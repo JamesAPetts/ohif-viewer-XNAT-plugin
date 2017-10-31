@@ -1,0 +1,12 @@
+package org.nrg.xnatx.ohifviewer;
+
+import org.nrg.framework.annotations.XnatPlugin;
+import org.springframework.context.annotation.ComponentScan;
+
+@XnatPlugin(value = "ohifViewerPlugin",
+            name = "XNAT OHIF Viewer Plugin",
+            version = "1.0-SNAPSHOT",
+            description = "Integrates the OHIF Cornerstone Viewer into XNAT.")
+@ComponentScan("org.nrg.xnatx.ohifviewer.xapi")
+public class OhifViewerPlugin {
+}

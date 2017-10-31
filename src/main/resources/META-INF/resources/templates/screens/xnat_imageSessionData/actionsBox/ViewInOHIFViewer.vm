@@ -1,0 +1,20 @@
+#* @vtlvariable name="om" type="org.nrg.xdat.om.XnatImagesessiondata" *#
+<!-- BEGIN /templates/screens/xnat_imageSessionData/actionsBox/ViewInOHIFViewer.vm -->
+<!-- Sequence: 6 -->
+<li class="yuimenuitem">
+    <a id="ohifViewer" href="#"><div class="ic">&nbsp;</div><div class="ic_spacer">&nbsp;</div>View Study</a>
+</li>
+
+<script>
+    $('#ohifViewer').click(function (e) {
+        var siteUrl = encodeURI(XNAT.url.fullUrl(''));
+        e.preventDefault();
+        XNAT.xhr.get('/viewer.html?siteUrl=' + siteUrl + '&url=/xapi/viewer/$om.id', function (data) {
+            XNAT.dialog.open({
+                maxxed: true,
+                content: data
+            })
+        });
+    });
+</script>
+<!-- END /templates/screens/xnat_imageSessionData/actionsBox/ViewInOHIFViewer.vm -->
