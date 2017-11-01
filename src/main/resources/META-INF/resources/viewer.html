@@ -6,6 +6,7 @@
     <script type="text/javascript">
         var parameters = new URLSearchParams(window.location.search);
         var siteUrl = parameters.get("siteUrl");
+        console.log('Site URL: ' + siteUrl);
 
         __meteor_runtime_config__ = {
             "meteorRelease": "METEOR@1.5.2.2",
@@ -18,7 +19,7 @@
                 "verifyEmail": false,
                 "ui": {
                     "studyListFunctionsEnabled": true,
-                    "leftSidebarOpen": false,
+                    "leftSidebarOpen": true,
                     "displaySetNavigationLoopOverSeries": false,
                     "displaySetNavigationMultipleViewports": true,
                     "autoPositionMeasurementsTextCallOuts": "TRLB"

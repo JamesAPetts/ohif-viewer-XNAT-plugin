@@ -7,14 +7,9 @@
 
 <script>
     $('#ohifViewer').click(function (e) {
-        var siteUrl = encodeURI(XNAT.url.fullUrl(''));
+        var siteUrl = encodeURIComponent(XNAT.url.fullUrl('').replace(/\/+$/, ""));
         e.preventDefault();
-        XNAT.xhr.get('/viewer.html?siteUrl=' + siteUrl + '&url=/xapi/viewer/$om.id', function (data) {
-            XNAT.dialog.open({
-                maxxed: true,
-                content: data
-            })
-        });
+        xmodal.iframe('/viewer.html?siteUrl=' + siteUrl + '&url=/xapi/viewer/$om.id')
     });
 </script>
 <!-- END /templates/screens/xnat_imageSessionData/actionsBox/ViewInOHIFViewer.vm -->
