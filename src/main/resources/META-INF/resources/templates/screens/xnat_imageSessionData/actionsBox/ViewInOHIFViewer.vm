@@ -8,10 +8,9 @@
 <script>
     $('#ohifViewer').click(function (e) {
         var rootUrl = XNAT.url.fullUrl('').replace(/\/+$/, "");
-        var siteUrl = encodeURIComponent(rootUrl);
+        var encodedRootUrl = encodeURIComponent(rootUrl);
 
         e.preventDefault();
-        xmodal.iframe(`${rootUrl}/viewer.html?siteUrl=` + siteUrl + '&url=/xapi/viewer/$om.id')
+        xmodal.iframe(`${rootUrl}/viewer.html?siteUrl=` + encodedRootUrl + '&url=/xapi/viewer/$om.id')
     });
 </script>
-<!-- END /templates/screens/xnat_imageSessionData/actionsBox/ViewInOHIFViewer.vm -->
