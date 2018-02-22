@@ -9,8 +9,10 @@
     $('#ohifViewer').click(function (e) {
         var rootUrl = XNAT.url.fullUrl('').replace(/\/+$/, "");
         var encodedRootUrl = encodeURIComponent(rootUrl);
-
         e.preventDefault();
-        xmodal.iframe(`${rootUrl}/viewer.html?siteUrl=` + encodedRootUrl + '&url=/xapi/viewer/$om.id')
+        xmodal.iframe('/viewer.html?url=' + `${rootUrl}` + '/xapi/viewer/$om.id')
+        //xmodal.iframe(`${rootUrl}/viewer.html?siteUrl=` + encodedRootUrl + '&url=/xapi/viewer/$om.id')
+
+
     });
 </script>

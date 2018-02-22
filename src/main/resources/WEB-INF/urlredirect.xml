@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<urlrewrite default-match-type="wildcard">
+        <rule>
+            <from>/viewer.html/*.json</from>
+            <to>/viewer.html?id=$1.json</to>
+        </rule>
+        <rule>
+            <from>/viewer.html/*</from>
+            <to>/viewer.html</to>
+        </rule>
+</urlrewrite>

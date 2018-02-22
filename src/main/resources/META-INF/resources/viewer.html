@@ -5,9 +5,31 @@
     <link rel="stylesheet" type="text/css" class="__meteor-css__" href="e4bae103351559e4cc4f1610f25c9bcfa9ae9646.css?meteor_css_resource=true">
     <link rel="stylesheet" type="text/css" class="__meteor-css__" href="d03b794e52cffaf1a76ed5395e54e18b09f20f15.css?meteor_css_resource=true">
     <script type="text/javascript">
-        var parameters = new URLSearchParams(window.location.search);
-        var siteUrl = parameters.get("siteUrl");
+        let parameters = new URLSearchParams(window.location.search);
+        let siteUrl = parameters.get("siteUrl");
         console.log('Site URL: ' + siteUrl);
+
+        let port = 8080;
+        // Insert port where Tomcat is running into the url. NOTE: You MUST
+        // Change this if you are running Tomcat on a different port to the default
+
+        /*
+        let siteUrlSplit = siteUrl.replace('http://', '').split('/');
+        //console.log(siteUrlSplit);
+        var siteUrlWithTomcatPort = '';
+        // If XNAT is running in a subdirectory, include this in the URL
+        if (siteUrlSplit.length > 1) {
+          let rootUrlWithTomcatPort = `${siteUrlSplit[0]}:${port}`;
+          siteUrlSplit.shift();
+          //console.log(rootUrlWithTomcatPort);
+          siteUrlWithTomcatPort = `${rootUrlWithTomcatPort}/${siteUrlSplit.join('/')}`;
+          //console.log(siteUrlWithTomcatPort);
+        } else {
+          siteUrlWithTomcatPort = `${siteUrl.replace('http://', '')}:${port}`;
+        }
+
+        console.log(siteUrlWithTomcatPort);
+        */
 
         __meteor_runtime_config__ = {
             "meteorRelease": "METEOR@1.5.2.2",
@@ -15,7 +37,7 @@
             "meteorEnv": {
                 "NODE_ENV": "production"
             },
-            "ROOT_URL": siteUrl,
+            "ROOT_URL": ':8080/XNAT_JPETTS',
             "PUBLIC_SETTINGS": {
                 "verifyEmail": false,
                 "ui": {

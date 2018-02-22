@@ -32,6 +32,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
+apply plugin: 'war'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
