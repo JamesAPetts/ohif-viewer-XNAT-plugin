@@ -32,7 +32,6 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
-apply plugin: 'war'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -53,6 +52,13 @@ repositories {
         url 'https://nrgxnat.jfrog.io/nrgxnat/ext-release'
         name 'XNAT External Release Repository'
     }
+    maven {
+        url 'https://jitpack.io'
+    }
+    
+    flatDir {
+       dirs 'lib'
+   }
 }
 
 sourceCompatibility = 1.7
@@ -75,13 +81,32 @@ dependencies {
     implementation("org.nrg:framework") {
         transitive = false
     }
+    implementation("org.nrg:prefs") {
+        transitive = false
+    }
+     implementation ('stratum:stratum:1.0') {
+        transitive = false
+    }
+    
 
     implementation "org.springframework:spring-web"
     implementation "org.springframework:spring-webmvc"
     implementation "org.springframework:spring-context"
+    implementation "org.springframework.security:spring-security-core"
+
     implementation "io.springfox:springfox-swagger2"
     implementation "commons-io:commons-io"
+    implementation "commons-codec:commons-codec"
     implementation "org.apache.commons:commons-lang3"
+   
+    compile name: 'log4j-1.2.16'
+    compile name: 'dcm4che-core-2.0.29'
+    compile name: 'EtherJ'
+    compile name: 'ICR_XNAT'
+
+    compile "com.google.code.gson:gson:2.8.2"
+    
+
 
     testImplementation "junit:junit"
 }

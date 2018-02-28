@@ -7,12 +7,101 @@
 
 <script>
     $('#ohifViewer').click(function (e) {
-        var rootUrl = XNAT.url.fullUrl('').replace(/\/+$/, "");
-        var encodedRootUrl = encodeURIComponent(rootUrl);
-        e.preventDefault();
-        xmodal.iframe('/viewer.html?url=' + `${rootUrl}` + '/xapi/viewer/$om.id')
-        //xmodal.iframe(`${rootUrl}/viewer.html?siteUrl=` + encodedRootUrl + '&url=/xapi/viewer/$om.id')
-
-
+      checkIfSessionJSON(e);
     });
+
+    function checkIfSessionJSON(e) {
+      var rootUrl = XNAT.url.fullUrl('').replace(/\/+$/, "");
+      e.preventDefault();
+
+      // JPETTS: Define a request to XNAT to retrieve the json experiment data
+      const oReq = new XMLHttpRequest();
+      const url = `${rootUrl}/xapi/viewer/$om.id`;
+      console.log(`Opening GET XMLHttpRequest to: ${url}`);
+
+      // Listeners
+      oReq.addEventListener('error', () => {
+        console.error('Error in REST call!');
+      });
+
+      oReq.addEventListener('abort', () => {
+        console.error('Request was aborted for some reason, ohnoess!');
+      });
+
+      oReq.addEventListener('load', () => {
+
+        console.log(`Request returned, status: ${oReq.status}`);
+
+        if (oReq.status === 200 ) {
+          console.log('JSON for this session found!');
+          console.log('Loading viewer with this JSON.');
+          console.log(JSON.parse(oReq.responseText));
+
+          openViewer(rootUrl);
+        } else if (oReq.status === 404) {
+            console.log('JSON doesn\'t exist, generating...');
+            generateJSONthenOpenViewer(rootUrl)
+
+            return;
+        } else if (oReq.status === 403) {
+          console.log('Incorrect permissions');
+
+          return;
+        } else {
+          console.log(`unsuccessful, status: ${oReq.status}`);
+
+          return;
+        }
+      });
+
+      // REST GET call
+      oReq.open('GET', url);
+      oReq.setRequestHeader('Accept', 'application/json');
+      oReq.send();
+    }
+
+    function openViewer(rootUrl) {
+      xmodal.iframe('/viewer.html?url=' + `${rootUrl}` + '/xapi/viewer/$om.id')
+      //xmodal.iframe(`${rootUrl}/viewer.html?siteUrl=` + encodedRootUrl + '&url=/xapi/viewer/$om.id')
+    }
+
+    function generateJSONthenOpenViewer(rootUrl) {
+      const oReq = new XMLHttpRequest();
+      const url = `${rootUrl}/xapi/viewer/$om.id`;
+      console.log(`Opening POST XMLHttpRequest to: ${url}`);
+
+      // Listeners
+      oReq.addEventListener('error', () => {
+        console.error('Error in REST call!');
+      });
+
+      oReq.addEventListener('abort', () => {
+        console.error('Request was aborted for some reason, ohnoess!');
+      });
+
+      oReq.addEventListener('load', () => {
+
+        console.log(`Request returned, status: ${oReq.status}`);
+
+        if (oReq.status === 201 ) {
+          console.log('JSON has been created!');
+
+          openViewer(rootUrl);
+        } else if (oReq.status === 403) {
+          console.log('Incorrect permissions');
+
+          return;
+        } else {
+          console.log(`unsuccessful, status: ${oReq.status}`);
+
+          return;
+        }
+      });
+
+      // REST GET call
+      oReq.open('POST', url);
+      oReq.setRequestHeader('Accept', 'application/json');
+      oReq.send();
+    }
+
 </script>

@@ -6,3 +6,4 @@
 /out
 /target
 dep*.txt
+/.nb-gradle/
