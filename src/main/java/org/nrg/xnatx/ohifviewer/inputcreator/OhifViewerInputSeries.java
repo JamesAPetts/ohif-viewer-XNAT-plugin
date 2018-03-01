@@ -94,5 +94,10 @@ public class OhifViewerInputSeries
 	{
 		this.instances = instances;
 	}
+  
+  public void addInstances(OhifViewerInputInstance instance)
+  {
+    this.instances.add(instance);
+  }
 	
 }
