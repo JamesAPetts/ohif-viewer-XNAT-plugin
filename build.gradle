@@ -33,6 +33,13 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
+task fatJar(type: Jar) {
+    baseName = project.name
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
@@ -105,7 +112,7 @@ dependencies {
     compile name: 'ICR_XNAT'
 
     compile "com.google.code.gson:gson:2.8.2"
-    
+    testCompile group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.21'
 
 
     testImplementation "junit:junit"
