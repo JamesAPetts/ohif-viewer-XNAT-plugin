@@ -66,47 +66,25 @@ public class CreateOhifViewerMetadata {
   {
     
     logger.info("Its JSONifying time!");
-
-    // Use Etherj to do the heavy lifting of sifting through all the scan data.
-    PatientRoot root = new DicomReceiver().getPatientRoot();
-    try
-    {
-      root = scanPath(xnatScanPath);
-      logger.error("root: " + root.toString());
-    }
-    catch (Exception ex)
-    {
-      logger.error(ex.getMessage());
-    }
-
-    // Transform the Etherj output into a java object with th structure needed
-    // by the OHIF viewer.
-    
-    OhifViewerInput ovi = new OhifViewerInput();
-    try
-    {
-      ovi = createOhifViewerInput(transactionId, xnatScanUrl, root);
-      logger.error("ovi generated!");
-    }
-    catch (Exception ex)
-    {
-      logger.error(ex.getMessage());
-    }
-    
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
     
     String serialisedOvi = "";
-
-    // Serialise the viewer input object to a JSON string.
     try
     {
+      // Use Etherj to do the heavy lifting of sifting through all the scan data.
+      PatientRoot root = scanPath(xnatScanPath);
+      // Transform the Etherj output into a java object with the structure needed
+      // by the OHIF viewer.
+      OhifViewerInput ovi = createOhifViewerInput(transactionId, xnatScanUrl, root);
+    
+      // Convert the Java object to a JSON string
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
       serialisedOvi = gson.toJson(ovi);
     }
     catch (Exception ex)
     {
       logger.error(ex.getMessage());
     }
-    
+
     logger.info("JSONification complete, radical!");
     
     return serialisedOvi;
