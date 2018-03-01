@@ -81,5 +81,10 @@ public class OhifViewerInputStudy
 	{
 		this.seriesList = seriesList;
 	}
+  
+  public void addSeries(OhifViewerInputSeries series)
+  {
+    this.seriesList.add(series);
+  }
 		
 }
