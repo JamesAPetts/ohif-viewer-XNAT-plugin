@@ -60,6 +60,8 @@ public class OhifViewerInputInstance extends OhifViewerInputItem
 	private String  imageOrientationPatient;
 	private String  pixelSpacing;
 	private String  url;
+  // @simond: Here's the bit that needs changing when we decide exactly how we want to store the files.
+  private static final String SUBDIRECTORY = "/resources/DICOM/files/";
   
   public OhifViewerInputInstance(SopInstance sop, String xnatScanUrl, Series ser)
   {
@@ -72,9 +74,8 @@ public class OhifViewerInputInstance extends OhifViewerInputItem
     setImageOrientationPatient(dbl2DcmString(sop.getImageOrientationPatient()));
     setPixelSpacing(dbl2DcmString(sop.getPixelSpacing()));
 
-    // Here's the bit that needs changing when we decide exactly how we want to store the files.
     String file = new File(sop.getPath()).getName();
-    setUrl(xnatScanUrl + ser.getNumber() + "/resources/DICOM/files/" + file);
+    setUrl(xnatScanUrl + ser.getNumber() + SUBDIRECTORY + file);
   }
 
 	public String getPixelSpacing()

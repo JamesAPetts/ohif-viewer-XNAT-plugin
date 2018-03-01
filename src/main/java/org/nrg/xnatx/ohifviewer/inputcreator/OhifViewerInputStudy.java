@@ -44,20 +44,29 @@
 
 package org.nrg.xnatx.ohifviewer.inputcreator;
 
+import etherj.dicom.Patient;
+import etherj.dicom.Study;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OhifViewerInputStudy extends OhifViewerInputItem
 {
 	private String  studyInstanceUid;
 	private String  patientName;
-	private List<OhifViewerInputSeries> seriesList;
+	private List<OhifViewerInputSeries> seriesList = new ArrayList<>();
+  
+  public OhifViewerInputStudy(Study std, Patient pat)
+  {
+    setStudyInstanceUid(std.getUid());
+    setPatientName(pat.getName());
+  }
 
 	public String getStudyInstanceUid()
 	{
 		return studyInstanceUid;
 	}
 
-	public void setStudyInstanceUid(String studyInstanceUid)
+	private void setStudyInstanceUid(String studyInstanceUid)
 	{
 		this.studyInstanceUid = studyInstanceUid;
 	}
@@ -67,7 +76,7 @@ public class OhifViewerInputStudy extends OhifViewerInputItem
 		return patientName;
 	}
 
-	public void setPatientName(String patientName)
+	private void setPatientName(String patientName)
 	{
 		this.patientName = patientName;
 	}
@@ -77,7 +86,7 @@ public class OhifViewerInputStudy extends OhifViewerInputItem
 		return seriesList;
 	}
 
-	public void setSeriesList(List<OhifViewerInputSeries> seriesList)
+	private void setSeriesList(List<OhifViewerInputSeries> seriesList)
 	{
 		this.seriesList = seriesList;
 	}

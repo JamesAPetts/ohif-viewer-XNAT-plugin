@@ -149,13 +149,13 @@ public class CreateOhifViewerMetadata {
       List<Study> studyList = pat.getStudyList();			
       for (Study std : studyList)
       {
-        OhifViewerInputStudy oviStd = getStudy(std, pat);
+        OhifViewerInputStudy oviStd = new OhifViewerInputStudy(std, pat);
         oviStudyList.add(oviStd);
 
         List<Series> seriesList = std.getSeriesList();
         for (Series ser : seriesList)
         {
-          OhifViewerInputSeries oviSer = getSeries(ser);
+          OhifViewerInputSeries oviSer = new OhifViewerInputSeries(ser);
           oviStd.addSeries(oviSer);
 
           List<SopInstance> sopList = ser.getSopInstanceList();
@@ -169,44 +169,6 @@ public class CreateOhifViewerMetadata {
     }
 
     return ovi;
-  }
-  
-  private OhifViewerInputSeries getSeries(Series ser)
-  {
-    OhifViewerInputSeries oviSer = new OhifViewerInputSeries();
-
-    oviSer.setSeriesInstanceUid(ser.getUid());
-    oviSer.setSeriesDescription(ser.getDescription());
-    oviSer.setSeriesNumber(ser.getNumber());
-    List<OhifViewerInputInstance> oviInstanceList = new ArrayList<>();
-    oviSer.setInstances(oviInstanceList);
-    
-    return oviSer;
-  }
-  
-  private OhifViewerInputStudy getStudy(Study std, Patient pat)
-  {
-    OhifViewerInputStudy oviStd = new OhifViewerInputStudy();
-
-    oviStd.setStudyInstanceUid(std.getUid());
-    oviStd.setPatientName(pat.getName());
-    List<OhifViewerInputSeries> oviSeriesList = new ArrayList<>();
-    oviStd.setSeriesList(oviSeriesList);
- 
-    return oviStd;
-  }
-  
-  
-
-  private String dbl2DcmString(double[] d)
-  {
-    StringBuilder sb = new StringBuilder();
-    for (int i=0; i<d.length; i++)
-    {
-      sb.append(d[i]);
-      if (i != (d.length-1)) sb.append("\\");
-    }
-    return sb.toString();
   }
   
 }
