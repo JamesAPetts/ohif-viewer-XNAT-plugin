@@ -32,72 +32,23 @@
 * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 * OF THE POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
-
-/********************************************************************
-* @author Simon J Doran
-* Java class: OhifViewerInputSeries.java
-* First created on Sep 12, 2017 at 11:10:36 AM
-* 
-* Component of OhifViewerInput, which is serialised to JSON by
-* CreateOhifViewerInputJson.java
-* 
-*********************************************************************/
-
 package org.nrg.xnatx.ohifviewer.inputcreator;
 
-import java.util.List;
-
-public class OhifViewerInputSeries extends OhifViewerInputItem
-{	
-	private String  seriesInstanceUid;
-	private String  seriesDescription;
-	private Integer seriesNumber;
-	private List<OhifViewerInputInstance> instances;
-	
-	
-	public String getSeriesInstanceUid()
-	{
-		return seriesInstanceUid;
-	}
-
-	public void setSeriesInstanceUid(String seriesInstanceUid)
-	{
-		this.seriesInstanceUid = seriesInstanceUid;
-	}
-
-	public String getSeriesDescription()
-	{
-		return seriesDescription;
-	}
-
-	public void setSeriesDescription(String seriesDescription)
-	{
-		this.seriesDescription = seriesDescription;
-	}
-
-	public Integer getSeriesNumber()
-	{
-		return seriesNumber;
-	}
-
-	public void setSeriesNumber(Integer seriesNumber)
-	{
-		this.seriesNumber = seriesNumber;
-	}
-
-	public List<OhifViewerInputInstance> getInstances()
-	{
-		return instances;
-	}
-
-	public void setInstances(List<OhifViewerInputInstance> instances)
-	{
-		this.instances = instances;
-	}
+/**
+ *
+ * @author jpetts
+ */
+public abstract class OhifViewerInputItem {
   
-  public void addInstances(OhifViewerInputInstance instance)
+  protected String dbl2DcmString(double[] d)
   {
-    this.instances.add(instance);
+    StringBuilder sb = new StringBuilder();
+    for (int i=0; i<d.length; i++)
+    {
+      sb.append(d[i]);
+      if (i != (d.length-1)) sb.append("\\");
+    }
+    return sb.toString();
   }
-	
+  
 }

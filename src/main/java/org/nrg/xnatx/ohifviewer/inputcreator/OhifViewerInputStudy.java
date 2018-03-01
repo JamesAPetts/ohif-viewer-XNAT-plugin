@@ -46,7 +46,7 @@ package org.nrg.xnatx.ohifviewer.inputcreator;
 
 import java.util.List;
 
-public class OhifViewerInputStudy
+public class OhifViewerInputStudy extends OhifViewerInputItem
 {
 	private String  studyInstanceUid;
 	private String  patientName;

@@ -45,7 +45,11 @@
 
 package org.nrg.xnatx.ohifviewer.inputcreator;
 
-public class OhifViewerInputInstance
+import etherj.dicom.Series;
+import etherj.dicom.SopInstance;
+import java.io.File;
+
+public class OhifViewerInputInstance extends OhifViewerInputItem
 {
 	private String  sopInstanceUid;
 	private Integer instanceNumber;
@@ -55,15 +59,30 @@ public class OhifViewerInputInstance
 	private String  imagePositionPatient;
 	private String  imageOrientationPatient;
 	private String  pixelSpacing;
-	private String  url;		
-	
+	private String  url;
+  
+  public OhifViewerInputInstance(SopInstance sop, String xnatScanUrl, Series ser)
+  {
+    setSopInstanceUid(sop.getUid());
+    setInstanceNumber(sop.getInstanceNumber());
+    setColumns(sop.getColumnCount());
+    setRows(sop.getRowCount());
+    setFrameOfReferenceUID(sop.getFrameOfReferenceUid());
+    setImagePositionPatient(dbl2DcmString(sop.getImagePositionPatient()));
+    setImageOrientationPatient(dbl2DcmString(sop.getImageOrientationPatient()));
+    setPixelSpacing(dbl2DcmString(sop.getPixelSpacing()));
+
+    // Here's the bit that needs changing when we decide exactly how we want to store the files.
+    String file = new File(sop.getPath()).getName();
+    setUrl(xnatScanUrl + ser.getNumber() + "/resources/DICOM/files/" + file);
+  }
 
 	public String getPixelSpacing()
 	{
 		return pixelSpacing;
 	}
 
-	public void setPixelSpacing(String pixelSpacing)
+	private void setPixelSpacing(String pixelSpacing)
 	{
 		this.pixelSpacing = pixelSpacing;
 	}
@@ -73,7 +92,7 @@ public class OhifViewerInputInstance
 		return sopInstanceUid;
 	}
 
-	public void setSopInstanceUid(String sopInstanceUid)
+	private void setSopInstanceUid(String sopInstanceUid)
 	{
 		this.sopInstanceUid = sopInstanceUid;
 	}
@@ -83,7 +102,7 @@ public class OhifViewerInputInstance
 		return instanceNumber;
 	}
 
-	public void setInstanceNumber(Integer instanceNumber)
+	private void setInstanceNumber(Integer instanceNumber)
 	{
 		this.instanceNumber = instanceNumber;
 	}
@@ -93,7 +112,7 @@ public class OhifViewerInputInstance
 		return columns;
 	}
 
-	public void setColumns(Integer columns)
+	private void setColumns(Integer columns)
 	{
 		this.columns = columns;
 	}
@@ -103,7 +122,7 @@ public class OhifViewerInputInstance
 		return rows;
 	}
 
-	public void setRows(Integer rows)
+	private void setRows(Integer rows)
 	{
 		this.rows = rows;
 	}
@@ -113,7 +132,7 @@ public class OhifViewerInputInstance
 		return frameOfReferenceUID;
 	}
 
-	public void setFrameOfReferenceUID(String frameOfReferenceUID)
+	private void setFrameOfReferenceUID(String frameOfReferenceUID)
 	{
 		this.frameOfReferenceUID = frameOfReferenceUID;
 	}
@@ -123,7 +142,7 @@ public class OhifViewerInputInstance
 		return imagePositionPatient;
 	}
 
-	public void setImagePositionPatient(String imagePositionPatient)
+	private void setImagePositionPatient(String imagePositionPatient)
 	{
 		this.imagePositionPatient = imagePositionPatient;
 	}
@@ -133,7 +152,7 @@ public class OhifViewerInputInstance
 		return imageOrientationPatient;
 	}
 
-	public void setImageOrientationPatient(String imageOrientationPatient)
+	private void setImageOrientationPatient(String imageOrientationPatient)
 	{
 		this.imageOrientationPatient = imageOrientationPatient;
 	}
@@ -143,7 +162,7 @@ public class OhifViewerInputInstance
 		return url;
 	}
 
-	public void setUrl(String url)
+	private void setUrl(String url)
 	{
 		this.url = url;
 	}

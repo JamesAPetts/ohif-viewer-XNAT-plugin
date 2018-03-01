@@ -161,7 +161,7 @@ public class CreateOhifViewerMetadata {
           List<SopInstance> sopList = ser.getSopInstanceList();
           for (SopInstance sop : sopList)
           {
-            OhifViewerInputInstance oviInst = getInstance(sop, xnatScanUrl, ser);
+            OhifViewerInputInstance oviInst = new OhifViewerInputInstance(sop, xnatScanUrl, ser);
             oviSer.addInstances(oviInst);			
           }
         }
@@ -170,27 +170,6 @@ public class CreateOhifViewerMetadata {
 
     return ovi;
   }
-  
-  private OhifViewerInputInstance getInstance(SopInstance sop, String xnatScanUrl, Series ser)
-  {
-    OhifViewerInputInstance oviInst = new OhifViewerInputInstance();
-
-    oviInst.setSopInstanceUid(sop.getUid());
-    oviInst.setInstanceNumber(sop.getInstanceNumber());
-    oviInst.setColumns(sop.getColumnCount());
-    oviInst.setRows(sop.getRowCount());
-    oviInst.setFrameOfReferenceUID(sop.getFrameOfReferenceUid());
-    oviInst.setImagePositionPatient(dbl2DcmString(sop.getImagePositionPatient()));
-    oviInst.setImageOrientationPatient(dbl2DcmString(sop.getImageOrientationPatient()));
-    oviInst.setPixelSpacing(dbl2DcmString(sop.getPixelSpacing()));
-
-    // Here's the bit that needs changing when we decide exactly how we want to store the files.
-    String file = new File(sop.getPath()).getName();
-    oviInst.setUrl(xnatScanUrl + ser.getNumber() + "/resources/DICOM/files/" + file);
-    
-    return oviInst;
-  }
-  
   
   private OhifViewerInputSeries getSeries(Series ser)
   {
