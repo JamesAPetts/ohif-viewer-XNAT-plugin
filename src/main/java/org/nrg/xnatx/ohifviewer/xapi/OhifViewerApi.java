@@ -77,16 +77,19 @@ public class OhifViewerApi {
     private static final String SEP = File.separator;
     private static Boolean isLocked = false;
     
+    /*=================================    
+    // Study level GET/POST
+    =================================*/
     
-    @ApiOperation(value = "Returns 200 if JSON exists")
+    @ApiOperation(value = "Returns 200 if Study level JSON exists")
     @ApiResponses({
       @ApiResponse(code = 302, message = "The session JSON exists."),
       @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experiment."),
       @ApiResponse(code = 404, message = "The specified JSON does not exist."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
-    })
+    })    
     @XapiRequestMapping(value = "exists/{_experimentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)    
-    public ResponseEntity<String> doesJsonExist(final @PathVariable String _experimentId) throws IOException {
+    public ResponseEntity<String> doesStudyJsonExist(final @PathVariable String _experimentId) throws IOException {
       // Grab the data archive path
       String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
       
@@ -94,9 +97,8 @@ public class OhifViewerApi {
       HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
       String proj     = experimentData.get("proj");
       String expLabel = experimentData.get("expLabel");
-      String subj     = experimentData.get("subj");
       
-      String readFilePath = getFilePath(xnatArchivePath, proj, expLabel, _experimentId);
+      String readFilePath = getStudyPath(xnatArchivePath, proj, expLabel, _experimentId);
       File file = new File(readFilePath);
       if (file.exists())
       {
@@ -104,6 +106,7 @@ public class OhifViewerApi {
       }
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
 
     
     @ApiOperation(value = "Returns the session JSON for the specified experiment ID.")
@@ -113,7 +116,7 @@ public class OhifViewerApi {
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
     @XapiRequestMapping(value = "{_experimentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public StreamingResponseBody getSessionJson(final @PathVariable String _experimentId) throws FileNotFoundException {
+    public StreamingResponseBody getExperimentJson(final @PathVariable String _experimentId) throws FileNotFoundException {
         
       // Grab the data archive path
       String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
@@ -122,9 +125,8 @@ public class OhifViewerApi {
       HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
       String proj     = experimentData.get("proj");
       String expLabel = experimentData.get("expLabel");
-      String subj     = experimentData.get("subj");
       
-      String readFilePath = getFilePath(xnatArchivePath, proj, expLabel, _experimentId);
+      String readFilePath = getStudyPath(xnatArchivePath, proj, expLabel, _experimentId);
       final Reader reader = new FileReader(readFilePath);
       
       return new StreamingResponseBody() {
@@ -143,7 +145,7 @@ public class OhifViewerApi {
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
     @XapiRequestMapping(value = "{_experimentId}", method = RequestMethod.POST)
-    public ResponseEntity<String> setSessionJson(final @PathVariable String _experimentId) throws IOException {
+    public ResponseEntity<String> setExperimentJson(final @PathVariable String _experimentId) throws IOException {
       
       //Only allow one process to write
       if (isLocked) return new ResponseEntity<>(HttpStatus.LOCKED);
@@ -188,7 +190,7 @@ public class OhifViewerApi {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
       
-      String writeFilePath = getFilePath(xnatArchivePath, proj, expLabel, _experimentId);
+      String writeFilePath = getStudyPath(xnatArchivePath, proj, expLabel, _experimentId);
       
       logger.error("Making directories: " + writeFilePath);
       try
@@ -223,6 +225,96 @@ public class OhifViewerApi {
       }
       
     }
+    
+    
+    /*=================================    
+    // Study level GET/POST
+    =================================*/
+    
+    
+    @ApiOperation(value = "Returns 200 if series level JSON exists")
+    @ApiResponses({
+      @ApiResponse(code = 302, message = "The session JSON exists."),
+      @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experiment."),
+      @ApiResponse(code = 404, message = "The specified JSON does not exist."),
+      @ApiResponse(code = 500, message = "An unexpected error occurred.")
+    })    
+    @XapiRequestMapping(value = "exists/{_experimentId}/{_seriesId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)    
+    public ResponseEntity<String> doesSeriesJsonExist(final @PathVariable String _experimentId, @PathVariable String _seriesId) throws IOException {
+      // Grab the data archive path
+      String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
+      
+      // Get directory info from _experimentId
+      HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
+      String proj     = experimentData.get("proj");
+      String expLabel = experimentData.get("expLabel");
+      
+      String readFilePath = getSeriesPath(xnatArchivePath, proj, expLabel, _seriesId);
+      File file = new File(readFilePath);
+      if (file.exists())
+      {
+        return new ResponseEntity<>(HttpStatus.FOUND);
+      }
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    
+    @ApiOperation(value = "Returns the session JSON for the specified series.")
+    @ApiResponses({
+      @ApiResponse(code = 200, message = "The session was located and properly rendered to JSON."),
+      @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experiment."),
+      @ApiResponse(code = 500, message = "An unexpected error occurred.")
+    })
+    @XapiRequestMapping(value = "{_experimentId}/{_seriesId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public StreamingResponseBody getSeriesJson(final @PathVariable String _experimentId, @PathVariable String _seriesId) throws FileNotFoundException {
+    // Grab the data archive path
+      String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
+      
+      // Get directory info from _experimentId
+      HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
+      String proj     = experimentData.get("proj");
+      String expLabel = experimentData.get("expLabel");
+      
+      logger.error("proj, expLabel, _seriesId: " + proj + " " + expLabel + " " + _seriesId);
+      
+      String readFilePath = getSeriesPath(xnatArchivePath, proj, expLabel, _seriesId);
+      
+      logger.error("Getting series Path: " + readFilePath);
+      
+      final Reader reader = new FileReader(readFilePath);
+      
+      return new StreamingResponseBody() {
+          @Override
+          public void writeTo(final OutputStream output) throws IOException {
+              IOUtils.copy(reader, output);
+          }
+      };
+    }
+    
+    
+     @ApiOperation(value = "Generates the session JSON for the specified series.")
+    @ApiResponses({
+      @ApiResponse(code = 201, message = "The session JSON has been created."),
+      @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experient."),
+      @ApiResponse(code = 500, message = "An unexpected error occurred.")
+    })
+    @XapiRequestMapping(value = "{_experimentId}/{_seriesId}", method = RequestMethod.POST)
+    public ResponseEntity<String> setSeriesJson(final @PathVariable String _experimentId) throws IOException {
+      
+      // TODO MAKE THIS
+      
+      return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     private HashMap<String, String> getDirectoryInfo(String _experimentId)
     {
@@ -262,6 +354,7 @@ public class OhifViewerApi {
     }
     
     
+    
     private ItemI getSubItem(ItemI itemI, String xsiType)
     {
       ArrayList<ItemI> itemIArrayList = null;
@@ -293,10 +386,18 @@ public class OhifViewerApi {
     }
     
     
-    private String getFilePath(String xnatArchivePath, String proj, String expLabel, String _experimentId)
+    private String getStudyPath(String xnatArchivePath, String proj, String expLabel, String _experimentId)
     {
       String filePath = xnatArchivePath + SEP + proj + SEP + "arc001"
       + SEP + expLabel + SEP + "RESOURCES/metadata/" + _experimentId +".json";
+      return filePath;
+    }
+    
+    // TODO: Refactor, too many arguments
+    private String getSeriesPath(String xnatArchivePath, String proj, String expLabel, String _seriesId)
+    {
+      String filePath = xnatArchivePath + SEP + proj + SEP + "arc001"
+      + SEP + expLabel + SEP + "SCANS" + SEP + _seriesId + SEP + "RESOURCES/metadata/" + _seriesId +".json";
       return filePath;
     }
             
