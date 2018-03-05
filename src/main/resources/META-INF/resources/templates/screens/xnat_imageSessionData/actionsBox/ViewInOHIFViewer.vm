@@ -14,7 +14,7 @@
       var rootUrl = XNAT.url.fullUrl('').replace(/\/+$/, "");
       e.preventDefault();
 
-      // JPETTS: Define a request to XNAT to retrieve the json experiment data
+      // JPETTS: Define a request to XNAT to check if specified JSON data exists
       const oReq = new XMLHttpRequest();
       const url = `${rootUrl}/xapi/viewer/$om.id`;
       console.log(`Opening GET XMLHttpRequest to: ${url}`);
@@ -25,7 +25,7 @@
       });
 
       oReq.addEventListener('abort', () => {
-        console.error('Request was aborted for some reason, ohnoess!');
+        console.error('Request was aborted for some reason, contact JamesAPetts with details and I\'ll look into it');
       });
 
       oReq.addEventListener('load', () => {
@@ -69,7 +69,7 @@
       const url = `${rootUrl}/xapi/viewer/$om.id`;
       console.log(`Opening POST XMLHttpRequest to: ${url}`);
 
-      alert("Generating metadata for experiment $om.label for the first time. This should only take a second.")
+      alert("Generating viewer metadata for experiment \"$om.label\" for the first time. This viewer will load in a few seconds.")
 
       // Listeners
       oReq.addEventListener('error', () => {
@@ -86,12 +86,16 @@
 
         if (oReq.status === 201 ) {
           console.log('JSON has been created!');
-
           openViewer(rootUrl);
+
         } else if (oReq.status === 403) {
           console.log('Incorrect permissions');
 
           return;
+        } else if (oReq.status === 423) {
+          console.log('POST locked');
+          //Likely just been POSTed by different user, try again in 100 ms
+          setTimeout(checkIfSessionJSON, 100);
         } else {
           console.log(`unsuccessful, status: ${oReq.status}`);
 
@@ -99,7 +103,7 @@
         }
       });
 
-      // REST GET call
+      // REST POST call
       oReq.open('POST', url);
       oReq.setRequestHeader('Accept', 'application/json');
       oReq.send();

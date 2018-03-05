@@ -65,7 +65,7 @@ public class CreateOhifViewerMetadata {
   public String jsonify(String xnatScanPath, String xnatScanUrl, String transactionId)
   {
     
-    logger.info("Its JSONifying time!");
+    logger.error("Its JSONifying time!");
     
     String serialisedOvi = "";
     try
@@ -85,7 +85,7 @@ public class CreateOhifViewerMetadata {
       logger.error(ex.getMessage());
     }
 
-    logger.info("JSONification complete, radical!");
+    logger.error("JSONification complete, radical!");
     
     return serialisedOvi;
   }

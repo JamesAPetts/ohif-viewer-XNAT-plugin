@@ -54,6 +54,8 @@ import org.springframework.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import org.nrg.xft.ItemI;
 import java.util.ArrayList;
@@ -74,6 +76,33 @@ public class OhifViewerApi {
     private static final Logger logger = LoggerFactory.getLogger(OhifViewerApi.class);
     private static final String SEP = File.separator;
     private static Boolean isLocked = false;
+    
+    
+    @ApiOperation(value = "Returns 200 if JSON exists")
+    @ApiResponses({
+      @ApiResponse(code = 302, message = "The session JSON exists."),
+      @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experiment."),
+      @ApiResponse(code = 500, message = "An unexpected error occurred.")
+    })
+    @XapiRequestMapping(value = "exists/{_experimentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<String> doesJsonExist(final @PathVariable String _experimentId) throws IOException {
+      // Grab the data archive path
+      String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
+      
+      // Get directory info from _experimentId
+      HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
+      String proj     = experimentData.get("proj");
+      String expLabel = experimentData.get("expLabel");
+      String subj     = experimentData.get("subj");
+      
+      String readFilePath = getFilePath(xnatArchivePath, proj, expLabel, _experimentId);
+      File file = new File(readFilePath);
+      if (file.exists())
+      {
+        return new ResponseEntity<>(HttpStatus.FOUND);
+      }
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
     
     @ApiOperation(value = "Returns the session JSON for the specified experiment ID.")
@@ -160,6 +189,21 @@ public class OhifViewerApi {
       
       String writeFilePath = getFilePath(xnatArchivePath, proj, expLabel, _experimentId);
       
+      logger.error("Making directories: " + writeFilePath);
+      try
+      {
+        File file = new File(writeFilePath);
+        if (!file.exists())
+        {
+          Files.createDirectories(Paths.get(file.getParent().toString()));
+          logger.error("...created directory.");
+        }
+      }
+      catch (Exception ex)
+      {
+        logger.error("Error creating directories: " + ex.getMessage());
+      }
+      
       final Writer writer = new FileWriter(writeFilePath);
       
       try
@@ -176,7 +220,7 @@ public class OhifViewerApi {
         logger.error(ioEx.getMessage());
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
-
+      
     }
     
     private HashMap<String, String> getDirectoryInfo(String _experimentId)
