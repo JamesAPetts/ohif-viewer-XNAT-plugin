@@ -61,14 +61,15 @@
     }
 
     function openViewer(rootUrl) {
-      xmodal.iframe('/viewer.html?url=' + `${rootUrl}` + '/xapi/viewer/$om.id')
-      //xmodal.iframe(`${rootUrl}/viewer.html?siteUrl=` + encodedRootUrl + '&url=/xapi/viewer/$om.id')
+      xmodal.iframe('/viewer.html?url=' + `${rootUrl}` + '/xapi/viewer/$om.id');
     }
 
     function generateJSONthenOpenViewer(rootUrl) {
       const oReq = new XMLHttpRequest();
       const url = `${rootUrl}/xapi/viewer/$om.id`;
       console.log(`Opening POST XMLHttpRequest to: ${url}`);
+
+      alert("Generating metadata for experiment $om.label for the first time. This should only take a second.")
 
       // Listeners
       oReq.addEventListener('error', () => {
