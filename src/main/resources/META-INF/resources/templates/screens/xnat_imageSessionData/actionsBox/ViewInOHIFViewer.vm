@@ -16,7 +16,7 @@
 
       // JPETTS: Define a request to XNAT to check if specified JSON data exists
       const oReq = new XMLHttpRequest();
-      const url = `${rootUrl}/xapi/viewer/$om.id`;
+      const url = `${rootUrl}/xapi/viewer/exists/$om.id`;
       console.log(`Opening GET XMLHttpRequest to: ${url}`);
 
       // Listeners
@@ -32,13 +32,12 @@
 
         console.log(`Request returned, status: ${oReq.status}`);
 
-        if (oReq.status === 200 ) {
+        if (oReq.status === 302 ) { // 302 === FOUND
           console.log('JSON for this session found!');
           console.log('Loading viewer with this JSON.');
-          console.log(JSON.parse(oReq.responseText));
 
           openViewer(rootUrl);
-        } else if (oReq.status === 404) {
+        } else if (oReq.status === 404) { // 404 === NOT_FOUND
             console.log('JSON doesn\'t exist, generating...');
             generateJSONthenOpenViewer(rootUrl)
 

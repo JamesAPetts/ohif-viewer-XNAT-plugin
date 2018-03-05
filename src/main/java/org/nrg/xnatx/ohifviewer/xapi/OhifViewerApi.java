@@ -82,9 +82,10 @@ public class OhifViewerApi {
     @ApiResponses({
       @ApiResponse(code = 302, message = "The session JSON exists."),
       @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experiment."),
+      @ApiResponse(code = 404, message = "The specified JSON does not exist."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
-    @XapiRequestMapping(value = "exists/{_experimentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @XapiRequestMapping(value = "exists/{_experimentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)    
     public ResponseEntity<String> doesJsonExist(final @PathVariable String _experimentId) throws IOException {
       // Grab the data archive path
       String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
