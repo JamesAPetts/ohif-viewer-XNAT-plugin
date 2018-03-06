@@ -62,10 +62,10 @@ public class CreateOhifViewerMetadata {
   private static final Logger logger = LoggerFactory.getLogger(CreateOhifViewerMetadata.class);
   private static final DicomToolkit dcmTk = DicomToolkit.getDefaultToolkit();
   
-  public String jsonify(String xnatScanPath, String xnatScanUrl, String transactionId)
+  public String jsonifyStudy(final String xnatScanPath, final String xnatScanUrl, final String transactionId)
   {
     
-    logger.error("Its JSONifying time!");
+    logger.error("Its Study JSONifying time!");
     
     String serialisedOvi = "";
     try
@@ -74,7 +74,7 @@ public class CreateOhifViewerMetadata {
       PatientRoot root = scanPath(xnatScanPath);
       // Transform the Etherj output into a java object with the structure needed
       // by the OHIF viewer.
-      OhifViewerInput ovi = createOhifViewerInput(transactionId, xnatScanUrl, root);
+      OhifViewerInput ovi = createStudyInput(transactionId, xnatScanUrl, root);
     
       // Convert the Java object to a JSON string
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -85,7 +85,37 @@ public class CreateOhifViewerMetadata {
       logger.error(ex.getMessage());
     }
 
-    logger.error("JSONification complete, radical!");
+    logger.error("Study JSONification complete, radical!");
+    
+    return serialisedOvi;
+  }
+  
+  
+  public String jsonifySeries(final String xnatScanPath, final String xnatScanUrl, final String experimentId, final String seriesNo)
+  {
+    final String transactionId = experimentId + "_" + seriesNo;
+    
+    logger.error("Its Series JSONifying time!");
+    
+    String serialisedOvi = "";
+    try
+    {
+      // Use Etherj to do the heavy lifting of sifting through all the scan data.
+      PatientRoot root = scanPath(xnatScanPath);
+      // Transform the Etherj output into a java object with the structure needed
+      // by the OHIF viewer.
+      OhifViewerInput ovi = createSeriesInput(seriesNo, transactionId, xnatScanUrl, root);
+    
+      // Convert the Java object to a JSON string
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      serialisedOvi = gson.toJson(ovi);
+    }
+    catch (Exception ex)
+    {
+      logger.error(ex.getMessage());
+    }
+    
+    logger.error("Series JSONification complete, radical!");
     
     return serialisedOvi;
   }
@@ -113,7 +143,7 @@ public class CreateOhifViewerMetadata {
   }
 
   
-  private OhifViewerInput createOhifViewerInput(String transactionId, String xnatScanUrl, PatientRoot root)
+  private OhifViewerInput createStudyInput(String transactionId, String xnatScanUrl, PatientRoot root)
   {
     OhifViewerInput ovi = new OhifViewerInput();
     List<OhifViewerInputStudy> oviStudyList = new ArrayList<>();
@@ -146,6 +176,69 @@ public class CreateOhifViewerMetadata {
       }
     }
 
+    return ovi;
+  }
+  
+  
+  // REFACTOR ONCE WORKING, un-needed duplication
+  // TODO - Using seriesNo rather than SeriesId... see if the right thing to do
+  private OhifViewerInput createSeriesInput(String seriesNo, String transactionId, String xnatScanUrl, PatientRoot root)
+  {
+    OhifViewerInput ovi = new OhifViewerInput();
+    List<OhifViewerInputStudy> oviStudyList = new ArrayList<>();
+
+    ovi.setTransactionId(transactionId);
+    ovi.setStudies(oviStudyList);
+    
+    logger.error("Making json for seriesNo:" + seriesNo);
+    
+    //TODO fix this function, Current prints out:
+    /*
+    {
+     "transactionId": "XNAT_JPETTS_E00007_1007",
+      "studies": [
+        {
+          "studyInstanceUid": "2.25.216540488264669880754620301267990043721",
+          "patientName": "CASE_4_LIVER",
+          "seriesList": []
+        }
+      ]
+    }
+    */
+    
+
+    List<Patient> patList = root.getPatientList();
+    for (Patient pat : patList)
+    {
+      List<Study> studyList = pat.getStudyList();			
+      for (Study std : studyList)
+      {
+        OhifViewerInputStudy oviStd = new OhifViewerInputStudy(std, pat);
+        oviStudyList.add(oviStd);
+
+        List<Series> seriesList = std.getSeriesList();
+        for (Series ser : seriesList)
+        {
+          Integer serNo = ser.getNumber();
+          if (serNo.toString() == seriesNo)
+          {
+            OhifViewerInputSeries oviSer = new OhifViewerInputSeries(ser);
+            oviStd.addSeries(oviSer);
+
+            List<SopInstance> sopList = ser.getSopInstanceList();
+            for (SopInstance sop : sopList)
+            {
+              OhifViewerInputInstance oviInst = new OhifViewerInputInstance(sop, xnatScanUrl, ser);
+              oviSer.addInstances(oviInst);			
+            }
+            break;
+          }
+          
+        }
+      }
+    }
+    
+    
     return ovi;
   }
   

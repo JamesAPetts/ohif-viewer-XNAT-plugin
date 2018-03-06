@@ -68,8 +68,6 @@
       const url = `${rootUrl}/xapi/viewer/$om.id`;
       console.log(`Opening POST XMLHttpRequest to: ${url}`);
 
-      alert("Generating viewer metadata for experiment \"$om.label\" for the first time. This viewer will load in a few seconds.")
-
       // Listeners
       oReq.addEventListener('error', () => {
         console.error('Error in REST call!');
@@ -106,6 +104,7 @@
       oReq.open('POST', url);
       oReq.setRequestHeader('Accept', 'application/json');
       oReq.send();
+      alert("Generating viewer metadata for experiment \"$om.label\" for the first time. This viewer will load in a few seconds.")
     }
 
 </script>

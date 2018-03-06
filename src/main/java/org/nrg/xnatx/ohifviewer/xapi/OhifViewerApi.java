@@ -117,7 +117,7 @@ public class OhifViewerApi {
     })
     @XapiRequestMapping(value = "{_experimentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public StreamingResponseBody getExperimentJson(final @PathVariable String _experimentId) throws FileNotFoundException {
-        
+      
       // Grab the data archive path
       String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
       
@@ -130,10 +130,10 @@ public class OhifViewerApi {
       final Reader reader = new FileReader(readFilePath);
       
       return new StreamingResponseBody() {
-          @Override
-          public void writeTo(final OutputStream output) throws IOException {
-              IOUtils.copy(reader, output);
-          }
+        @Override
+        public void writeTo(final OutputStream output) throws IOException {
+          IOUtils.copy(reader, output);
+        }
       };
     }
     
@@ -169,19 +169,12 @@ public class OhifViewerApi {
         + "/experiments/" + _experimentId
         + "/scans/";
       
+      // Generate JSON string
       String jsonString = "";
-
       try
       {
         CreateOhifViewerMetadata jsonCreator = new CreateOhifViewerMetadata();
-        try
-        {
-          jsonString = jsonCreator.jsonify(xnatScanPath,xnatScanUrl,_experimentId);
-        }
-        catch (Exception ex)
-        {
-          logger.error(ex.getMessage());
-        }
+        jsonString = jsonCreator.jsonifyStudy(xnatScanPath,xnatScanUrl,_experimentId);
       }
       catch (Exception ex)
       {
@@ -191,46 +184,20 @@ public class OhifViewerApi {
       }
       
       String writeFilePath = getStudyPath(xnatArchivePath, proj, expLabel, _experimentId);
+
+      // Create RESOURCES/metadata if it doesn't exist
+      createFilePath(writeFilePath);
       
-      logger.error("Making directories: " + writeFilePath);
-      try
-      {
-        File file = new File(writeFilePath);
-        if (!file.exists())
-        {
-          Files.createDirectories(Paths.get(file.getParent().toString()));
-          logger.error("...created directory.");
-        }
-      }
-      catch (Exception ex)
-      {
-        logger.error("Error creating directories: " + ex.getMessage());
-      }
-      
-      final Writer writer = new FileWriter(writeFilePath);
-      
-      try
-      {
-        IOUtils.write(jsonString, writer);
-        writer.close();
-        logger.info("Wrote to: " + writeFilePath);
-        isLocked = false;
-        return new ResponseEntity<>(HttpStatus.CREATED);
-      }
-      catch (IOException ioEx)
-      {
-        isLocked = false;
-        logger.error(ioEx.getMessage());
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-      }
-      
+      // Write to file and send back response code
+      ResponseEntity<String> POSTStatus = writeJSON(jsonString, writeFilePath);
+      return POSTStatus;
     }
     
     
     /*=================================    
-    // Study level GET/POST
+    // Series level GET/POST
     =================================*/
-    
+    /*
     
     @ApiOperation(value = "Returns 200 if series level JSON exists")
     @ApiResponses({
@@ -298,15 +265,69 @@ public class OhifViewerApi {
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
     @XapiRequestMapping(value = "{_experimentId}/{_seriesId}", method = RequestMethod.POST)
-    public ResponseEntity<String> setSeriesJson(final @PathVariable String _experimentId) throws IOException {
+    public ResponseEntity<String> setSeriesJson(final @PathVariable String _experimentId, @PathVariable String _seriesId) throws IOException {
+      //Only allow one process to write
+      if (isLocked) return new ResponseEntity<>(HttpStatus.LOCKED);
+      isLocked = true;
       
-      // TODO MAKE THIS
+      // Grab the data archive path
+      String rootURL          = XDAT.getSiteConfigPreferences().getSiteUrl();
+      String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
+
+      HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
+      String proj     = experimentData.get("proj");
+      String expLabel = experimentData.get("expLabel");
+      String subj     = experimentData.get("subj");
       
-      return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+            // Generate JSON string -- // TODO Change to exp only in JSONifier!
+      //
+      //
+      //
+      //
+      //
+      //
+      
+      String xnatScanPath = xnatArchivePath + SEP + proj
+        + SEP + "arc001" + SEP + expLabel + SEP + "SCANS";
+
+      String xnatScanUrl  = rootURL.replace("http", "dicomweb")
+        + "/data/archive/projects/" + proj
+        + "/subjects/" + subj
+        + "/experiments/" + _experimentId
+        + "/scans/";
+     
+      String jsonString = "";
+      try
+      {
+        CreateOhifViewerMetadata jsonCreator = new CreateOhifViewerMetadata();
+        jsonString = jsonCreator.jsonifySeries(xnatScanPath,xnatScanUrl,_experimentId, _seriesId);
+      }
+      catch (Exception ex)
+      {
+        isLocked = false;
+        logger.error("Jsonifier exception:\n" + ex.getMessage());
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+      
+      //
+      //
+      //
+      //
+      //
+      //
+      
+      String writeFilePath = getSeriesPath(xnatArchivePath, proj, expLabel, _seriesId);
+
+      // Create RESOURCES/metadata if it doesn't exist
+      createFilePath(writeFilePath);
+      
+      // Write to file and send back response code
+      ResponseEntity<String> POSTStatus = writeJSON(jsonString, writeFilePath);
+      return POSTStatus;
     }
     
     
-    
+    */
     
     
     
@@ -400,5 +421,40 @@ public class OhifViewerApi {
       + SEP + expLabel + SEP + "SCANS" + SEP + _seriesId + SEP + "RESOURCES/metadata/" + _seriesId +".json";
       return filePath;
     }
-            
+    
+    private void createFilePath(String filePath)
+    { // Create RESOURCES/metadata if it doesn't exist
+      try
+      {
+        File file = new File(filePath);
+        if (!file.exists())
+        {
+          Files.createDirectories(Paths.get(file.getParent().toString()));
+        }
+      }
+      catch (Exception ex)
+      {
+        logger.error("Error creating directories: " + ex.getMessage());
+      }
+    }
+    
+    private ResponseEntity<String> writeJSON(String jsonString, String writeFilePath)
+    {
+      try
+      {
+        // Write to file
+        final Writer writer = new FileWriter(writeFilePath);
+        IOUtils.write(jsonString, writer);
+        writer.close();
+        logger.info("Wrote to: " + writeFilePath);
+        isLocked = false;
+        return new ResponseEntity<>(HttpStatus.CREATED);
+      }
+      catch (IOException ioEx)
+      {
+        isLocked = false;
+        logger.error(ioEx.getMessage());
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
 }
