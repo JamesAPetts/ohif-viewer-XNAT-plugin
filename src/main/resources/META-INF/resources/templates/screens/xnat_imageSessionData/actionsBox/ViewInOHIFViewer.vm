@@ -12,6 +12,10 @@
 
     function checkIfSessionJSON(e) {
       var rootUrl = XNAT.url.fullUrl('').replace(/\/+$/, "");
+
+      console.log(rootUrl);
+      console.log("TEST");
+
       e.preventDefault();
 
       // JPETTS: Define a request to XNAT to check if specified JSON data exists
@@ -25,7 +29,7 @@
       });
 
       oReq.addEventListener('abort', () => {
-        console.error('Request was aborted for some reason, contact JamesAPetts with details and I\'ll look into it');
+        console.error('Request was aborted for some reason. Please contact your System Administrator.');
       });
 
       oReq.addEventListener('load', () => {
@@ -36,10 +40,10 @@
           console.log('JSON for this session found!');
           console.log('Loading viewer with this JSON.');
 
-          openViewer(rootUrl);
+          openViewer();
         } else if (oReq.status === 404) { // 404 === NOT_FOUND
             console.log('JSON doesn\'t exist, generating...');
-            generateJSONthenOpenViewer(rootUrl)
+            generateJSONthenOpenViewer(e, rootUrl)
 
             return;
         } else if (oReq.status === 403) {
@@ -59,11 +63,15 @@
       oReq.send();
     }
 
-    function openViewer(rootUrl) {
-      xmodal.iframe('/viewer.html?url=' + `${rootUrl}` + '/xapi/viewer/$om.id');
+    function openViewer() {
+      const rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
+
+      console.log(`${rootUrlWithPort}/VIEWER/?url=` + `${rootUrlWithPort}` + '/xapi/viewer/$om.id');
+      xmodal.iframe(`${rootUrlWithPort}/VIEWER/?url=` + `${rootUrlWithPort}` + '/xapi/viewer/$om.id');
+
     }
 
-    function generateJSONthenOpenViewer(rootUrl) {
+    function generateJSONthenOpenViewer(e, rootUrl) {
       const oReq = new XMLHttpRequest();
       const url = `${rootUrl}/xapi/viewer/$om.id`;
       console.log(`Opening POST XMLHttpRequest to: ${url}`);
@@ -83,7 +91,7 @@
 
         if (oReq.status === 201 ) {
           console.log('JSON has been created!');
-          openViewer(rootUrl);
+          openViewer();
 
         } else if (oReq.status === 403) {
           console.log('Incorrect permissions');
@@ -92,7 +100,7 @@
         } else if (oReq.status === 423) {
           console.log('POST locked');
           //Likely just been POSTed by different user, try again in 100 ms
-          setTimeout(checkIfSessionJSON, 100);
+          setTimeout(checkIfSessionJSON(e), 100);
         } else {
           console.log(`unsuccessful, status: ${oReq.status}`);
 

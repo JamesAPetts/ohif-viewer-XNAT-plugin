@@ -154,6 +154,9 @@ public class OhifViewerApi {
       // Grab the data archive path
       String rootURL          = XDAT.getSiteConfigPreferences().getSiteUrl();
       String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
+      
+      logger.error("rootUrl:" + rootURL);
+      logger.error("siteHome: " + XDAT.getSiteConfigPreferences().getSiteHome());
 
       HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
       String proj     = experimentData.get("proj");

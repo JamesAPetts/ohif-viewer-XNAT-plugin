@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Build-Number: Manual
+Implementation-Version: 1.0.0.0
+Implementation-Sha: .dirty
+Application-Name: VIEWER
+Build-Date: Fri Mar 09 16:18:04 GMT 2018
+

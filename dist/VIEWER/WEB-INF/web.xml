@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ web: web.xml
+  ~ XNAT http://www.xnat.org
+  ~ Copyright (c) 2005-2017, Washington University School of Medicine and Howard Hughes Medical Institute
+  ~ All Rights Reserved
+  ~
+  ~ Released under the Simplified BSD.
+  -->
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+    <!-- ======================================================================== -->
+    <!--                                                                          -->
+    <!-- Redirect the home page of the application to the turbine servlet         -->
+    <!--                                                                          -->
+    <!-- ======================================================================== -->
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+    <!-- ======================================================================== -->
+    <!--                                                                          -->
+    <!-- Set the session configuration settings, which is basically just the      -->
+    <!-- session timeout value specified in minutes.                              -->
+    <!--                                                                          -->
+    <!-- ======================================================================== -->
+    <session-config>
+        <session-timeout>15</session-timeout>
+    </session-config>
+    <!-- ======================================================================== -->
+    <!--                                                                          -->
+    <!-- Mapping HTTP error codes and exceptions to custom error pages to make    -->
+    <!-- the display a bit more pleasant and preserve system confidentiality.     -->
+    <!--                                                                          -->
+    <!-- ======================================================================== -->
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/app/template/Error.vm</location>
+    </error-page>
+
+    <!-- ======================================================================== -->
+    <!--                                                                          -->
+    <!-- Make sure that templates, resources and logs are not available through   -->
+    <!-- the servlet container. Remove security constraints or add an authen-     -->
+    <!-- tication role if you need access to these paths.                         -->
+    <!--                                                                          -->
+    <!-- ======================================================================== -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>templates</web-resource-name>
+            <url-pattern>/templates/*</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>logs</web-resource-name>
+            <url-pattern>/logs/*</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>resources</web-resource-name>
+            <url-pattern>/resources/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint/>
+    </security-constraint>
+</web-app>
+
