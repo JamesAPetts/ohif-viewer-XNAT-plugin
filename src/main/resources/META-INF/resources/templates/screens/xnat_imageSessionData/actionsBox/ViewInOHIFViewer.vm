@@ -67,7 +67,22 @@
       const rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
 
       console.log(`${rootUrlWithPort}/VIEWER/?url=` + `${rootUrlWithPort}` + '/xapi/viewer/$om.id');
-      xmodal.iframe(`${rootUrlWithPort}/VIEWER/?url=` + `${rootUrlWithPort}` + '/xapi/viewer/$om.id');
+      //xmodal.iframe(`${rootUrlWithPort}/VIEWER/?url=` + `${rootUrlWithPort}` + '/xapi/viewer/$om.id');
+
+
+      opts = {
+        title: 'OHIF Viewer - Study: $om.label',
+        ok: false,
+        cancel: false,
+        size: 'max',
+        maximize: false, // render a 'maximize' button in the title bar (to expand the dialog to fill the viewport)?
+        isDraggable: false, // can we drag this dialog?
+        enter: false, // will pressing the 'enter' key trigger the default button?
+        esc: true // will pressing the 'esc' key dismiss the dialog?
+      };
+
+
+      xmodal.iframe(`${rootUrlWithPort}/VIEWER/?url=` + `${rootUrlWithPort}` + '/xapi/viewer/$om.id', opts);
 
     }
 
