@@ -3,6 +3,7 @@
 /.gradle*
 /.idea
 /build
+/dist
 /out
 /target
 dep*.txt

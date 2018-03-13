@@ -11,11 +11,11 @@ To build the XNAT OHIF viewer plugin
 
 1. Build the plugin:
 
-    `./gradlew clean jar distZip` 
+    `./gradlew clean fatjar` 
     
     On Windows, you can use the batch file:
     
-    `gradlew.bat clean jar distZip`
+    `gradlew.bat clean fatjar`
     
     This should build the plugin in the file **build/libs/ohif-viewer-plugin-1.0.0-SNAPSHOT.jar** 
     (the version may differ based on updates to the code).
@@ -33,6 +33,10 @@ Deploying your XNAT plugin requires the following steps:
 a virtual machine created through the [XNAT Vagrant project](https://bitbucket/xnatdev/xnat-vagrant.git),
 you can copy the plugin to the appropriate configuration folder and then copy it within the VM from 
 **/vagrant** to **/data/xnat/home/plugins**.
+
+
+2. Complete the installation of the Viewer application itself (located: <TODO-XNAT-Fork-of-OHIF-Viewer-goes-here>, follow its own README file) on your Tomcat server.
+
 
 Once you've completed these steps, restart the Tomcat server. Your new plugin will be available as soon 
 as the restart and initialization process is completed.
