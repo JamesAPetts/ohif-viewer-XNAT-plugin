@@ -165,8 +165,14 @@ public class OhifViewerApi {
       
       String xnatScanPath = xnatArchivePath + SEP + proj
         + SEP + "arc001" + SEP + expLabel + SEP + "SCANS";
+      
+      //Elegance please James...
+      //TODO: Use URL type and just replace protocol with dicomweb
+      String xnatRootURL = rootURL.replace("https", "dicomweb");
+      xnatRootURL = xnatRootURL.replace("http", "dicomweb");
 
-      String xnatScanUrl  = rootURL.replace("http", "dicomweb")
+      //String xnatScanUrl  = rootURL.replace("http", "dicomweb")
+      String xnatScanUrl  = xnatRootURL
         + "/data/archive/projects/" + proj
         + "/subjects/" + subj
         + "/experiments/" + _experimentId
