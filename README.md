@@ -3,7 +3,7 @@
 This is the XNAT 1.7 OHIF Viewer plugin. This plugin integrates the OHIF Cornerstone-based stand-alone viwer into
 XNAT. It replaces previous support for the XimgViewer plugin.
 
-# Building #
+# Building # (Note an up to date distribution is available in the repo under /dist)
 
 To build the XNAT OHIF viewer plugin
 
@@ -28,16 +28,24 @@ To build the XNAT OHIF viewer plugin
 
 Deploying your XNAT plugin requires the following steps:
 
-1. Copy the plugin jar to the **plugins** folder for your XNAT installation. The location of the 
+1) Stop your tomcat with "sudo service tomcat7 stop"
+
+2) Copy the dist/ohif-viewer-X.X-SNAPSHOT.jar plugin to the **plugins** folder for your XNAT installation. The location of the 
 **plugins** folder varies based on how and where you have installed your XNAT. If you are running 
 a virtual machine created through the [XNAT Vagrant project](https://bitbucket/xnatdev/xnat-vagrant.git),
 you can copy the plugin to the appropriate configuration folder and then copy it within the VM from 
 **/vagrant** to **/data/xnat/home/plugins**.
 
+3) Copy dist/VIEWER.war to the webapps folder of your Tomcat server ( /var/lib/tomcat7/webapps/ by default if using xnat-vagrant).
+   (VIEWER.war is the latest production build of https://github.com/JamesAPetts/OHIF-Viewer-XNAT/).
 
-2. Complete the installation of the Viewer application itself (located: <TODO-XNAT-Fork-of-OHIF-Viewer-goes-here>, follow its own README file) on your Tomcat server.
+4) If you are serving your XNAT on your Tomcat's root, e.g. "www.domain.com/":
+	- sudo service tomcat7 start
+   If you are serving your XNAT on a subdirectory, e.g. "www.domain.com/XNAT_SERVER/":
+	- rename "VIEWER.war" to "XNAT_SERVER#VIEWER.war", where "XNAT_SERVER" is the directory you are serving XNAT under.
+	- sudo service tomcat7 start
+	- in the newly created XNAT_SERVER#VIEWER/index.html: replace "ROOT_URL":"VIEWER" with "ROOT_URL":"XNAT_SERVER/VIEWER", where XNAT_SERVER is the directory you are serving XNAT under.
+	-- Note the last step is a hotfix and does not require restarting Tomcat again.
 
-
-Once you've completed these steps, restart the Tomcat server. Your new plugin will be available as soon 
-as the restart and initialization process is completed.
+5) Enjoy!  
 
