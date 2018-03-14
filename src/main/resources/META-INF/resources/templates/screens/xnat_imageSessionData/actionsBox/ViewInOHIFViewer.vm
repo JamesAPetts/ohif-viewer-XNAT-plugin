@@ -66,10 +66,6 @@
     function openViewer() {
       const rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
 
-      console.log(`${rootUrlWithPort}/VIEWER/?url=` + `${rootUrlWithPort}` + '/xapi/viewer/$om.id');
-      //xmodal.iframe(`${rootUrlWithPort}/VIEWER/?url=` + `${rootUrlWithPort}` + '/xapi/viewer/$om.id');
-
-
       opts = {
         title: 'OHIF Viewer - Study: $om.label',
         ok: false,
@@ -127,7 +123,7 @@
       oReq.open('POST', url);
       oReq.setRequestHeader('Accept', 'application/json');
       oReq.send();
-      alert("Generating viewer metadata for experiment \"$om.label\" for the first time. This viewer will load in a few seconds.")
+      alert("Generating viewer metadata for experiment \"$om.label\" for the first time. If the study is very large please wait a minute before attempting to open the viewer. This will only happen once per experiment.");
     }
 
 </script>

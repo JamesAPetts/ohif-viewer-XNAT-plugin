@@ -77,7 +77,7 @@ public class OhifViewerApi {
     private static final String SEP = File.separator;
     private static Boolean isLocked = false;
     
-    /*=================================    
+    /*=================================
     // Study level GET/POST
     =================================*/
     
