@@ -9,7 +9,7 @@ To build the XNAT OHIF viewer plugin
 
 1. If you haven't already, clone [this repository](https://bitbucket.org/xnatx/ohif-viewer-plugin.git) and cd to the newly cloned folder.
 
-1. Build the plugin:
+2. Build the plugin:
 
     `./gradlew clean fatjar` 
     
@@ -20,7 +20,7 @@ To build the XNAT OHIF viewer plugin
     This should build the plugin in the file **build/libs/ohif-viewer-plugin-1.0.0-SNAPSHOT.jar** 
     (the version may differ based on updates to the code).
     
-1. Copy the plugin jar to your plugins folder: 
+3. Copy the plugin jar to your plugins folder: 
 
     `cp build/libs/ohif-viewer-plugin-1.0.0-SNAPSHOT.jar /data/xnat/home/plugins`
 
@@ -37,14 +37,22 @@ you can copy the plugin to the appropriate configuration folder and then copy it
 **/vagrant** to **/data/xnat/home/plugins**.
 
 3. Copy dist/VIEWER.war to the webapps folder of your Tomcat server ( /var/lib/tomcat7/webapps/ by default if using xnat-vagrant).
-   (VIEWER.war is the latest production build of https://github.com/JamesAPetts/OHIF-Viewer-XNAT/).
 
-4a. If you are serving your XNAT on your Tomcat's root, e.g. "www.domain.com/":
-	 `sudo service tomcat7 start`
-5a. If you are serving your XNAT on a subdirectory, e.g. "www.domain.com/XNAT_SERVER/":
-	- rename "VIEWER.war" to "XNAT_SERVER#VIEWER.war", where "XNAT_SERVER" is the directory you are serving XNAT under.
-	- `sudo service tomcat7 start`
-	- in the newly created XNAT_SERVER#VIEWER/index.html: replace "ROOT_URL":"VIEWER" with "ROOT_URL":"XNAT_SERVER/VIEWER", where XNAT_SERVER is the directory you are serving XNAT under (Note this last step is a hotfix and does not require restarting Tomcat again).
+    (VIEWER.war is the latest production build of https://github.com/JamesAPetts/OHIF-Viewer-XNAT/).
 
-5. Enjoy!  
+If you are serving your XNAT on your Tomcat's root, e.g. "www.domain.com/":
+
+4. `sudo service tomcat7 start`
+
+5. Enjoy!
+
+If you are serving your XNAT on a subdirectory, e.g. "www.domain.com/XNAT_SERVER/":
+
+4. rename "VIEWER.war" to "XNAT_SERVER#VIEWER.war", where "XNAT_SERVER" is the directory you are serving XNAT under.
+
+5. `sudo service tomcat7 start`
+
+6. in the newly created XNAT_SERVER#VIEWER/index.html: replace "ROOT_URL":"VIEWER" with "ROOT_URL":"XNAT_SERVER/VIEWER", where XNAT_SERVER is the directory you are serving XNAT under (Note this last step is a hotfix and does not require restarting Tomcat again).
+
+7. Enjoy!  
 
