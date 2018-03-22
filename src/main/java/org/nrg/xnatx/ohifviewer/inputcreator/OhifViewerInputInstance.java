@@ -48,6 +48,12 @@ package org.nrg.xnatx.ohifviewer.inputcreator;
 import etherj.dicom.Series;
 import etherj.dicom.SopInstance;
 import java.io.File;
+import org.nrg.dcm.SOPModel;
+
+// TEMP
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+// TEMP
 
 public class OhifViewerInputInstance extends OhifViewerInputItem
 {
@@ -61,9 +67,16 @@ public class OhifViewerInputInstance extends OhifViewerInputItem
 	private String  pixelSpacing;
 	private String  url;
   // @simond: Here's the bit that needs changing when we decide exactly how we want to store the files.
-  private static final String SUBDIRECTORY = "/resources/DICOM/files/";
+  //private static final String SUBDIRECTORY = "/resources/DICOM/files/";
+  private static final String RESOURCES = "/resources/";
+  private static final String FILES = "/files/";
   
-  public OhifViewerInputInstance(SopInstance sop, String xnatScanUrl, Series ser)
+  
+  // TEMP
+  private static final Logger logger = LoggerFactory.getLogger(CreateOhifViewerMetadata.class);
+  // TEMP
+  
+  public OhifViewerInputInstance(SopInstance sop, Series ser, String xnatScanUrl, String scanId)
   {
     setSopInstanceUid(sop.getUid());
     setInstanceNumber(sop.getInstanceNumber());
@@ -75,7 +88,32 @@ public class OhifViewerInputInstance extends OhifViewerInputItem
     setPixelSpacing(dbl2DcmString(sop.getPixelSpacing()));
 
     String file = new File(sop.getPath()).getName();
-    setUrl(xnatScanUrl + ser.getNumber() + SUBDIRECTORY + file);
+    String sopClassUid = sop.getSopClassUid();
+    
+    String resource = getResourceType(sopClassUid);
+    String urlString = xnatScanUrl + scanId + RESOURCES + resource + FILES + file;
+    
+    logger.error("seriesId: " + scanId);
+    logger.error("resource: " + resource);
+    logger.error("urlString: " + urlString);
+    
+    setUrl(urlString);
+  }
+  
+  private String getResourceType(String sopClassUid)
+  {
+    
+    String resourceType;
+    if (SOPModel.isPrimaryImagingSOP(sopClassUid))
+    {
+      resourceType = "DICOM";
+    }
+    else
+    {
+      resourceType = "secondary";
+    }
+    
+    return resourceType;
   }
 
 	public String getPixelSpacing()

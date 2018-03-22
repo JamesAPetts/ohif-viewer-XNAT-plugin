@@ -56,10 +56,13 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.HashMap;
 import org.nrg.xft.ItemI;
 import java.util.ArrayList;
 import org.nrg.xdat.om.XnatExperimentdata;
+import org.nrg.xdat.om.XnatImagesessiondata;
+import org.nrg.xdat.model.XnatImagescandataI;
 import org.nrg.xdat.om.XnatProjectdata;
 import org.nrg.xdat.om.XnatSubjectdata;
 
@@ -155,13 +158,15 @@ public class OhifViewerApi {
       String rootURL          = XDAT.getSiteConfigPreferences().getSiteUrl();
       String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
       
-      logger.error("rootUrl:" + rootURL);
-      logger.error("siteHome: " + XDAT.getSiteConfigPreferences().getSiteHome());
+      logger.debug("rootUrl:" + rootURL);
+      logger.debug("siteHome: " + XDAT.getSiteConfigPreferences().getSiteHome());
 
       HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
       String proj     = experimentData.get("proj");
       String expLabel = experimentData.get("expLabel");
       String subj     = experimentData.get("subj");
+      
+      HashMap<String,String> seriesUidToScanIdMap = getSeriesUidToScanIdMap(_experimentId);
       
       String xnatScanPath = xnatArchivePath + SEP + proj
         + SEP + "arc001" + SEP + expLabel + SEP + "SCANS";
@@ -182,8 +187,8 @@ public class OhifViewerApi {
       String jsonString = "";
       try
       {
-        CreateOhifViewerMetadata jsonCreator = new CreateOhifViewerMetadata();
-        jsonString = jsonCreator.jsonifyStudy(xnatScanPath,xnatScanUrl,_experimentId);
+        CreateOhifViewerMetadata jsonCreator = new CreateOhifViewerMetadata(xnatScanPath, xnatScanUrl, seriesUidToScanIdMap);
+        jsonString = jsonCreator.jsonifyStudy(_experimentId);
       }
       catch (Exception ex)
       {
@@ -204,7 +209,7 @@ public class OhifViewerApi {
     
     
     /*=================================    
-    // Series level GET/POST
+    // Series level GET/POST- WIP
     =================================*/
     /*
     
@@ -250,11 +255,11 @@ public class OhifViewerApi {
       String proj     = experimentData.get("proj");
       String expLabel = experimentData.get("expLabel");
       
-      logger.error("proj, expLabel, _seriesId: " + proj + " " + expLabel + " " + _seriesId);
+      logger.debug("proj, expLabel, _seriesId: " + proj + " " + expLabel + " " + _seriesId);
       
       String readFilePath = getSeriesPath(xnatArchivePath, proj, expLabel, _seriesId);
       
-      logger.error("Getting series Path: " + readFilePath);
+      logger.debug("Getting series Path: " + readFilePath);
       
       final Reader reader = new FileReader(readFilePath);
       
@@ -267,7 +272,7 @@ public class OhifViewerApi {
     }
     
     
-     @ApiOperation(value = "Generates the session JSON for the specified series.")
+    @ApiOperation(value = "Generates the session JSON for the specified series.")
     @ApiResponses({
       @ApiResponse(code = 201, message = "The session JSON has been created."),
       @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experient."),
@@ -384,6 +389,39 @@ public class OhifViewerApi {
     }
     
     
+    private HashMap<String, String> getSeriesUidToScanIdMap(String _experimentId)
+    {
+      // WIP
+      HashMap<String, String> seriesUidToScanIdMap = new HashMap<String, String>();
+      XnatExperimentdata expData = XnatExperimentdata.getXnatExperimentdatasById(_experimentId, null, false);
+      
+      XnatImagesessiondata session = null;
+      try
+      {
+        session=(XnatImagesessiondata)expData;
+      }
+      catch (Exception ex)
+      {
+        logger.error(ex.getMessage());
+      }
+
+      List<XnatImagescandataI> scans = session.getScans_scan();
+      
+      for (final XnatImagescandataI scan:scans)
+      {
+        
+        logger.error(scan.getUid() + " " + scan.getId());
+        String seriesInstanceUid = scan.getUid();
+        String scanId = scan.getId();
+        seriesUidToScanIdMap.put(seriesInstanceUid, scanId);
+        
+      }
+      
+      return seriesUidToScanIdMap;
+    }
+    
+    
+    
     
     private ItemI getSubItem(ItemI itemI, String xsiType)
     {
@@ -455,7 +493,7 @@ public class OhifViewerApi {
         final Writer writer = new FileWriter(writeFilePath);
         IOUtils.write(jsonString, writer);
         writer.close();
-        logger.info("Wrote to: " + writeFilePath);
+        logger.debug("Wrote to: " + writeFilePath);
         isLocked = false;
         return new ResponseEntity<>(HttpStatus.CREATED);
       }
