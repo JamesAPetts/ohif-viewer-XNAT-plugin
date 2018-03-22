@@ -33,11 +33,20 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
 task fatJar(type: Jar) {
     baseName = project.name
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+
+
 
 
 sourceCompatibility = 1.7
@@ -83,6 +92,9 @@ dependencies {
         transitive = false
     }
     implementation("org.nrg.xdat:core") {
+        transitive = false
+    }
+    implementation("org.nrg:dicom-xnat-sop") {
         transitive = false
     }
     implementation("org.nrg:framework") {

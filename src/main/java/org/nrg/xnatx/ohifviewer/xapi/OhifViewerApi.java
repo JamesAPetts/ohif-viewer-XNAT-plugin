@@ -357,22 +357,10 @@ public class OhifViewerApi {
       XnatExperimentdata expData = XnatExperimentdata.getXnatExperimentdatasById(_experimentId, null, false);
       XnatProjectdata projData = expData.getProjectData();
       
-      // Get the subjectId in order to get the Subject data
-      ItemI imageSessionData = getSubItem((ItemI) expData, "xnat:imageSessionData");
-      ItemI subjectAssessorData = getSubItem(imageSessionData, "xnat:subjectAssessorData");
-      
-      String _subjectId = null;
-      try
-      {
-        _subjectId = subjectAssessorData.getProperty("subject_id").toString();
-      }
-      catch (Exception ex)
-      {
-        logger.error(ex.getMessage());
-      }
+      XnatImagesessiondata session=(XnatImagesessiondata)expData;      
 
       // Get the subject data
-      XnatSubjectdata subjData = XnatSubjectdata.getXnatSubjectdatasById(_subjectId, null, false);
+      XnatSubjectdata subjData = XnatSubjectdata.getXnatSubjectdatasById(session.getSubjectId(), null, false);
       
       // Get the required info
       String expLabel = expData.getArchiveDirectoryName();
@@ -419,40 +407,6 @@ public class OhifViewerApi {
       
       return seriesUidToScanIdMap;
     }
-    
-    
-    
-    
-    private ItemI getSubItem(ItemI itemI, String xsiType)
-    {
-      ArrayList<ItemI> itemIArrayList = null;
-      
-      try
-      {
-        itemIArrayList = itemI.getChildItems();
-      }
-      catch (Exception ex)
-      {
-        logger.error(ex.getMessage());
-      }
-      for (int i=0; i<itemIArrayList.size(); i++)
-      {        
-        if (itemIArrayList.get(i).getXSIType() == xsiType)
-        {
-          try
-          {
-            return itemIArrayList.get(i);
-          }
-          catch (Exception ex)
-          {
-            logger.error(ex.getMessage());
-          }
-        }
-      }
-      
-      return null;
-    }
-    
     
     private String getStudyPath(String xnatArchivePath, String proj, String expLabel, String _experimentId)
     {

@@ -93,7 +93,7 @@
       });
 
       oReq.addEventListener('abort', () => {
-        console.error('Request was aborted for some reason, ohnoess!');
+        console.error('Request was aborted for some reason. Please contact your System Administrator.');
       });
 
       oReq.addEventListener('load', () => {
@@ -125,5 +125,6 @@
       oReq.send();
       alert("Generating viewer metadata for experiment \"$om.label\" for the first time. If the study is very large please wait a minute before attempting to open the viewer. This will only happen once per experiment.");
     }
+
 
 </script>
