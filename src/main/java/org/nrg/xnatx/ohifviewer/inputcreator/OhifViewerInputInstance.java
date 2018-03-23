@@ -1,63 +1,21 @@
-/********************************************************************
-* Copyright (c) 2017, Institute of Cancer Research
-* All rights reserved.
-* 
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions
-* are met:
-* 
-* (1) Redistributions of source code must retain the above copyright
-*     notice, this list of conditions and the following disclaimer.
-* 
-* (2) Redistributions in binary form must reproduce the above
-*     copyright notice, this list of conditions and the following
-*     disclaimer in the documentation and/or other materials provided
-*     with the distribution.
-* 
-* (3) Neither the name of the Institute of Cancer Research nor the
-*     names of its contributors may be used to endorse or promote
-*     products derived from this software without specific prior
-*     written permission.
-* 
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-* FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-* COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-* INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
-* OF THE POSSIBILITY OF SUCH DAMAGE.
-*********************************************************************/
-
-/********************************************************************
-* @author Simon J Doran
-* Java class: OhifViewerInputInstance.java
-* First created on Sep 12, 2017 at 12:34:36 PM
-* 
-* Component of OhifViewerInput, which is serialised to JSON by
-* CreateOhifViewerInputJson.java
-* 
-*********************************************************************/
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package org.nrg.xnatx.ohifviewer.inputcreator;
 
 import etherj.dicom.Series;
 import etherj.dicom.SopInstance;
-import java.io.File;
+import java.util.ArrayList;
 import org.nrg.dcm.SOPModel;
 
-// TEMP
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-// TEMP
-
-public class OhifViewerInputInstance extends OhifViewerInputItem
-{
-	private String  sopInstanceUid;
+/**
+ *
+ * @author jpetts
+ */
+public abstract class OhifViewerInputInstance extends OhifViewerInputItem {
+  private String  sopInstanceUid;
 	private Integer instanceNumber;
 	private Integer columns;
 	private Integer rows;
@@ -65,16 +23,10 @@ public class OhifViewerInputInstance extends OhifViewerInputItem
 	private String  imagePositionPatient;
 	private String  imageOrientationPatient;
 	private String  pixelSpacing;
-	private String  url;
   // @simond: Here's the bit that needs changing when we decide exactly how we want to store the files.
   //private static final String SUBDIRECTORY = "/resources/DICOM/files/";
-  private static final String RESOURCES = "/resources/";
-  private static final String FILES = "/files/";
-  
-  
-  // TEMP
-  private static final Logger logger = LoggerFactory.getLogger(CreateOhifViewerMetadata.class);
-  // TEMP
+  protected static final String RESOURCES = "/resources/";
+  protected static final String FILES = "/files/";
   
   public OhifViewerInputInstance(SopInstance sop, Series ser, String xnatScanUrl, String scanId)
   {
@@ -86,21 +38,9 @@ public class OhifViewerInputInstance extends OhifViewerInputItem
     setImagePositionPatient(dbl2DcmString(sop.getImagePositionPatient()));
     setImageOrientationPatient(dbl2DcmString(sop.getImageOrientationPatient()));
     setPixelSpacing(dbl2DcmString(sop.getPixelSpacing()));
-
-    String file = new File(sop.getPath()).getName();
-    String sopClassUid = sop.getSopClassUid();
-    
-    String resource = getResourceType(sopClassUid);
-    String urlString = xnatScanUrl + scanId + RESOURCES + resource + FILES + file;
-    
-    logger.error("seriesId: " + scanId);
-    logger.error("resource: " + resource);
-    logger.error("urlString: " + urlString);
-    
-    setUrl(urlString);
   }
   
-  private String getResourceType(String sopClassUid)
+  protected String getResourceType(String sopClassUid)
   {
     
     String resourceType;
@@ -195,15 +135,4 @@ public class OhifViewerInputInstance extends OhifViewerInputItem
 	{
 		this.imageOrientationPatient = imageOrientationPatient;
 	}
-
-	public String getUrl()
-	{
-		return url;
-	}
-
-	private void setUrl(String url)
-	{
-		this.url = url;
-	}
-	
 }

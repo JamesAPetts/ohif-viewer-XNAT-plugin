@@ -155,10 +155,10 @@ public class OhifViewerApi {
       isLocked = true;
       
       // Grab the data archive path
-      String rootURL          = XDAT.getSiteConfigPreferences().getSiteUrl();
+      String xnatRootURL          = XDAT.getSiteConfigPreferences().getSiteUrl();
       String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
       
-      logger.debug("rootUrl:" + rootURL);
+      logger.debug("rootUrl:" + xnatRootURL);
       logger.debug("siteHome: " + XDAT.getSiteConfigPreferences().getSiteHome());
 
       HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
@@ -171,10 +171,7 @@ public class OhifViewerApi {
       String xnatScanPath = xnatArchivePath + SEP + proj
         + SEP + "arc001" + SEP + expLabel + SEP + "SCANS";
       
-      //Elegance please James...
-      //TODO: Use URL type and just replace protocol with dicomweb
-      String xnatRootURL = rootURL.replace("https", "dicomweb");
-      xnatRootURL = xnatRootURL.replace("http", "dicomweb");
+
 
       //String xnatScanUrl  = rootURL.replace("http", "dicomweb")
       String xnatScanUrl  = xnatRootURL

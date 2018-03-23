@@ -62,9 +62,24 @@ import org.slf4j.LoggerFactory;
 public class CreateOhifViewerMetadata {
   private static final Logger logger = LoggerFactory.getLogger(CreateOhifViewerMetadata.class);
   private static final DicomToolkit dcmTk = DicomToolkit.getDefaultToolkit();
+  protected static final ArrayList<String> MULTI_FRAME_SOP_CLASS_UIDS = createMultiFrameSopClassUidList();
+  private static ArrayList<String> createMultiFrameSopClassUidList()
+  {
+        ArrayList<String> result = new ArrayList<>();
+        result.add("1.2.840.10008.5.1.4.1.1.3");
+        result.add("1.2.840.10008.5.1.4.1.1.3.1");
+        result.add("1.2.840.10008.5.1.4.1.1.7.1");
+        result.add("1.2.840.10008.5.1.4.1.1.7.2");
+        result.add("1.2.840.10008.5.1.4.1.1.7.3");
+        result.add("1.2.840.10008.5.1.4.1.1.7.4");
+        result.add("1.2.840.10008.5.1.4.1.1.77.2");
+        return result;
+   }
+  
   private final String xnatScanPath;
   private final String xnatScanUrl;
   private final HashMap<String,String> seriesUidToScanIdMap;
+
   
   
   public CreateOhifViewerMetadata(final String xnatScanPath, final String xnatScanUrl, final HashMap<String,String> seriesUidToScanIdMap)
@@ -185,8 +200,17 @@ public class CreateOhifViewerMetadata {
           List<SopInstance> sopList = ser.getSopInstanceList();
           for (SopInstance sop : sopList)
           {
-            OhifViewerInputInstance oviInst = new OhifViewerInputInstance(sop, ser, xnatScanUrl, scanId);
-            oviSer.addInstances(oviInst);			
+            if (MULTI_FRAME_SOP_CLASS_UIDS.contains(sop.getSopClassUid()))
+            {
+              // TODO FIX THIS
+              OhifViewerInputInstanceMulti oviInst = new OhifViewerInputInstanceMulti(sop, ser, xnatScanUrl, scanId);
+              oviSer.addInstances(oviInst);
+            }
+            else
+            {
+              OhifViewerInputInstanceSingle oviInst = new OhifViewerInputInstanceSingle(sop, ser, xnatScanUrl, scanId);
+              oviSer.addInstances(oviInst);
+            }            			
           }
         }
       }
@@ -247,8 +271,16 @@ public class CreateOhifViewerMetadata {
             List<SopInstance> sopList = ser.getSopInstanceList();
             for (SopInstance sop : sopList)
             {
-              OhifViewerInputInstance oviInst = new OhifViewerInputInstance(sop, ser, xnatScanUrl, scanId);
-              oviSer.addInstances(oviInst);			
+              if (MULTI_FRAME_SOP_CLASS_UIDS.contains(sop.getSopClassUid()))
+              {
+                OhifViewerInputInstanceMulti oviInst = new OhifViewerInputInstanceMulti(sop, ser, xnatScanUrl, scanId);
+                oviSer.addInstances(oviInst);
+              }
+              else
+              {
+                OhifViewerInputInstanceMulti oviInst = new OhifViewerInputInstanceMulti(sop, ser, xnatScanUrl, scanId);
+                oviSer.addInstances(oviInst);
+              }    
             }
             break;
           }
