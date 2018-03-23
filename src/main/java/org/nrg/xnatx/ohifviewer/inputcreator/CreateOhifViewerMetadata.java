@@ -222,7 +222,6 @@ public class CreateOhifViewerMetadata {
   
   
   // WIP Series level stuff - refactor later
-  // TODO - Using seriesNo rather than SeriesId... see if the right thing to do
   private OhifViewerInput createSeriesInput(String seriesNo, String transactionId, PatientRoot root)
   {
     OhifViewerInput ovi = new OhifViewerInput();
