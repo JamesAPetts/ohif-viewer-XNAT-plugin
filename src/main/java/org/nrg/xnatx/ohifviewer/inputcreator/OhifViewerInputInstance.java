@@ -7,7 +7,6 @@ package org.nrg.xnatx.ohifviewer.inputcreator;
 
 import etherj.dicom.Series;
 import etherj.dicom.SopInstance;
-import java.util.ArrayList;
 import org.nrg.dcm.SOPModel;
 
 /**

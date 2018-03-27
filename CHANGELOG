@@ -1,0 +1,16 @@
+0.2.0
+
+Added:
+-- Added support for secondary DICOM files.
+-- Added support for single frame images which contain the tag (0028,0008), which is supposed to be reserved for multi-frame images according to the DICOM standard.
+-- Added support for generating JSON with the correct protocol for both single and multi-frame DICOM images, however this is currently unused (see changes).
+
+Changed:
+-- Multi-frame images will not appear in the viewer when View Study is clicked, as they currently do not load correctly.
+
+Multi frame image support should come shortly.
+
+
+0.1.0
+
+Basic functionality, the viewer is correctly linked and interfaced with XNAT. Although not yet feature rich the plugin is useable.

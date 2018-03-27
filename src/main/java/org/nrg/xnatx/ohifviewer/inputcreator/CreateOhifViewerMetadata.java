@@ -203,8 +203,9 @@ public class CreateOhifViewerMetadata {
             if (MULTI_FRAME_SOP_CLASS_UIDS.contains(sop.getSopClassUid()))
             {
               // TODO FIX THIS
-              OhifViewerInputInstanceMulti oviInst = new OhifViewerInputInstanceMulti(sop, ser, xnatScanUrl, scanId);
-              oviSer.addInstances(oviInst);
+              //OhifViewerInputInstanceMulti oviInst = new OhifViewerInputInstanceMulti(sop, ser, xnatScanUrl, scanId);
+              //oviSer.addInstances(oviInst);
+              // TEMP - At the moment just don't display multi-frame images
             }
             else
             {

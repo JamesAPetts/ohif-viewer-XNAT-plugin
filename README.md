@@ -15,9 +15,9 @@ a virtual machine created through the [XNAT Vagrant project](https://bitbucket/x
 you can copy the plugin to the appropriate configuration folder and then copy it within the VM from 
 **/vagrant** to **/data/xnat/home/plugins**.
 
-3. Copy dist/VIEWER.war to the webapps folder of your Tomcat server ( /var/lib/tomcat7/webapps/ by default if using xnat-vagrant).
+3. Copy dist/VIEWER.war to the webapps directory of your Tomcat server ( /var/lib/tomcat7/webapps/ by default if using xnat-vagrant).
 
-    (VIEWER.war is the latest production build of https://github.com/JamesAPetts/OHIF-Viewer-XNAT/).
+    (**NOTE**: when upgrading the plugin you **must** use the latest VIEWER.war. The latest production build is included in the distribution (The latest build of https://github.com/JamesAPetts/OHIF-Viewer-XNAT/).
 
 If you are serving your XNAT on your Tomcat's root, e.g. "www.domain.com/":
 
