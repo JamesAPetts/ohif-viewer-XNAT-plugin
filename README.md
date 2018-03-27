@@ -1,7 +1,7 @@
 # XNAT OHIF Viewer Plugin #
 
-This is the XNAT 1.7 OHIF Viewer plugin. This plugin integrates the OHIF Cornerstone-based stand-alone viwer into
-XNAT. It replaces previous support for the XimgViewer plugin.
+This is the beta version of the XNAT 1.7 OHIF Viewer plugin. This plugin integrates the OHIF Cornerstone-based stand-alone viwer into
+XNAT. It replaces previous support for the XimgViewer plugin. I am actively working on automating the metadata generation and supporting multi-frame images for the 1.0 release.
 
 # Deploying the Pre-built plugin #
 
@@ -9,7 +9,7 @@ Deploying your XNAT plugin requires the following steps:
 
 1. Stop your tomcat with "sudo service tomcat7 stop"
 
-2. Copy the dist/ohif-viewer-X.X-SNAPSHOT.jar plugin to the **plugins** folder for your XNAT installation. The location of the 
+2. Copy the dist/ohif-viewer-x.y.z-SNAPSHOT.jar plugin to the **plugins** folder for your XNAT installation. The location of the 
 **plugins** folder varies based on how and where you have installed your XNAT. If you are running 
 a virtual machine created through the [XNAT Vagrant project](https://bitbucket/xnatdev/xnat-vagrant.git),
 you can copy the plugin to the appropriate configuration folder and then copy it within the VM from 
