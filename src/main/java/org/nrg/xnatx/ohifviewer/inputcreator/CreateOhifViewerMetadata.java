@@ -119,35 +119,7 @@ public class CreateOhifViewerMetadata {
   }
   
   
-  //------------- TODO: WIP-------------//
-  public String jsonifySeries(final String experimentId, final String seriesNo)
-  {
-    final String transactionId = experimentId + "_" + seriesNo;
-    
-    logger.debug("Its Series JSONifying time!");
-    
-    String serialisedOvi = "";
-    try
-    {
-      // Use Etherj to do the heavy lifting of sifting through all the scan data.
-      PatientRoot root = scanPath(xnatScanPath);
-      // Transform the Etherj output into a java object with the structure needed
-      // by the OHIF viewer.
-      OhifViewerInput ovi = createSeriesInput(seriesNo, transactionId, root);
-    
-      // Convert the Java object to a JSON string
-      Gson gson = new GsonBuilder().setPrettyPrinting().create();
-      serialisedOvi = gson.toJson(ovi);
-    }
-    catch (Exception ex)
-    {
-      logger.error(ex.getMessage());
-    }
-    
-    logger.debug("Series JSONification complete, radical!");
-    
-    return serialisedOvi;
-  }
+
   
 
   private PatientRoot scanPath(String path)
@@ -223,6 +195,41 @@ public class CreateOhifViewerMetadata {
   
   
   // WIP Series level stuff - refactor later
+  /*
+  
+    //------------- TODO: WIP-------------//
+  public String jsonifySeries(final String experimentId, final String seriesNo)
+  {
+    final String transactionId = experimentId + "_" + seriesNo;
+    
+    logger.debug("Its Series JSONifying time!");
+    
+    String serialisedOvi = "";
+    try
+    {
+      // Use Etherj to do the heavy lifting of sifting through all the scan data.
+      PatientRoot root = scanPath(xnatScanPath);
+      // Transform the Etherj output into a java object with the structure needed
+      // by the OHIF viewer.
+      OhifViewerInput ovi = createSeriesInput(seriesNo, transactionId, root);
+    
+      // Convert the Java object to a JSON string
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      serialisedOvi = gson.toJson(ovi);
+    }
+    catch (Exception ex)
+    {
+      logger.error(ex.getMessage());
+    }
+    
+    logger.debug("Series JSONification complete, radical!");
+    
+    return serialisedOvi;
+  }
+  
+  
+  
+  
   private OhifViewerInput createSeriesInput(String seriesNo, String transactionId, PatientRoot root)
   {
     OhifViewerInput ovi = new OhifViewerInput();
@@ -234,18 +241,16 @@ public class CreateOhifViewerMetadata {
     logger.debug("Making json for seriesNo:" + seriesNo);
     
     //TODO fix this function, Current prints out:
-    /*
-    {
-     "transactionId": "XNAT_JPETTS_E00007_1007",
-      "studies": [
-        {
-          "studyInstanceUid": "2.25.216540488264669880754620301267990043721",
-          "patientName": "CASE_4_LIVER",
-          "seriesList": []
-        }
-      ]
-    }
-    */
+    // {
+    //  "transactionId": "XNAT_JPETTS_E00007_1007",
+    //   "studies": [
+    //     {
+    //       "studyInstanceUid": "2.25.216540488264669880754620301267990043721",
+    //       "patientName": "CASE_4_LIVER",
+    //       "seriesList": []
+    //     }
+    //   ]
+    // }
     
 
     List<Patient> patList = root.getPatientList();
@@ -292,5 +297,7 @@ public class CreateOhifViewerMetadata {
     
     return ovi;
   }
+
+  */
   
 }

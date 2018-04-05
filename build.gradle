@@ -35,8 +35,8 @@ apply plugin: 'eclipse'
 
 idea {
     module {
-        downloadJavadoc = true
         downloadSources = true
+        downloadJavadoc = true
     }
 }
 

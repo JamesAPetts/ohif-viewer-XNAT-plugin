@@ -8,7 +8,6 @@ package org.nrg.xnatx.ohifviewer.inputcreator;
 import etherj.dicom.Series;
 import etherj.dicom.SopInstance;
 import java.io.File;
-import org.nrg.dcm.SOPModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +18,7 @@ import org.slf4j.LoggerFactory;
 public class OhifViewerInputInstanceSingle extends OhifViewerInputInstance {
   private String url;
   
-  // TEMP
-  private static final Logger logger = LoggerFactory.getLogger(CreateOhifViewerMetadata.class);
-  // TEMP
+  private static final Logger logger = LoggerFactory.getLogger(OhifViewerInputInstanceSingle.class);
   
   public OhifViewerInputInstanceSingle(SopInstance sop, Series ser, String xnatScanUrl, String scanId)
   {
@@ -33,10 +30,6 @@ public class OhifViewerInputInstanceSingle extends OhifViewerInputInstance {
     xnatScanUrl = selectCorrectProtocol(xnatScanUrl, sopClassUid);
     
     String urlString = xnatScanUrl + scanId + RESOURCES + resource + FILES + file;
-    
-    logger.error("seriesId: " + scanId);
-    logger.error("resource: " + resource);
-    logger.error("urlString: " + urlString);
     
     setUrl(urlString);
   }

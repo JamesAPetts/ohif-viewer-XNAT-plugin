@@ -51,6 +51,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
@@ -58,13 +59,17 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.HashMap;
-import org.nrg.xft.ItemI;
+import org.nrg.xft.security.UserI;
 import java.util.ArrayList;
 import org.nrg.xdat.om.XnatExperimentdata;
 import org.nrg.xdat.om.XnatImagesessiondata;
 import org.nrg.xdat.model.XnatImagescandataI;
 import org.nrg.xdat.om.XnatProjectdata;
 import org.nrg.xdat.om.XnatSubjectdata;
+import org.nrg.xdat.security.services.RoleHolder;
+import org.nrg.xdat.security.services.UserManagementServiceI;
+import org.nrg.xapi.rest.AbstractXapiRestController;
+import org.nrg.xdat.security.helpers.AccessLevel;
 
 /**
  * 
@@ -75,10 +80,19 @@ import org.nrg.xdat.om.XnatSubjectdata;
 @Api("Get and set viewer metadata.")
 @XapiRestController
 @RequestMapping(value = "/viewer")
-public class OhifViewerApi {
+public class OhifViewerApi extends AbstractXapiRestController {
     private static final Logger logger = LoggerFactory.getLogger(OhifViewerApi.class);
     private static final String SEP = File.separator;
     private static Boolean isLocked = false;
+    
+    @Autowired
+    public OhifViewerApi(final UserManagementServiceI userManagementService, final RoleHolder roleHolder) {
+   		super(userManagementService, roleHolder);
+    }
+    
+    
+    
+    
     
     /*=================================
     // Study level GET/POST
@@ -144,65 +158,53 @@ public class OhifViewerApi {
     @ApiOperation(value = "Generates the session JSON for the specified experiment ID.")
     @ApiResponses({
       @ApiResponse(code = 201, message = "The session JSON has been created."),
-      @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experient."),
+      @ApiResponse(code = 403, message = "The user does not have permission to post to the indicated experient."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
     @XapiRequestMapping(value = "{_experimentId}", method = RequestMethod.POST)
-    public ResponseEntity<String> setExperimentJson(final @PathVariable String _experimentId) throws IOException {
-      
-      //Only allow one process to write
-      if (isLocked) return new ResponseEntity<>(HttpStatus.LOCKED);
-      isLocked = true;
-      
+    public ResponseEntity<String> postExperimentJson(final @PathVariable String _experimentId) throws IOException {
       // Grab the data archive path
-      String xnatRootURL          = XDAT.getSiteConfigPreferences().getSiteUrl();
+      String xnatRootURL      = XDAT.getSiteConfigPreferences().getSiteUrl();
       String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
       
-      logger.debug("rootUrl:" + xnatRootURL);
-      logger.debug("siteHome: " + XDAT.getSiteConfigPreferences().getSiteHome());
-
-      HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
-      String proj     = experimentData.get("proj");
-      String expLabel = experimentData.get("expLabel");
-      String subj     = experimentData.get("subj");
-      
-      HashMap<String,String> seriesUidToScanIdMap = getSeriesUidToScanIdMap(_experimentId);
-      
-      String xnatScanPath = xnatArchivePath + SEP + proj
-        + SEP + "arc001" + SEP + expLabel + SEP + "SCANS";
-      
-
-
-      //String xnatScanUrl  = rootURL.replace("http", "dicomweb")
-      String xnatScanUrl  = xnatRootURL
-        + "/data/archive/projects/" + proj
-        + "/subjects/" + subj
-        + "/experiments/" + _experimentId
-        + "/scans/";
-      
-      // Generate JSON string
-      String jsonString = "";
-      try
-      {
-        CreateOhifViewerMetadata jsonCreator = new CreateOhifViewerMetadata(xnatScanPath, xnatScanUrl, seriesUidToScanIdMap);
-        jsonString = jsonCreator.jsonifyStudy(_experimentId);
-      }
-      catch (Exception ex)
-      {
-        isLocked = false;
-        logger.error("Jsonifier exception:\n" + ex.getMessage());
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-      }
-      
-      String writeFilePath = getStudyPath(xnatArchivePath, proj, expLabel, _experimentId);
-
-      // Create RESOURCES/metadata if it doesn't exist
-      createFilePath(writeFilePath);
-      
-      // Write to file and send back response code
-      ResponseEntity<String> POSTStatus = writeJSON(jsonString, writeFilePath);
-      return POSTStatus;
+      ResponseEntity<String> postResult = generateExperimentMetadata(xnatRootURL, xnatArchivePath, _experimentId);
+      return postResult;
     }
+    
+    
+    
+    
+    // JamesAPetts -- WIP -- Generate all JSON for the database
+    @ApiOperation(value = "Generates the session JSON for every experiment in the database.")
+    @ApiResponses({
+      @ApiResponse(code = 201, message = "The JSON metadata has been created for every experiment in the database."),
+      @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experient."),
+      @ApiResponse(code = 500, message = "An unexpected error occurred.")
+    })
+    @XapiRequestMapping(value = "generate-all-metadata", method = RequestMethod.POST, restrictTo = AccessLevel.Admin)
+    public ResponseEntity<String> setAllJson() throws IOException {
+      // Grab the data archive path
+      String xnatRootURL      = XDAT.getSiteConfigPreferences().getSiteUrl();
+      String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
+      
+      ArrayList<String> experimentIds = getAllExperimentIds(xnatRootURL, xnatArchivePath);
+      
+      for (int i = 0; i< experimentIds.size(); i++)
+      {
+        final String experimentId = experimentIds.get(i);
+        logger.error("experimentId " + experimentId);
+        ResponseEntity<String> postResult = generateExperimentMetadata(xnatRootURL, xnatArchivePath, experimentId);
+        if (postResult.getStatusCodeValue() == 500)
+        {
+          return postResult;
+        }
+      }
+      
+      return new ResponseEntity<String>(HttpStatus.CREATED);
+      
+      
+    }
+    
     
     
     /*=================================    
@@ -341,9 +343,75 @@ public class OhifViewerApi {
     */
     
     
+    private ResponseEntity<String> generateExperimentMetadata(String xnatRootURL, String xnatArchivePath, String _experimentId)
+    {
+            //Only allow one process to write
+      if (isLocked) return new ResponseEntity<>(HttpStatus.LOCKED);
+      isLocked = true;
+
+      HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
+      String proj     = experimentData.get("proj");
+      String expLabel = experimentData.get("expLabel");
+      String subj     = experimentData.get("subj");
+      
+      HashMap<String,String> seriesUidToScanIdMap = getSeriesUidToScanIdMap(_experimentId);
+      
+      String xnatScanPath = xnatArchivePath + SEP + proj
+        + SEP + "arc001" + SEP + expLabel + SEP + "SCANS";
+      
+
+
+      //String xnatScanUrl  = rootURL.replace("http", "dicomweb")
+      String xnatScanUrl  = xnatRootURL
+        + "/data/archive/projects/" + proj
+        + "/subjects/" + subj
+        + "/experiments/" + _experimentId
+        + "/scans/";
+      
+      // Generate JSON string
+      String jsonString = "";
+      try
+      {
+        CreateOhifViewerMetadata jsonCreator = new CreateOhifViewerMetadata(xnatScanPath, xnatScanUrl, seriesUidToScanIdMap);
+        jsonString = jsonCreator.jsonifyStudy(_experimentId);
+      }
+      catch (Exception ex)
+      {
+        isLocked = false;
+        logger.error("Jsonifier exception:\n" + ex.getMessage());
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+      
+      String writeFilePath = getStudyPath(xnatArchivePath, proj, expLabel, _experimentId);
+
+      // Create RESOURCES/metadata if it doesn't exist
+      createFilePath(writeFilePath);
+      
+      // Write to file and send back response code
+      ResponseEntity<String> POSTStatus = writeJSON(jsonString, writeFilePath);
+      return POSTStatus;
+    }
     
     
     
+    private ArrayList<String> getAllExperimentIds(String xnatRootURL, String xnatArchivePath)
+    {
+      ArrayList<String> experimentIds = new ArrayList<>();
+      
+      UserI user = getSessionUser();
+      ArrayList<XnatExperimentdata> experiments = XnatExperimentdata.getAllXnatExperimentdatas(user, true);
+      
+      for (int i = 0; i< experiments.size(); i++)
+      {
+        final XnatExperimentdata experimentI = experiments.get(i);
+        if ( experimentI instanceof XnatImagesessiondata )
+        {
+          experimentIds.add(experimentI.getId());
+        }
+      }
+      
+      return experimentIds;
+    }
     
     
     
