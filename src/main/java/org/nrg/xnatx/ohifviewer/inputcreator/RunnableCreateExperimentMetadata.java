@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import org.apache.commons.io.IOUtils;
 import org.nrg.xdat.model.XnatImagescandataI;
 import org.nrg.xdat.om.XnatExperimentdata;
@@ -21,8 +22,6 @@ import org.nrg.xdat.om.XnatProjectdata;
 import org.nrg.xdat.om.XnatSubjectdata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 /**
  *
@@ -31,6 +30,7 @@ import org.springframework.http.ResponseEntity;
 public class RunnableCreateExperimentMetadata implements Runnable {
   private static final Logger logger = LoggerFactory.getLogger(RunnableCreateExperimentMetadata.class);
   private static final String SEP = File.separator;
+  private final CountDownLatch doneSignal;
   private final String threadName = "ohifviewer.RunnableCreateExperimentMetadata";
   private final String xnatRootURL;
   private final String xnatArchivePath;
@@ -38,10 +38,11 @@ public class RunnableCreateExperimentMetadata implements Runnable {
   private Thread thread;
   
    
-  public RunnableCreateExperimentMetadata( String _xnatRootURL, String _xnatArchivePath, String _experimentId) {
-     xnatRootURL = _xnatRootURL;
-     xnatArchivePath = _xnatArchivePath;
-     experimentId = _experimentId;
+  public RunnableCreateExperimentMetadata(CountDownLatch doneSignal, String _xnatRootURL, String _xnatArchivePath, String _experimentId) {
+    this.doneSignal = doneSignal;
+    this.xnatRootURL = _xnatRootURL;
+    this.xnatArchivePath = _xnatArchivePath;
+    this.experimentId = _experimentId;
   }
   
   public void start()
@@ -54,6 +55,21 @@ public class RunnableCreateExperimentMetadata implements Runnable {
   
   public void run()
   {
+    try
+    {
+      doWork();
+      doneSignal.countDown();
+    }
+    catch (Exception ex)
+    {
+      thread.interrupt();
+      logger.error(ex.getMessage());
+    }
+  }
+  
+  
+  private void doWork()
+  {
     HashMap<String,String> experimentData = getDirectoryInfo(experimentId);
     String proj     = experimentData.get("proj");
     String expLabel = experimentData.get("expLabel");
@@ -64,16 +80,12 @@ public class RunnableCreateExperimentMetadata implements Runnable {
     String xnatScanPath = xnatArchivePath + SEP + proj
       + SEP + "arc001" + SEP + expLabel + SEP + "SCANS";
 
-
-
-    //String xnatScanUrl  = rootURL.replace("http", "dicomweb")
     String xnatScanUrl  = xnatRootURL
       + "/data/archive/projects/" + proj
       + "/subjects/" + subj
       + "/experiments/" + experimentId
       + "/scans/";
 
-    // Generate JSON string
     String jsonString = "";
     try
     {
@@ -91,7 +103,7 @@ public class RunnableCreateExperimentMetadata implements Runnable {
     createFilePath(writeFilePath);
 
     // Write to file and send back response code
-    ResponseEntity<String> POSTStatus = writeJSON(jsonString, writeFilePath);
+    writeJSON(jsonString, writeFilePath);
   }
   
 
@@ -176,7 +188,7 @@ public class RunnableCreateExperimentMetadata implements Runnable {
     }
   }
     
-  private ResponseEntity<String> writeJSON(String jsonString, String writeFilePath)
+  private void writeJSON(String jsonString, String writeFilePath)
   {
     try
     {
@@ -184,13 +196,13 @@ public class RunnableCreateExperimentMetadata implements Runnable {
       final Writer writer = new FileWriter(writeFilePath);
       IOUtils.write(jsonString, writer);
       writer.close();
-      logger.debug("Wrote to: " + writeFilePath);
-      return new ResponseEntity<>(HttpStatus.CREATED);
+      logger.debug("Wrote to: " + writeFilePath);;
     }
     catch (IOException ioEx)
     {
       logger.error(ioEx.getMessage());
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
+    return;
   }
 }

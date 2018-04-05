@@ -1,3 +1,13 @@
+0.3.0
+
+Added:
+-- Added a new REST call "/xapi/viewer/generate-all-metadata" which will generate the viewer metadata for every experiment in the database. This is only useable by an admin.
+currently this must be invoked by the URL or the command line, but will be soon added to the administer tools.
+
+Changed:
+-- Multithreaded the server code such that each POST uses a seperate thread when multiple JSON files need to be written (as in "/xapi/viewer/generate-all-metadata").
+
+
 0.2.0
 
 Added:

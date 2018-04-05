@@ -42,7 +42,6 @@ import io.swagger.annotations.Api;
 import org.apache.commons.io.IOUtils;
 import org.nrg.framework.annotations.XapiRestController;
 import org.nrg.xapi.rest.XapiRequestMapping;
-import org.nrg.xnatx.ohifviewer.inputcreator.CreateOhifViewerMetadata;
 import org.nrg.xdat.XDAT;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,15 +54,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.HashMap;
 import org.nrg.xft.security.UserI;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 import org.nrg.xdat.om.XnatExperimentdata;
 import org.nrg.xdat.om.XnatImagesessiondata;
-import org.nrg.xdat.model.XnatImagescandataI;
 import org.nrg.xdat.om.XnatProjectdata;
 import org.nrg.xdat.om.XnatSubjectdata;
 import org.nrg.xdat.security.services.RoleHolder;
@@ -163,8 +159,22 @@ public class OhifViewerApi extends AbstractXapiRestController {
       String xnatRootURL      = XDAT.getSiteConfigPreferences().getSiteUrl();
       String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
       
-      ResponseEntity<String> postResult = generateExperimentMetadata(xnatRootURL, xnatArchivePath, _experimentId);
-      return postResult;
+      // Create a CountDownLatch in order to check when process is finished
+      CountDownLatch doneSignal =  new CountDownLatch(1);
+      RunnableCreateExperimentMetadata createExperimentMetadata =
+                new RunnableCreateExperimentMetadata(doneSignal, xnatRootURL, xnatArchivePath, _experimentId);
+      createExperimentMetadata.start();
+      
+      try
+      {
+        doneSignal.await();
+        return new ResponseEntity<String>(HttpStatus.CREATED);
+      }
+      catch (InterruptedException ex)
+      {
+        logger.error(ex.getMessage());
+        return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
     }
     
     
@@ -183,29 +193,32 @@ public class OhifViewerApi extends AbstractXapiRestController {
       String xnatRootURL      = XDAT.getSiteConfigPreferences().getSiteUrl();
       String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
       
-      ArrayList<String> experimentIds = getAllExperimentIds(xnatRootURL, xnatArchivePath);
+      ArrayList<String> experimentIds = getAllExperimentIds();
+      
+      // Create a CountDownLatch in order to check when all processes are finished
+      CountDownLatch doneSignal =  new CountDownLatch(experimentIds.size());
+      
       
       for (int i = 0; i< experimentIds.size(); i++)
       {
         final String experimentId = experimentIds.get(i);
         logger.error("experimentId " + experimentId);
-        /*
-        ResponseEntity<String> postResult = generateExperimentMetadata(xnatRootURL, xnatArchivePath, experimentId);
-        if (postResult.getStatusCodeValue() == 500)
-        {
-          return postResult;
-        }
-        */
-        RunnableCreateExperimentMetadata createExperimentMetadata = new RunnableCreateExperimentMetadata(xnatRootURL, xnatArchivePath, experimentId);
+        RunnableCreateExperimentMetadata createExperimentMetadata =
+                new RunnableCreateExperimentMetadata(doneSignal, xnatRootURL, xnatArchivePath, experimentId);
         createExperimentMetadata.start();
         
       }
       
-      
-      
-      
-      return new ResponseEntity<String>(HttpStatus.CREATED);
-      
+      try
+      {
+        doneSignal.await();
+        return new ResponseEntity<String>(HttpStatus.CREATED);
+      }
+      catch (InterruptedException ex)
+      {
+        logger.error(ex.getMessage());
+        return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }      
       
     }
     
@@ -343,53 +356,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
     */
     
     
-    private ResponseEntity<String> generateExperimentMetadata(String xnatRootURL, String xnatArchivePath, String _experimentId)
-    {
-      HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
-      String proj     = experimentData.get("proj");
-      String expLabel = experimentData.get("expLabel");
-      String subj     = experimentData.get("subj");
-      
-      HashMap<String,String> seriesUidToScanIdMap = getSeriesUidToScanIdMap(_experimentId);
-      
-      String xnatScanPath = xnatArchivePath + SEP + proj
-        + SEP + "arc001" + SEP + expLabel + SEP + "SCANS";
-      
-
-
-      //String xnatScanUrl  = rootURL.replace("http", "dicomweb")
-      String xnatScanUrl  = xnatRootURL
-        + "/data/archive/projects/" + proj
-        + "/subjects/" + subj
-        + "/experiments/" + _experimentId
-        + "/scans/";
-      
-      // Generate JSON string
-      String jsonString = "";
-      try
-      {
-        CreateOhifViewerMetadata jsonCreator = new CreateOhifViewerMetadata(xnatScanPath, xnatScanUrl, seriesUidToScanIdMap);
-        jsonString = jsonCreator.jsonifyStudy(_experimentId);
-      }
-      catch (Exception ex)
-      {
-        logger.error("Jsonifier exception:\n" + ex.getMessage());
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-      }
-      
-      String writeFilePath = getStudyPath(xnatArchivePath, proj, expLabel, _experimentId);
-
-      // Create RESOURCES/metadata if it doesn't exist
-      createFilePath(writeFilePath);
-      
-      // Write to file and send back response code
-      ResponseEntity<String> POSTStatus = writeJSON(jsonString, writeFilePath);
-      return POSTStatus;
-    }
-    
-    
-    
-    private ArrayList<String> getAllExperimentIds(String xnatRootURL, String xnatArchivePath)
+    private ArrayList<String> getAllExperimentIds()
     {
       ArrayList<String> experimentIds = new ArrayList<>();
       
@@ -407,8 +374,6 @@ public class OhifViewerApi extends AbstractXapiRestController {
       
       return experimentIds;
     }
-    
-    
     
     
     private HashMap<String, String> getDirectoryInfo(String _experimentId)
@@ -435,38 +400,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       
       return result;
     }
-    
-    
-    private HashMap<String, String> getSeriesUidToScanIdMap(String _experimentId)
-    {
-      // WIP
-      HashMap<String, String> seriesUidToScanIdMap = new HashMap<String, String>();
-      XnatExperimentdata expData = XnatExperimentdata.getXnatExperimentdatasById(_experimentId, null, false);
-      
-      XnatImagesessiondata session = null;
-      try
-      {
-        session=(XnatImagesessiondata)expData;
-      }
-      catch (Exception ex)
-      {
-        logger.error(ex.getMessage());
-      }
-
-      List<XnatImagescandataI> scans = session.getScans_scan();
-      
-      for (final XnatImagescandataI scan:scans)
-      {
-        
-        logger.error(scan.getUid() + " " + scan.getId());
-        String seriesInstanceUid = scan.getUid();
-        String scanId = scan.getId();
-        seriesUidToScanIdMap.put(seriesInstanceUid, scanId);
-        
-      }
-      
-      return seriesUidToScanIdMap;
-    }
+   
     
     private String getStudyPath(String xnatArchivePath, String proj, String expLabel, String _experimentId)
     {
@@ -475,45 +409,6 @@ public class OhifViewerApi extends AbstractXapiRestController {
       return filePath;
     }
     
-    // TODO: Refactor, too many arguments
-    private String getSeriesPath(String xnatArchivePath, String proj, String expLabel, String _seriesId)
-    {
-      String filePath = xnatArchivePath + SEP + proj + SEP + "arc001"
-      + SEP + expLabel + SEP + "SCANS" + SEP + _seriesId + SEP + "RESOURCES/metadata/" + _seriesId +".json";
-      return filePath;
-    }
-    
-    private void createFilePath(String filePath)
-    { // Create RESOURCES/metadata if it doesn't exist
-      try
-      {
-        File file = new File(filePath);
-        if (!file.exists())
-        {
-          Files.createDirectories(Paths.get(file.getParent().toString()));
-        }
-      }
-      catch (Exception ex)
-      {
-        logger.error("Error creating directories: " + ex.getMessage());
-      }
-    }
-    
-    private ResponseEntity<String> writeJSON(String jsonString, String writeFilePath)
-    {
-      try
-      {
-        // Write to file
-        final Writer writer = new FileWriter(writeFilePath);
-        IOUtils.write(jsonString, writer);
-        writer.close();
-        logger.debug("Wrote to: " + writeFilePath);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-      }
-      catch (IOException ioEx)
-      {
-        logger.error(ioEx.getMessage());
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-      }
-    }
 }
+    
+
