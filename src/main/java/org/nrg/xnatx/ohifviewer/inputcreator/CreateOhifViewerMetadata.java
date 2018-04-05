@@ -45,7 +45,6 @@ import etherj.dicom.PatientRoot;
 import etherj.dicom.Series;
 import etherj.dicom.SopInstance;
 import etherj.dicom.Study;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

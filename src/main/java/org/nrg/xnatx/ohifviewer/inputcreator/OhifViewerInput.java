@@ -38,7 +38,7 @@
 * Java class: OhifInput.java
 * First created on Sep 12, 2017 at 10:36:31 AM
 * 
-* Class serialised to JSON by CreateOhifViewerInputJson.java
+* Class serialised to JSON by CreateOhifViewerMetadata.java
 *********************************************************************/
 
 package org.nrg.xnatx.ohifviewer.inputcreator;

@@ -1,5 +1,5 @@
 /********************************************************************
-* Copyright (c) 2017, Institute of Cancer Research
+* Copyright (c) 2018, Institute of Cancer Research
 * All rights reserved.
 * 
 * Redistribution and use in source and binary forms, with or without
