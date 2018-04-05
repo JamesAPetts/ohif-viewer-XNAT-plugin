@@ -70,6 +70,7 @@ import org.nrg.xdat.security.services.RoleHolder;
 import org.nrg.xdat.security.services.UserManagementServiceI;
 import org.nrg.xapi.rest.AbstractXapiRestController;
 import org.nrg.xdat.security.helpers.AccessLevel;
+import org.nrg.xnatx.ohifviewer.inputcreator.RunnableCreateExperimentMetadata;
 
 /**
  * 
@@ -83,16 +84,11 @@ import org.nrg.xdat.security.helpers.AccessLevel;
 public class OhifViewerApi extends AbstractXapiRestController {
     private static final Logger logger = LoggerFactory.getLogger(OhifViewerApi.class);
     private static final String SEP = File.separator;
-    private static Boolean isLocked = false;
     
     @Autowired
     public OhifViewerApi(final UserManagementServiceI userManagementService, final RoleHolder roleHolder) {
    		super(userManagementService, roleHolder);
     }
-    
-    
-    
-    
     
     /*=================================
     // Study level GET/POST
@@ -193,12 +189,20 @@ public class OhifViewerApi extends AbstractXapiRestController {
       {
         final String experimentId = experimentIds.get(i);
         logger.error("experimentId " + experimentId);
+        /*
         ResponseEntity<String> postResult = generateExperimentMetadata(xnatRootURL, xnatArchivePath, experimentId);
         if (postResult.getStatusCodeValue() == 500)
         {
           return postResult;
         }
+        */
+        RunnableCreateExperimentMetadata createExperimentMetadata = new RunnableCreateExperimentMetadata(xnatRootURL, xnatArchivePath, experimentId);
+        createExperimentMetadata.start();
+        
       }
+      
+      
+      
       
       return new ResponseEntity<String>(HttpStatus.CREATED);
       
@@ -279,9 +283,6 @@ public class OhifViewerApi extends AbstractXapiRestController {
     })
     @XapiRequestMapping(value = "{_experimentId}/{_seriesId}", method = RequestMethod.POST)
     public ResponseEntity<String> setSeriesJson(final @PathVariable String _experimentId, @PathVariable String _seriesId) throws IOException {
-      //Only allow one process to write
-      if (isLocked) return new ResponseEntity<>(HttpStatus.LOCKED);
-      isLocked = true;
       
       // Grab the data archive path
       String rootURL          = XDAT.getSiteConfigPreferences().getSiteUrl();
@@ -317,7 +318,6 @@ public class OhifViewerApi extends AbstractXapiRestController {
       }
       catch (Exception ex)
       {
-        isLocked = false;
         logger.error("Jsonifier exception:\n" + ex.getMessage());
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
@@ -345,10 +345,6 @@ public class OhifViewerApi extends AbstractXapiRestController {
     
     private ResponseEntity<String> generateExperimentMetadata(String xnatRootURL, String xnatArchivePath, String _experimentId)
     {
-            //Only allow one process to write
-      if (isLocked) return new ResponseEntity<>(HttpStatus.LOCKED);
-      isLocked = true;
-
       HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
       String proj     = experimentData.get("proj");
       String expLabel = experimentData.get("expLabel");
@@ -377,7 +373,6 @@ public class OhifViewerApi extends AbstractXapiRestController {
       }
       catch (Exception ex)
       {
-        isLocked = false;
         logger.error("Jsonifier exception:\n" + ex.getMessage());
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
@@ -513,12 +508,10 @@ public class OhifViewerApi extends AbstractXapiRestController {
         IOUtils.write(jsonString, writer);
         writer.close();
         logger.debug("Wrote to: " + writeFilePath);
-        isLocked = false;
         return new ResponseEntity<>(HttpStatus.CREATED);
       }
       catch (IOException ioEx)
       {
-        isLocked = false;
         logger.error(ioEx.getMessage());
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
