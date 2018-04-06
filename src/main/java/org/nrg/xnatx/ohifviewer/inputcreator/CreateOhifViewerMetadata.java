@@ -76,49 +76,35 @@ public class CreateOhifViewerMetadata {
    }
   
   private final String xnatScanPath;
-  private final String xnatScanUrl;
+  private final String xnatExperimentScanUrl;
   private final HashMap<String,String> seriesUidToScanIdMap;
 
   
   
-  public CreateOhifViewerMetadata(final String xnatScanPath, final String xnatScanUrl, final HashMap<String,String> seriesUidToScanIdMap)
+  public CreateOhifViewerMetadata(final String xnatScanPath, final String xnatExperimentScanUrl, final HashMap<String,String> seriesUidToScanIdMap)
   {
     this.xnatScanPath = xnatScanPath;
-    this.xnatScanUrl = xnatScanUrl;
+    this.xnatExperimentScanUrl = xnatExperimentScanUrl;
     this.seriesUidToScanIdMap = seriesUidToScanIdMap;
-  }
-  
-  
-  public String jsonifyStudy(final String transactionId)
-  {
+  }    
     
-    logger.debug("Its Study JSONifying time!");
-    
+    public String jsonify(final String transactionId)
+    {
     String serialisedOvi = "";
-    try
-    {
-      // Use Etherj to do the heavy lifting of sifting through all the scan data.
-      PatientRoot root = scanPath(xnatScanPath);
-      // Transform the Etherj output into a java object with the structure needed
-      // by the OHIF viewer.
-      OhifViewerInput ovi = createStudyInput(transactionId, root);
-    
-      // Convert the Java object to a JSON string
-      Gson gson = new GsonBuilder().setPrettyPrinting().create();
-      serialisedOvi = gson.toJson(ovi);
-    }
-    catch (Exception ex)
-    {
-      logger.error(ex.getMessage());
-    }
 
-    logger.debug("Study JSONification complete, radical!");
+    // Use Etherj to do the heavy lifting of sifting through all the scan data.
+    PatientRoot root = scanPath(xnatScanPath);
+    // Transform the Etherj output into a java object with the structure needed
+    // by the OHIF viewer.
+    OhifViewerInput ovi = createInput(transactionId, root);
+
+    // Convert the Java object to a JSON string
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    serialisedOvi = gson.toJson(ovi);
+
     
     return serialisedOvi;
-  }
-  
-  
-
+    }
   
 
   private PatientRoot scanPath(String path)
@@ -143,7 +129,7 @@ public class CreateOhifViewerMetadata {
   }
 
   
-  private OhifViewerInput createStudyInput(String transactionId, PatientRoot root)
+  private OhifViewerInput createInput(String transactionId, PatientRoot root)
   {
     OhifViewerInput ovi = new OhifViewerInput();
     List<OhifViewerInputStudy> oviStudyList = new ArrayList<>();
@@ -180,123 +166,15 @@ public class CreateOhifViewerMetadata {
             }
             else
             {
-              OhifViewerInputInstanceSingle oviInst = new OhifViewerInputInstanceSingle(sop, ser, xnatScanUrl, scanId);
+              OhifViewerInputInstanceSingle oviInst = new OhifViewerInputInstanceSingle(sop, ser, this.xnatExperimentScanUrl, scanId);
               oviSer.addInstances(oviInst);
-            }            			
-          }
-        }
-      }
-    }
-
-    return ovi;
-  }
-  
-  
-  
-  // WIP Series level stuff - refactor later
-  /*
-  
-    //------------- TODO: WIP-------------//
-  public String jsonifySeries(final String experimentId, final String seriesNo)
-  {
-    final String transactionId = experimentId + "_" + seriesNo;
-    
-    logger.debug("Its Series JSONifying time!");
-    
-    String serialisedOvi = "";
-    try
-    {
-      // Use Etherj to do the heavy lifting of sifting through all the scan data.
-      PatientRoot root = scanPath(xnatScanPath);
-      // Transform the Etherj output into a java object with the structure needed
-      // by the OHIF viewer.
-      OhifViewerInput ovi = createSeriesInput(seriesNo, transactionId, root);
-    
-      // Convert the Java object to a JSON string
-      Gson gson = new GsonBuilder().setPrettyPrinting().create();
-      serialisedOvi = gson.toJson(ovi);
-    }
-    catch (Exception ex)
-    {
-      logger.error(ex.getMessage());
-    }
-    
-    logger.debug("Series JSONification complete, radical!");
-    
-    return serialisedOvi;
-  }
-  
-  
-  
-  
-  private OhifViewerInput createSeriesInput(String seriesNo, String transactionId, PatientRoot root)
-  {
-    OhifViewerInput ovi = new OhifViewerInput();
-    List<OhifViewerInputStudy> oviStudyList = new ArrayList<>();
-
-    ovi.setTransactionId(transactionId);
-    ovi.setStudies(oviStudyList);
-    
-    logger.debug("Making json for seriesNo:" + seriesNo);
-    
-    //TODO fix this function, Current prints out:
-    // {
-    //  "transactionId": "XNAT_JPETTS_E00007_1007",
-    //   "studies": [
-    //     {
-    //       "studyInstanceUid": "2.25.216540488264669880754620301267990043721",
-    //       "patientName": "CASE_4_LIVER",
-    //       "seriesList": []
-    //     }
-    //   ]
-    // }
-    
-
-    List<Patient> patList = root.getPatientList();
-    for (Patient pat : patList)
-    {
-      List<Study> studyList = pat.getStudyList();			
-      for (Study std : studyList)
-      {
-        OhifViewerInputStudy oviStd = new OhifViewerInputStudy(std, pat);
-        oviStudyList.add(oviStd);
-
-        List<Series> seriesList = std.getSeriesList();
-        for (Series ser : seriesList)
-        {
-          Integer serNo = ser.getNumber();
-          if (serNo.toString() == seriesNo)
-          {
-            OhifViewerInputSeries oviSer = new OhifViewerInputSeries(ser);
-            oviStd.addSeries(oviSer);
-            
-            String scanId = seriesUidToScanIdMap.get(ser.getUid());
-
-            List<SopInstance> sopList = ser.getSopInstanceList();
-            for (SopInstance sop : sopList)
-            {
-              if (MULTI_FRAME_SOP_CLASS_UIDS.contains(sop.getSopClassUid()))
-              {
-                OhifViewerInputInstanceMulti oviInst = new OhifViewerInputInstanceMulti(sop, ser, xnatScanUrl, scanId);
-                oviSer.addInstances(oviInst);
-              }
-              else
-              {
-                OhifViewerInputInstanceMulti oviInst = new OhifViewerInputInstanceMulti(sop, ser, xnatScanUrl, scanId);
-                oviSer.addInstances(oviInst);
-              }    
             }
-            break;
           }
-          
         }
       }
     }
-    
-    
+
     return ovi;
   }
-
-  */
   
 }

@@ -67,6 +67,7 @@ import org.nrg.xdat.security.services.UserManagementServiceI;
 import org.nrg.xapi.rest.AbstractXapiRestController;
 import org.nrg.xdat.security.helpers.AccessLevel;
 import org.nrg.xnatx.ohifviewer.inputcreator.RunnableCreateExperimentMetadata;
+import org.nrg.xnatx.ohifviewer.inputcreator.RunnableCreateSeriesMetadata;
 
 /**
  * 
@@ -180,7 +181,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
     
     
     
-    // JamesAPetts -- WIP -- Generate all JSON for the database
+    // JamesAPetts -- WIP -- Generate all the JSON metadata for the database
     @ApiOperation(value = "Generates the session JSON for every experiment in the database.")
     @ApiResponses({
       @ApiResponse(code = 201, message = "The JSON metadata has been created for every experiment in the database."),
@@ -227,7 +228,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
     /*=================================    
     // Series level GET/POST- WIP
     =================================*/
-    /*
+
     
     @ApiOperation(value = "Returns 200 if series level JSON exists")
     @ApiResponses({
@@ -254,6 +255,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       }
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
     
     @ApiOperation(value = "Returns the session JSON for the specified series.")
     @ApiResponses({
@@ -271,11 +273,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       String proj     = experimentData.get("proj");
       String expLabel = experimentData.get("expLabel");
       
-      logger.debug("proj, expLabel, _seriesId: " + proj + " " + expLabel + " " + _seriesId);
-      
       String readFilePath = getSeriesPath(xnatArchivePath, proj, expLabel, _seriesId);
-      
-      logger.debug("Getting series Path: " + readFilePath);
       
       final Reader reader = new FileReader(readFilePath);
       
@@ -286,7 +284,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
           }
       };
     }
-    
+
     
     @ApiOperation(value = "Generates the session JSON for the specified series.")
     @ApiResponses({
@@ -295,65 +293,30 @@ public class OhifViewerApi extends AbstractXapiRestController {
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
     @XapiRequestMapping(value = "{_experimentId}/{_seriesId}", method = RequestMethod.POST)
-    public ResponseEntity<String> setSeriesJson(final @PathVariable String _experimentId, @PathVariable String _seriesId) throws IOException {
+    public ResponseEntity<String> postSeriesJson(final @PathVariable String _experimentId, @PathVariable String _seriesId) throws IOException {
       
       // Grab the data archive path
-      String rootURL          = XDAT.getSiteConfigPreferences().getSiteUrl();
+      String xnatRootURL      = XDAT.getSiteConfigPreferences().getSiteUrl();
       String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
-
-      HashMap<String,String> experimentData = getDirectoryInfo(_experimentId);
-      String proj     = experimentData.get("proj");
-      String expLabel = experimentData.get("expLabel");
-      String subj     = experimentData.get("subj");
       
-            // Generate JSON string -- // TODO Change to exp only in JSONifier!
-      //
-      //
-      //
-      //
-      //
-      //
+      // Create a CountDownLatch in order to check when process is finished
+      CountDownLatch doneSignal =  new CountDownLatch(1);
+      RunnableCreateSeriesMetadata createSeriesMetadata =
+                new RunnableCreateSeriesMetadata(doneSignal, xnatRootURL, xnatArchivePath, _experimentId, _seriesId);
+      createSeriesMetadata.start();
       
-      String xnatScanPath = xnatArchivePath + SEP + proj
-        + SEP + "arc001" + SEP + expLabel + SEP + "SCANS";
-
-      String xnatScanUrl  = rootURL.replace("http", "dicomweb")
-        + "/data/archive/projects/" + proj
-        + "/subjects/" + subj
-        + "/experiments/" + _experimentId
-        + "/scans/";
-     
-      String jsonString = "";
       try
       {
-        CreateOhifViewerMetadata jsonCreator = new CreateOhifViewerMetadata();
-        jsonString = jsonCreator.jsonifySeries(xnatScanPath,xnatScanUrl,_experimentId, _seriesId);
+        doneSignal.await();
+        return new ResponseEntity<String>(HttpStatus.CREATED);
       }
-      catch (Exception ex)
+      catch (InterruptedException ex)
       {
-        logger.error("Jsonifier exception:\n" + ex.getMessage());
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        logger.error(ex.getMessage());
+        return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
-      
-      //
-      //
-      //
-      //
-      //
-      //
-      
-      String writeFilePath = getSeriesPath(xnatArchivePath, proj, expLabel, _seriesId);
-
-      // Create RESOURCES/metadata if it doesn't exist
-      createFilePath(writeFilePath);
-      
-      // Write to file and send back response code
-      ResponseEntity<String> POSTStatus = writeJSON(jsonString, writeFilePath);
-      return POSTStatus;
     }
     
-    
-    */
     
     
     private ArrayList<String> getAllExperimentIds()
@@ -406,6 +369,13 @@ public class OhifViewerApi extends AbstractXapiRestController {
     {
       String filePath = xnatArchivePath + SEP + proj + SEP + "arc001"
       + SEP + expLabel + SEP + "RESOURCES/metadata/" + _experimentId +".json";
+      return filePath;
+    }
+    
+    private String getSeriesPath(String xnatArchivePath, String proj, String expLabel, String _seriesId)
+    {
+      String filePath = xnatArchivePath + SEP + proj + SEP + "arc001"
+      + SEP + expLabel + SEP + "RESOURCES/metadata/" + _seriesId +".json";
       return filePath;
     }
     

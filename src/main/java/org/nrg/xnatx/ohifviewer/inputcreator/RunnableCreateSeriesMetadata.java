@@ -34,35 +34,53 @@
 *********************************************************************/
 package org.nrg.xnatx.ohifviewer.inputcreator;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import org.apache.commons.io.IOUtils;
+import org.nrg.xdat.model.XnatImagescandataI;
+import org.nrg.xdat.om.XnatExperimentdata;
+import org.nrg.xdat.om.XnatImagesessiondata;
+import org.nrg.xdat.om.XnatProjectdata;
+import org.nrg.xdat.om.XnatSubjectdata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.nrg.xnatx.ohifviewer.inputcreator.RunnableCreateMetadata;
 
 /**
  *
  * @author jpetts
  */
-public class RunnableCreateExperimentMetadata extends RunnableCreateMetadata {
+public class RunnableCreateSeriesMetadata extends RunnableCreateMetadata {
   private final String experimentId;
+  private final String seriesId;
+  
    
-  public RunnableCreateExperimentMetadata(CountDownLatch doneSignal, String _xnatRootURL, String _xnatArchivePath, String _experimentId) {
+  public RunnableCreateSeriesMetadata(CountDownLatch doneSignal, String _xnatRootURL, String _xnatArchivePath, String _experimentId, String _seriesId) {
     super(doneSignal, _xnatRootURL, _xnatArchivePath);
     this.experimentId = _experimentId;
+    this.seriesId = _seriesId;
     this.threadName = "ohifviewer.RunnableCreateExperimentMetadata";
   }
   
-  @Override
+  
   protected void doWork()
   {
-    HashMap<String,String> experimentData = getDirectoryInfo(experimentId);
+    HashMap<String,String> experimentData = getDirectoryInfo(this.experimentId);
     String proj     = experimentData.get("proj");
     String expLabel = experimentData.get("expLabel");
     String subj     = experimentData.get("subj");
 
-    HashMap<String,String> seriesUidToScanIdMap = getSeriesUidToScanIdMap(experimentId);
+    HashMap<String,String> seriesUidToScanIdMap = getSeriesUidToScanIdMap(this.experimentId);
 
     String xnatScanPath = xnatArchivePath + SEP + proj
-      + SEP + "arc001" + SEP + expLabel + SEP + "SCANS";
+      + SEP + "arc001" + SEP + expLabel + SEP + "SCANS" + SEP + this.seriesId;
 
     String xnatExperimentScanUrl = getXnatScanUrl(proj, subj, expLabel);
 
@@ -70,14 +88,14 @@ public class RunnableCreateExperimentMetadata extends RunnableCreateMetadata {
     try
     {
       CreateOhifViewerMetadata jsonCreator = new CreateOhifViewerMetadata(xnatScanPath, xnatExperimentScanUrl, seriesUidToScanIdMap);
-      jsonString = jsonCreator.jsonify(experimentId);
+      jsonString = jsonCreator.jsonify(this.experimentId);
     }
     catch (Exception ex)
     {
       logger.error("Jsonifier exception:\n" + ex.getMessage());
     }
 
-    String writeFilePath = getStudyPath(xnatArchivePath, proj, expLabel, experimentId);
+    String writeFilePath = getSeriesPath(xnatArchivePath, proj, expLabel, this.seriesId);
 
     // Create RESOURCES/metadata if it doesn't exist
     createFilePath(writeFilePath);
@@ -85,13 +103,14 @@ public class RunnableCreateExperimentMetadata extends RunnableCreateMetadata {
     // Write to file and send back response code
     writeJSON(jsonString, writeFilePath);
   }
+ 
   
-
-  private String getStudyPath(String xnatArchivePath, String proj, String expLabel, String _experimentId)
+  private String getSeriesPath(String xnatArchivePath, String proj, String expLabel, String _seriesId)
   {
     String filePath = xnatArchivePath + SEP + proj + SEP + "arc001"
-    + SEP + expLabel + SEP + "RESOURCES/metadata/" + _experimentId +".json";
+    + SEP + expLabel + SEP + "RESOURCES/metadata/" + _seriesId +".json";
     return filePath;
   }
+
 
 }
