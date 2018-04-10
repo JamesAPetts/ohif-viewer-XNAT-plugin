@@ -1,3 +1,13 @@
+0.3.1
+
+Added:
+-- Series level JSONification and the ability to read only series from the viewer application, however this is not currently wired up to the XNAT UI (yet is functional).
+
+Changed:
+-- Improved Multithreaded code to use a threadpool with size equal to the number of threads on the server machine to avoid a clog up of IO opperations on large databases.
+-- Fixed an issue introduced in 0.3.0 whereby single experiment/series JSONification would instantiate a single new Thread rather than opperating on the active thread processing the API request.
+
+
 0.3.0
 
 Added:

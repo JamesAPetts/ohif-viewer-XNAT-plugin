@@ -58,6 +58,8 @@ import java.util.HashMap;
 import org.nrg.xft.security.UserI;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.nrg.xdat.om.XnatExperimentdata;
 import org.nrg.xdat.om.XnatImagesessiondata;
 import org.nrg.xdat.om.XnatProjectdata;
@@ -81,6 +83,7 @@ import org.nrg.xnatx.ohifviewer.inputcreator.RunnableCreateSeriesMetadata;
 public class OhifViewerApi extends AbstractXapiRestController {
     private static final Logger logger = LoggerFactory.getLogger(OhifViewerApi.class);
     private static final String SEP = File.separator;
+    private static Boolean generateAllJsonLocked = false;
     
     @Autowired
     public OhifViewerApi(final UserManagementServiceI userManagementService, final RoleHolder roleHolder) {
@@ -160,28 +163,15 @@ public class OhifViewerApi extends AbstractXapiRestController {
       String xnatRootURL      = XDAT.getSiteConfigPreferences().getSiteUrl();
       String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
       
-      // Create a CountDownLatch in order to check when process is finished
-      CountDownLatch doneSignal =  new CountDownLatch(1);
+      // Runs creation process within the active thread.
       RunnableCreateExperimentMetadata createExperimentMetadata =
-                new RunnableCreateExperimentMetadata(doneSignal, xnatRootURL, xnatArchivePath, _experimentId);
-      createExperimentMetadata.start();
+                new RunnableCreateExperimentMetadata(xnatRootURL, xnatArchivePath, _experimentId, null);      
+      HttpStatus returnHttpStatus = createExperimentMetadata.runOnCurrentThread();
       
-      try
-      {
-        doneSignal.await();
-        return new ResponseEntity<String>(HttpStatus.CREATED);
-      }
-      catch (InterruptedException ex)
-      {
-        logger.error(ex.getMessage());
-        return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-      }
+      return new ResponseEntity<String>(returnHttpStatus);
     }
     
     
-    
-    
-    // JamesAPetts -- WIP -- Generate all the JSON metadata for the database
     @ApiOperation(value = "Generates the session JSON for every experiment in the database.")
     @ApiResponses({
       @ApiResponse(code = 201, message = "The JSON metadata has been created for every experiment in the database."),
@@ -190,37 +180,54 @@ public class OhifViewerApi extends AbstractXapiRestController {
     })
     @XapiRequestMapping(value = "generate-all-metadata", method = RequestMethod.POST, restrictTo = AccessLevel.Admin)
     public ResponseEntity<String> setAllJson() throws IOException {
+      
+      // Don't allow more generate all processes to be started if one is already running
+      if (generateAllJsonLocked == true)
+      {
+        return new ResponseEntity<String>(HttpStatus.LOCKED);
+      }
+      else
+      {
+        generateAllJsonLocked = true;
+      }
+      
       // Grab the data archive path
       String xnatRootURL      = XDAT.getSiteConfigPreferences().getSiteUrl();
       String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
       
       ArrayList<String> experimentIds = getAllExperimentIds();
       
+      // Executes experiment JSON creation in a multithreaded fashion.
+      Integer numThreads = Runtime.getRuntime().availableProcessors();
+      logger.error("numThreads: " + numThreads);
+      ExecutorService executorService = Executors.newFixedThreadPool(numThreads); // TODO -- Testing: threadpool of size 1 for now
       // Create a CountDownLatch in order to check when all processes are finished
       CountDownLatch doneSignal =  new CountDownLatch(experimentIds.size());
-      
       
       for (int i = 0; i< experimentIds.size(); i++)
       {
         final String experimentId = experimentIds.get(i);
         logger.error("experimentId " + experimentId);
         RunnableCreateExperimentMetadata createExperimentMetadata =
-                new RunnableCreateExperimentMetadata(doneSignal, xnatRootURL, xnatArchivePath, experimentId);
-        createExperimentMetadata.start();
-        
+                new RunnableCreateExperimentMetadata(xnatRootURL, xnatArchivePath, experimentId, doneSignal);
+        executorService.submit(createExperimentMetadata);
       }
       
+      
+      HttpStatus returnHttpStatus;
       try
       {
         doneSignal.await();
-        return new ResponseEntity<String>(HttpStatus.CREATED);
+        returnHttpStatus = HttpStatus.CREATED;
       }
       catch (InterruptedException ex)
       {
         logger.error(ex.getMessage());
-        return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-      }      
-      
+        returnHttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+      }
+
+      generateAllJsonLocked = false;
+      return new ResponseEntity<String>(returnHttpStatus);
     }
     
     
@@ -299,22 +306,12 @@ public class OhifViewerApi extends AbstractXapiRestController {
       String xnatRootURL      = XDAT.getSiteConfigPreferences().getSiteUrl();
       String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
       
-      // Create a CountDownLatch in order to check when process is finished
-      CountDownLatch doneSignal =  new CountDownLatch(1);
+      // Runs creation process within the active thread.
       RunnableCreateSeriesMetadata createSeriesMetadata =
-                new RunnableCreateSeriesMetadata(doneSignal, xnatRootURL, xnatArchivePath, _experimentId, _seriesId);
-      createSeriesMetadata.start();
+                new RunnableCreateSeriesMetadata(xnatRootURL, xnatArchivePath, _experimentId, _seriesId, null);
+      HttpStatus returnHttpStatus = createSeriesMetadata.runOnCurrentThread();
       
-      try
-      {
-        doneSignal.await();
-        return new ResponseEntity<String>(HttpStatus.CREATED);
-      }
-      catch (InterruptedException ex)
-      {
-        logger.error(ex.getMessage());
-        return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-      }
+      return new ResponseEntity<String>(returnHttpStatus);
     }
     
     

@@ -51,6 +51,7 @@ import org.nrg.xdat.om.XnatProjectdata;
 import org.nrg.xdat.om.XnatSubjectdata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 
 /**
  *
@@ -63,7 +64,6 @@ public abstract class RunnableCreateMetadata implements Runnable {
   protected final String xnatRootURL;
   protected final String xnatArchivePath;
   protected Thread thread;
-  protected String threadName = "ohfiviwer.RunnableCreateMetadata";
   
    
   public RunnableCreateMetadata(CountDownLatch doneSignal, String _xnatRootURL, String _xnatArchivePath) {
@@ -72,19 +72,11 @@ public abstract class RunnableCreateMetadata implements Runnable {
     this.xnatArchivePath = _xnatArchivePath;
   }
   
-  public void start()
-  {
-    if (thread == null) {
-      thread = new Thread (this, threadName);
-      thread.start ();
-    }
-  }
-  
   public void run()
   {
     try
     {
-      doWork();
+      createMetadata();
       doneSignal.countDown();
     }
     catch (Exception ex)
@@ -94,12 +86,7 @@ public abstract class RunnableCreateMetadata implements Runnable {
     }
   }
   
-  
-  protected void doWork()
-  {
-    //Implementation implemented in derived classes
-  }
-  
+  protected abstract HttpStatus createMetadata();  
   
   protected String getXnatScanUrl(String project, String subject, String experimentId)
   {
@@ -110,8 +97,6 @@ public abstract class RunnableCreateMetadata implements Runnable {
       + "/scans/";
     return xnatExperimentScanUrl;
   }
-  
-
   
   protected HashMap<String, String> getDirectoryInfo(String _experimentId)
   {
@@ -185,7 +170,7 @@ public abstract class RunnableCreateMetadata implements Runnable {
     }
   }
     
-  protected void writeJSON(String jsonString, String writeFilePath)
+  protected HttpStatus writeJSON(String jsonString, String writeFilePath)
   {
     try
     {
@@ -193,13 +178,13 @@ public abstract class RunnableCreateMetadata implements Runnable {
       final Writer writer = new FileWriter(writeFilePath);
       IOUtils.write(jsonString, writer);
       writer.close();
-      logger.debug("Wrote to: " + writeFilePath);;
+      logger.debug("Wrote to: " + writeFilePath);
+      return HttpStatus.CREATED;
     }
     catch (IOException ioEx)
     {
       logger.error(ioEx.getMessage());
+      return HttpStatus.INTERNAL_SERVER_ERROR;
     }
-    
-    return;
   }
 }

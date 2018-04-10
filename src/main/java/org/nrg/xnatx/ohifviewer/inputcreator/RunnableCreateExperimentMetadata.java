@@ -36,7 +36,7 @@ package org.nrg.xnatx.ohifviewer.inputcreator;
 
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
-import org.nrg.xnatx.ohifviewer.inputcreator.RunnableCreateMetadata;
+import org.springframework.http.HttpStatus;
 
 /**
  *
@@ -45,14 +45,18 @@ import org.nrg.xnatx.ohifviewer.inputcreator.RunnableCreateMetadata;
 public class RunnableCreateExperimentMetadata extends RunnableCreateMetadata {
   private final String experimentId;
    
-  public RunnableCreateExperimentMetadata(CountDownLatch doneSignal, String _xnatRootURL, String _xnatArchivePath, String _experimentId) {
+  public RunnableCreateExperimentMetadata(String _xnatRootURL, String _xnatArchivePath, String _experimentId, CountDownLatch doneSignal) {
     super(doneSignal, _xnatRootURL, _xnatArchivePath);
     this.experimentId = _experimentId;
-    this.threadName = "ohifviewer.RunnableCreateExperimentMetadata";
+  }
+  
+  public HttpStatus runOnCurrentThread() {
+    // Method that allows single threaded execution (for single POST requests).
+    return createMetadata();
   }
   
   @Override
-  protected void doWork()
+  protected HttpStatus createMetadata()
   {
     HashMap<String,String> experimentData = getDirectoryInfo(experimentId);
     String proj     = experimentData.get("proj");
@@ -83,7 +87,7 @@ public class RunnableCreateExperimentMetadata extends RunnableCreateMetadata {
     createFilePath(writeFilePath);
 
     // Write to file and send back response code
-    writeJSON(jsonString, writeFilePath);
+    return writeJSON(jsonString, writeFilePath);
   }
   
 

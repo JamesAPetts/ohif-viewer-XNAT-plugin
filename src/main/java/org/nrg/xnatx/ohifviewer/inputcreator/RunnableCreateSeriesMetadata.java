@@ -34,24 +34,9 @@
 *********************************************************************/
 package org.nrg.xnatx.ohifviewer.inputcreator;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import org.apache.commons.io.IOUtils;
-import org.nrg.xdat.model.XnatImagescandataI;
-import org.nrg.xdat.om.XnatExperimentdata;
-import org.nrg.xdat.om.XnatImagesessiondata;
-import org.nrg.xdat.om.XnatProjectdata;
-import org.nrg.xdat.om.XnatSubjectdata;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.nrg.xnatx.ohifviewer.inputcreator.RunnableCreateMetadata;
+import org.springframework.http.HttpStatus;
 
 /**
  *
@@ -62,15 +47,19 @@ public class RunnableCreateSeriesMetadata extends RunnableCreateMetadata {
   private final String seriesId;
   
    
-  public RunnableCreateSeriesMetadata(CountDownLatch doneSignal, String _xnatRootURL, String _xnatArchivePath, String _experimentId, String _seriesId) {
+  public RunnableCreateSeriesMetadata(String _xnatRootURL, String _xnatArchivePath, String _experimentId, String _seriesId, CountDownLatch doneSignal) {
     super(doneSignal, _xnatRootURL, _xnatArchivePath);
     this.experimentId = _experimentId;
     this.seriesId = _seriesId;
-    this.threadName = "ohifviewer.RunnableCreateExperimentMetadata";
   }
   
+  public HttpStatus runOnCurrentThread() {
+    // Method that allows single threaded execution (for single POST requests).
+    return createMetadata();
+  }
   
-  protected void doWork()
+  @Override
+  protected HttpStatus createMetadata()
   {
     HashMap<String,String> experimentData = getDirectoryInfo(this.experimentId);
     String proj     = experimentData.get("proj");
@@ -101,7 +90,7 @@ public class RunnableCreateSeriesMetadata extends RunnableCreateMetadata {
     createFilePath(writeFilePath);
 
     // Write to file and send back response code
-    writeJSON(jsonString, writeFilePath);
+    return writeJSON(jsonString, writeFilePath);
   }
  
   
