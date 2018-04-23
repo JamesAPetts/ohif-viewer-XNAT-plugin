@@ -60,7 +60,7 @@ In the likely event you are installing this plugin on an XNAT with an already po
 
 
 
-# Building # (Note this is not required to use the plugin, only if you modify it. An up to date Distribution is available in the repo under /dist)
+# Building (Note this is for developers and is not required to use the plugin) #
 
 To build the XNAT OHIF viewer plugin
 
