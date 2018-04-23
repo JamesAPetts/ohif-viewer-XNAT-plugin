@@ -199,7 +199,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       
       // Executes experiment JSON creation in a multithreaded fashion.
       Integer numThreads = Runtime.getRuntime().availableProcessors();
-      logger.error("numThreads: " + numThreads);
+      logger.info("numThreads for parallel JSON creation: " + numThreads);
       ExecutorService executorService = Executors.newFixedThreadPool(numThreads); // TODO -- Testing: threadpool of size 1 for now
       // Create a CountDownLatch in order to check when all processes are finished
       CountDownLatch doneSignal =  new CountDownLatch(experimentIds.size());

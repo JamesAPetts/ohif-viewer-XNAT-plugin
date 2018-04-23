@@ -143,12 +143,9 @@ public abstract class RunnableCreateMetadata implements Runnable {
 
     for (final XnatImagescandataI scan:scans)
     {
-
-      logger.error(scan.getUid() + " " + scan.getId());
       String seriesInstanceUid = scan.getUid();
       String scanId = scan.getId();
       seriesUidToScanIdMap.put(seriesInstanceUid, scanId);
-
     }
 
     return seriesUidToScanIdMap;

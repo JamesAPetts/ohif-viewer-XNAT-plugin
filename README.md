@@ -1,9 +1,11 @@
 # XNAT OHIF Viewer Plugin #
 
 This is the beta version of the XNAT 1.7 OHIF Viewer plugin. This plugin integrates the OHIF Cornerstone-based stand-alone viwer into
-XNAT. It replaces previous support for the XimgViewer plugin. I am actively working on automating the metadata generation and supporting multi-frame images for the 1.0 release.
+XNAT. It replaces previous support for the XimgViewer plugin.
 
-# Deploying the Pre-built plugin #
+Due to security concerns with server side scripting, installing the plugin currently requires an admin account.
+
+# A) Deploying the Pre-built plugin #
 
 Deploying your XNAT plugin requires the following steps:
 
@@ -23,7 +25,7 @@ If you are serving your XNAT on your Tomcat's root, e.g. "www.domain.com/":
 
 4. `sudo service tomcat7 start`
 
-5. Enjoy!
+5. Move on to step B
 
 If you are serving your XNAT on a subdirectory, e.g. "www.domain.com/XNAT_SERVER/":
 
@@ -33,9 +35,32 @@ If you are serving your XNAT on a subdirectory, e.g. "www.domain.com/XNAT_SERVER
 
 6. in the newly created XNAT_SERVER#VIEWER/index.html: replace "ROOT_URL":"VIEWER" with "ROOT_URL":"XNAT_SERVER/VIEWER", where XNAT_SERVER is the directory you are serving XNAT under (Note this last step is a hotfix and does not require restarting Tomcat again).
 
-7. Enjoy!  
+7. Move on to step B  
 
-# Building # (Note an up to date distribution is available in the repo under /dist)
+# B) Setting up Automatic viewer metadata generation #
+
+Setup of the viewer requires an admin to set up the event handlers for automatic viewer metadata generation.
+This is due to the XNAT security model disallowing plugins to setup scripts automatically, as they are a potential security hazard. As such, an admin is required to add a script, such that the scripts content has been reviewed.
+To set up automated metadata generation:
+
+1. As an admin in your XNAT instance, navigate to Administer -> Automation:
+![Alt text](docs/screenshots/_1_automation.png?raw=true)
+
+2. Click on the scripts tab and add a new Groovy Script. Give the script and ID, label and description, and paste the contents of dist/automation/updateExperimentMetadata.groovy into the body (feel free to check that all the script does is call the JSONifier).
+![Alt text](docs/screenshots/_2_addScript.png?raw=true)
+
+3. On the SiteEventHandlers tab, add new event handlers of Event Type: WorkFlowStatusEvent. Create one event handler for **Transfered**, **Update** and **Folder Deleted**. For each, set the script to the new script we just added, and set a suitab$
+![Alt text](docs/screenshots/_3_addEventHandler.png?raw=true)
+
+Now the jsonifier will rebuild the viewer metadata whenever a scan/experiment is added/deleted!
+
+# C) (Optional) Initialising the viewer in a populated database #
+
+In the likely event you are installing this plugin on an XNAT with an already populated database, an admin may call the REST command **POST XNAT_ROOT_URL/xapi/viewer/generate-all-metadata** in order to initiate a process that will scour the database and generate metadata for every session. This process will use as many threads as are available on the server machine, but may take a long time. Note this step is not essential to use the viewer, however if this step is skipped the user will incur a delay when a particular experiment is displayed in the viewer for the first time.
+
+
+
+# Building # (Note this is not required to use the plugin, only if you modify it. An up to date Distribution is available in the repo under /dist)
 
 To build the XNAT OHIF viewer plugin
 
@@ -49,6 +74,5 @@ To build the XNAT OHIF viewer plugin
 
     `gradlew.bat clean fatjar`
 
-    This should build the plugin in the file **build/libs/ohif-viewer-plugin-1.0.0-SNAPSHOT.jar**
-    (the version may differ based on updates to the code). Note: the fatjar command is currently required as EtherJ.jar is not currently hosted in a place gradle can find it, this will change in the future.
-
+    This should build the plugin in the file **build/libs/ohif-viewer-plugin-X.X.X-SNAPSHOT.jar**
+    Note: the fatjar command is currently required as EtherJ.jar is not currently hosted in a place gradle can find it, this will change in the future.
