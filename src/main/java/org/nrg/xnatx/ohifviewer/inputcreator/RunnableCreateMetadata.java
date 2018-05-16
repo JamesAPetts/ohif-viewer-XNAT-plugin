@@ -125,7 +125,6 @@ public abstract class RunnableCreateMetadata implements Runnable {
   
   protected HashMap<String, String> getSeriesUidToScanIdMap(String _experimentId)
   {
-    // WIP
     HashMap<String, String> seriesUidToScanIdMap = new HashMap<String, String>();
     XnatExperimentdata expData = XnatExperimentdata.getXnatExperimentdatasById(_experimentId, null, false);
 

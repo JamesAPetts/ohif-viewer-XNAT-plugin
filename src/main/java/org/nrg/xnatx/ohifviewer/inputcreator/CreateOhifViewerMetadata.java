@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CreateOhifViewerMetadata {
   private static final Logger logger = LoggerFactory.getLogger(CreateOhifViewerMetadata.class);
-  private static final DicomToolkit dcmTk = DicomToolkit.getDefaultToolkit();
+  private static final DicomToolkit dcmTk = DicomToolkit.getToolkit();
   protected static final ArrayList<String> MULTI_FRAME_SOP_CLASS_UIDS = createMultiFrameSopClassUidList();
   private static ArrayList<String> createMultiFrameSopClassUidList()
   {
