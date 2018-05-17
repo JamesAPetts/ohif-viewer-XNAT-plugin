@@ -1,4 +1,4 @@
-# XNAT OHIF Viewer Plugin #
+# XNAT OHIF Viewer Plugin 0.5.0 #
 
 This is the beta version of the XNAT 1.7 OHIF Viewer plugin. This plugin integrates the OHIF Cornerstone-based stand-alone viwer into
 XNAT. It replaces previous support for the XimgViewer plugin.
