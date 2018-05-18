@@ -1,3 +1,10 @@
+1.0.0
+Changed:
+-- Single plugin deployment. The plugin is now one plug-and-play jar file.
+-- Rewrote the routing section of the OHIF viewer such that the application can be embedded within the plugin jar.
+-- Automatic routing configuration for XNATs running on both root and on extention of a Tomcat server.
+
+
 0.5.0
 -- Added server side event listeners to automate JSON generation on session upload/modification.
 -- Removed need for setting up of automation scripts.
