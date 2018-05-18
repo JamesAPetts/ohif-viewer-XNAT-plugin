@@ -23,7 +23,7 @@ In the likely event you are installing this plugin on an XNAT with an already po
 
 # Upgrading from 0.X.X #
 
-As of 1.0.0, the automatic JSON generation on session creation/modification is now handled by server side event handlers, as such manual configuration of automated Groovy scripts is  no longer required.
+As of 1.0.0, the automatic JSON generation on session creation/modification is now handled by server side event handlers, and hosting the old VIEWER.war as a seperate application is no longer required.
 
 If you are upgrading the plugin from 0.X.X:
 1. Deactivate any related automation scripts in the Administration/Automation interface.
