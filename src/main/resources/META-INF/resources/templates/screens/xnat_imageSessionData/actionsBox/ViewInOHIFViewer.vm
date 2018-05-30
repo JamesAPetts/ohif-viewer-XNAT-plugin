@@ -82,7 +82,7 @@
 
       jsonRequestUrl = `${rootUrlWithPort}/xapi/viewer/$om.id`;
       console.log(`ViewInOHIFViewer.vm: jsonRequestUrl: ${jsonRequestUrl}`);
-      xmodal.iframe(`${rootUrlWithPort}/VIEWER`, opts);
+      xmodal.iframe(`${rootUrlWithPort}/VIEWER/`, opts);
 
     }
 
