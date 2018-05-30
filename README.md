@@ -1,11 +1,11 @@
-# XNAT OHIF Viewer Plugin 1.0.0 #
+# XNAT OHIF Viewer Plugin 1.0.1 #
 
-This is the initial release of the XNAT 1.7 OHIF Viewer plugin. This plugin integrates the OHIF Cornerstone-based viewer into
+This plugin integrates the OHIF Cornerstone-based viewer into
 XNAT. It replaces previous support for the XimgViewer plugin.
 
 # A) Deploying the Pre-built plugin #
 
-**New in 1.0.0: single plugin deployment.**
+**New since 1.0.0: single plugin deployment.**
 
 1. Stop your tomcat with "sudo service tomcat7 stop"
 

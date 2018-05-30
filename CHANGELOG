@@ -1,3 +1,8 @@
+1.0.1
+Fixed:
+-- Fixed an issue loading the xmodal iframe in the new single plugin deployment when routing through a proxy using https.
+
+
 1.0.0
 Changed:
 -- Single plugin deployment. The plugin is now one plug-and-play jar file.
