@@ -128,7 +128,8 @@ dependencies {
    
     compile name: 'log4j-1.2.16'
     compile name: 'dcm4che-core-2.0.29'
-    compile name: 'EtherJ'
+    compile name: 'EtherJ-Core'
+    compile name: 'EtherJ-XNAT'
     compile name: 'ICR_XNAT'
 
     compile "com.google.code.gson:gson:2.8.2"
