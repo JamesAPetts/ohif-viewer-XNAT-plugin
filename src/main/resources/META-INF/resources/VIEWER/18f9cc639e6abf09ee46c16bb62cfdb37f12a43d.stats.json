@@ -3,8 +3,8 @@
     "name": "standard-minifier-js",
     "version": "2.1.2"
   },
-  "totalMinifiedBytes": 2778816,
-  "totalMinifiedGzipBytes": 695070,
+  "totalMinifiedBytes": 2778871,
+  "totalMinifiedGzipBytes": 695073,
   "minifiedBytesByPackage": {
     "packages/meteor.js": 8650,
     "packages/meteor-base.js": 68,
@@ -1201,7 +1201,7 @@
       }
     ],
     "packages/ohif_viewerbase.js": [
-      354955,
+      354966,
       {
         "node_modules": {
           "meteor": {
@@ -1289,7 +1289,7 @@
                     },
                     "downloadDialog": {
                       "template.downloadDialog.js": 4453,
-                      "downloadDialog.js": 4497
+                      "downloadDialog.js": 4508
                     },
                     "toolbarSectionButton": {
                       "template.toolbarSectionButton.js": 2788,
@@ -1816,7 +1816,7 @@
     "packages/fortawesome_fontawesome.js": 80,
     "packages/mrt_moment.js": 31758,
     "packages/icr_xnat-roi.js": [
-      60103,
+      60032,
       {
         "node_modules": {
           "meteor": {
@@ -1854,7 +1854,7 @@
                       "imageAnnotationDialogs.js": 175
                     },
                     "freehandHelpDialogs": {
-                      "template.freehandHelpDialogs.js": 1692,
+                      "template.freehandHelpDialogs.js": 1621,
                       "freehandHelpDialogs.js": 360
                     }
                   }
@@ -1885,7 +1885,7 @@
     "packages/hot-code-push.js": 70,
     "packages/global-imports.js": 1802,
     "app/app.js": [
-      21119,
+      21234,
       {
         "client": {
           "components": {
@@ -1902,7 +1902,7 @@
             },
             "toolbarSection": {
               "template.toolbarSection.js": 716,
-              "toolbarSection.js": 5464
+              "toolbarSection.js": 5579
             },
             "viewer": {
               "template.viewer.js": 1322,
