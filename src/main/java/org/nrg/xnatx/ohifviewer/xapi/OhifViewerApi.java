@@ -101,7 +101,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       @ApiResponse(code = 404, message = "The specified JSON does not exist."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })    
-    @XapiRequestMapping(value = "exists/{_experimentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)    
+    @XapiRequestMapping(value = "exists/{_experimentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, restrictTo = AccessLevel.Read)    
     public ResponseEntity<String> doesStudyJsonExist(final @PathVariable String _experimentId) throws IOException {
       // Grab the data archive path
       String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
@@ -128,7 +128,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experiment."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
-    @XapiRequestMapping(value = "{_experimentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @XapiRequestMapping(value = "{_experimentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, restrictTo = AccessLevel.Read)
     public StreamingResponseBody getExperimentJson(final @PathVariable String _experimentId) throws FileNotFoundException {
       
       // Grab the data archive path
@@ -157,7 +157,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       @ApiResponse(code = 403, message = "The user does not have permission to post to the indicated experient."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
-    @XapiRequestMapping(value = "{_experimentId}", method = RequestMethod.POST)
+    @XapiRequestMapping(value = "{_experimentId}", method = RequestMethod.POST, restrictTo = AccessLevel.Edit)
     public ResponseEntity<String> postExperimentJson(final @PathVariable String _experimentId) throws IOException {
       // Grab the data archive path
       String xnatRootURL      = XDAT.getSiteConfigPreferences().getSiteUrl();
@@ -244,7 +244,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       @ApiResponse(code = 404, message = "The specified JSON does not exist."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })    
-    @XapiRequestMapping(value = "exists/{_experimentId}/{_seriesId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)    
+    @XapiRequestMapping(value = "exists/{_experimentId}/{_seriesId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, restrictTo = AccessLevel.Read)    
     public ResponseEntity<String> doesSeriesJsonExist(final @PathVariable String _experimentId, @PathVariable String _seriesId) throws IOException {
       // Grab the data archive path
       String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
@@ -270,7 +270,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experiment."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
-    @XapiRequestMapping(value = "{_experimentId}/{_seriesId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @XapiRequestMapping(value = "{_experimentId}/{_seriesId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, restrictTo = AccessLevel.Read)
     public StreamingResponseBody getSeriesJson(final @PathVariable String _experimentId, @PathVariable String _seriesId) throws FileNotFoundException {
     // Grab the data archive path
       String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
@@ -299,7 +299,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experient."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
-    @XapiRequestMapping(value = "{_experimentId}/{_seriesId}", method = RequestMethod.POST)
+    @XapiRequestMapping(value = "{_experimentId}/{_seriesId}", method = RequestMethod.POST, restrictTo = AccessLevel.Edit)
     public ResponseEntity<String> postSeriesJson(final @PathVariable String _experimentId, @PathVariable String _seriesId) throws IOException {
       
       // Grab the data archive path
