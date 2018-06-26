@@ -95,6 +95,22 @@ public class OhifViewerApi extends AbstractXapiRestController {
     // Study level GET/POST
     =================================*/
     
+    @ApiOperation(value = "Checks whether user has permission to write to project (intended for private use by the viewer)")
+    @ApiResponses({
+      @ApiResponse(code = 200, message = "Permission granted."),
+      @ApiResponse(code = 403, message = "The user does not have permission to view the indicated project"),
+    })
+    @XapiRequestMapping(
+            value = "projects/{_projectId}/writepermissions",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.GET,
+            restrictTo = AccessLevel.Edit)
+    public ResponseEntity<String> canUserWrite(
+      @PathVariable("_projectId") @ProjectId final String _projectId)
+    {
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
     @ApiOperation(value = "Checks if Study level JSON exists")
     @ApiResponses({
       @ApiResponse(code = 302, message = "The session JSON exists."),
