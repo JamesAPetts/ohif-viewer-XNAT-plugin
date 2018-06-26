@@ -1,4 +1,4 @@
-# XNAT OHIF Viewer Plugin 1.0.1 #
+# XNAT OHIF Viewer Plugin 1.1.1 #
 
 This plugin integrates the OHIF Cornerstone-based viewer into
 XNAT. It replaces previous support for the XimgViewer plugin.

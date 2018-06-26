@@ -57,6 +57,7 @@ import org.springframework.http.HttpStatus;
  *
  * @author jpetts
  */
+@Deprecated
 public abstract class RunnableCreateMetadata implements Runnable {
   protected static final Logger logger = LoggerFactory.getLogger(RunnableCreateMetadata.class);
   protected static final String SEP = File.separator;

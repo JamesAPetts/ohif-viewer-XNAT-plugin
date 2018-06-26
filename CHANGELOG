@@ -1,3 +1,10 @@
+1.1.1
+-- Tightened security of API for all possible account types.
+
+1.1.0
+-- Changed posting JSON to require EDIT.
+
+
 1.0.1
 Fixed:
 -- Fixed an issue loading the xmodal iframe in the new single plugin deployment when routing through a proxy using https.

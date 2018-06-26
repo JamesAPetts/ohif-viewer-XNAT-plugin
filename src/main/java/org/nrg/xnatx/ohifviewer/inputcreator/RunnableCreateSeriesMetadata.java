@@ -42,6 +42,7 @@ import org.springframework.http.HttpStatus;
  *
  * @author jpetts
  */
+@Deprecated
 public class RunnableCreateSeriesMetadata extends RunnableCreateMetadata {
   private final String experimentId;
   private final String seriesId;

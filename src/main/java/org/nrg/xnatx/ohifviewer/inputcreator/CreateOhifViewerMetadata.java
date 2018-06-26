@@ -37,14 +37,14 @@ package org.nrg.xnatx.ohifviewer.inputcreator;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import etherj.PathScan;
-import etherj.dicom.DicomReceiver;
-import etherj.dicom.DicomToolkit;
-import etherj.dicom.Patient;
-import etherj.dicom.PatientRoot;
-import etherj.dicom.Series;
-import etherj.dicom.SopInstance;
-import etherj.dicom.Study;
+import icr.etherj.PathScan;
+import icr.etherj.dicom.DicomReceiver;
+import icr.etherj.dicom.DicomToolkit;
+import icr.etherj.dicom.Patient;
+import icr.etherj.dicom.PatientRoot;
+import icr.etherj.dicom.Series;
+import icr.etherj.dicom.SopInstance;
+import icr.etherj.dicom.Study;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,8 +78,6 @@ public class CreateOhifViewerMetadata {
   private final String xnatScanPath;
   private final String xnatExperimentScanUrl;
   private final HashMap<String,String> seriesUidToScanIdMap;
-
-  
   
   public CreateOhifViewerMetadata(final String xnatScanPath, final String xnatExperimentScanUrl, final HashMap<String,String> seriesUidToScanIdMap)
   {
@@ -88,8 +86,8 @@ public class CreateOhifViewerMetadata {
     this.seriesUidToScanIdMap = seriesUidToScanIdMap;
   }    
     
-    public String jsonify(final String transactionId)
-    {
+  public String jsonify(final String transactionId)
+  {
     String serialisedOvi = "";
 
     // Use Etherj to do the heavy lifting of sifting through all the scan data.
@@ -102,9 +100,8 @@ public class CreateOhifViewerMetadata {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     serialisedOvi = gson.toJson(ovi);
 
-    
     return serialisedOvi;
-    }
+  }
   
 
   private PatientRoot scanPath(String path)

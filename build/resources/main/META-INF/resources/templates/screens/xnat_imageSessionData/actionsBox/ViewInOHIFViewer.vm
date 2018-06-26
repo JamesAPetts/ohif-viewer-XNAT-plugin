@@ -12,6 +12,9 @@
 
     var jsonRequestUrl;
 
+    const projectId = XNAT.data.context.projectID;
+    const experimentId = XNAT.data.context.ID;
+
     function checkIfSessionJSON(e) {
       var rootUrl = XNAT.url.fullUrl('').replace(/\/+$/, "");
 
@@ -20,9 +23,12 @@
 
       e.preventDefault();
 
+      const projectId = XNAT.data.context.projectID;
+      const experimentId = XNAT.data.context.ID;
+
       // JPETTS: Define a request to XNAT to check if specified JSON data exists
       const oReq = new XMLHttpRequest();
-      const url = `${rootUrl}/xapi/viewer/exists/$om.id`;
+      const url = `${rootUrl}/xapi/viewer/projects/${projectId}/experiments/${experimentId}/exists`;
       console.log(`Opening GET XMLHttpRequest to: ${url}`);
 
       // Listeners
@@ -80,14 +86,15 @@
       };
 
 
-      jsonRequestUrl = `${rootUrlWithPort}/xapi/viewer/$om.id`;
+      jsonRequestUrl = `${rootUrlWithPort}/xapi/viewer/projects/${projectId}/experiments/${experimentId}`;
       console.log(`ViewInOHIFViewer.vm: jsonRequestUrl: ${jsonRequestUrl}`);
       xmodal.iframe(`${rootUrlWithPort}/VIEWER/`, opts);
+
     }
 
     function generateJSONthenOpenViewer(e, rootUrl) {
       const oReq = new XMLHttpRequest();
-      const url = `${rootUrl}/xapi/viewer/$om.id`;
+      const url = `${rootUrl}/xapi/viewer/projects/${projectId}/experiments/${experimentId}`;
       console.log(`Opening POST XMLHttpRequest to: ${url}`);
 
       // Listeners

@@ -26,7 +26,7 @@ buildscript {
 }
 
 group 'org.nrg.xnatx'
-version '1.0.1-SNAPSHOT'
+version '1.1.1-SNAPSHOT'
 
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'java'
@@ -71,7 +71,7 @@ repositories {
     maven {
         url 'https://jitpack.io'
     }
-    
+
     flatDir {
        dirs 'lib'
    }
@@ -109,7 +109,7 @@ dependencies {
      implementation ('stratum:stratum:1.0') {
         transitive = false
     }
-    
+
 
     implementation "org.springframework:spring-web"
     implementation "org.springframework:spring-webmvc"
@@ -120,15 +120,15 @@ dependencies {
     implementation "commons-io:commons-io"
     implementation "commons-codec:commons-codec"
     implementation "org.apache.commons:commons-lang3"
-    //implementation "io.projectreactor:reactor-core"
     compile group: 'io.projectreactor', name: 'reactor-core', version: '2.0.2.RELEASE'
     compile group: 'io.projectreactor', name: 'reactor-bus', version: '2.0.2.RELEASE'
     compile 'javax.inject:javax.inject:1'
-    
-   
+
+
     compile name: 'log4j-1.2.16'
     compile name: 'dcm4che-core-2.0.29'
-    compile name: 'EtherJ'
+    compile name: 'EtherJ-Core'
+    compile name: 'EtherJ-XNAT'
     compile name: 'ICR_XNAT'
 
     compile "com.google.code.gson:gson:2.8.2"
