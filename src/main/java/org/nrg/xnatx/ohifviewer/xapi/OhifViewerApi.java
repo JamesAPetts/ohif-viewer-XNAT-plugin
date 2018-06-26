@@ -69,6 +69,7 @@ import org.nrg.xdat.security.services.UserManagementServiceI;
 import org.nrg.xapi.rest.AbstractXapiRestController;
 import org.nrg.xapi.rest.ProjectId;
 import org.nrg.xdat.security.helpers.AccessLevel;
+import org.nrg.xnatx.ohifviewer.inputcreator.CreateExperimentMetadata;
 import org.nrg.xnatx.ohifviewer.inputcreator.RunnableCreateExperimentMetadata;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -94,13 +95,13 @@ public class OhifViewerApi extends AbstractXapiRestController {
     // Study level GET/POST
     =================================*/
     
-    @ApiOperation(value = "Returns 200 if Study level JSON exists")
+    @ApiOperation(value = "Checks if Study level JSON exists")
     @ApiResponses({
       @ApiResponse(code = 302, message = "The session JSON exists."),
       @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experiment."),
       @ApiResponse(code = 404, message = "The specified JSON does not exist."),
       @ApiResponse(code = 500, message = "An unexpected error occurred."),
-    })    
+    })
     @XapiRequestMapping(
             value = "projects/{_projectId}/experiments/{_experimentId}/exists",
             produces = MediaType.APPLICATION_JSON_VALUE,
@@ -111,7 +112,6 @@ public class OhifViewerApi extends AbstractXapiRestController {
       final @PathVariable String _experimentId)
       throws IOException, FileNotFoundException
     {
-      // Grab the data archive path
       String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
       
       // Get directory info from _experimentId
@@ -126,14 +126,15 @@ public class OhifViewerApi extends AbstractXapiRestController {
         logger.error(ex.getMessage());
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
-
       
+      // Check if the experiment corresponds to the project specified in Url
       if (!proj.equals(_projectId)) {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
       
       String readFilePath = getStudyPath(xnatArchivePath, proj, expLabel, _experimentId);
       File file = new File(readFilePath);
+      
       if (file.exists())
       {
         return new ResponseEntity<>(HttpStatus.FOUND);
@@ -158,8 +159,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       @PathVariable("_projectId") @ProjectId final String _projectId,
       final @PathVariable String _experimentId)
       throws FileNotFoundException
-    {
-      // Grab the data archive path
+    { 
       String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
       
       // Get directory info from _experimentId
@@ -207,12 +207,8 @@ public class OhifViewerApi extends AbstractXapiRestController {
       @PathVariable("_projectId") @ProjectId final String _projectId,
       final @PathVariable String _experimentId)
       throws IOException
-    {
-      // Grab the data archive path
-      String xnatRootURL      = XDAT.getSiteConfigPreferences().getSiteUrl();
-      String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
-      
-       // Get directory info from _experimentId
+    {      
+      // Get directory info from _experimentId
       HashMap<String,String> experimentData;
       String proj = null;
       try {
@@ -226,10 +222,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
         return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
       }
       
-      // Runs creation process within the active thread.
-      RunnableCreateExperimentMetadata createExperimentMetadata =
-                new RunnableCreateExperimentMetadata(xnatRootURL, xnatArchivePath, _experimentId, null);      
-      HttpStatus returnHttpStatus = createExperimentMetadata.runOnCurrentThread();
+      HttpStatus returnHttpStatus = CreateExperimentMetadata.createMetadata(_experimentId);
       
       return new ResponseEntity<String>(returnHttpStatus);
     }
@@ -258,16 +251,12 @@ public class OhifViewerApi extends AbstractXapiRestController {
         generateAllJsonLocked = true;
       }
       
-      // Grab the data archive path
-      String xnatRootURL      = XDAT.getSiteConfigPreferences().getSiteUrl();
-      String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
-      
       ArrayList<String> experimentIds = getAllExperimentIds();
       
-      // Executes experiment JSON creation in a multithreaded fashion.
+      // Executes experiment JSON creation in a multithreaded fashion if avialable
       Integer numThreads = Runtime.getRuntime().availableProcessors();
       logger.info("numThreads for parallel JSON creation: " + numThreads);
-      ExecutorService executorService = Executors.newFixedThreadPool(numThreads); // TODO -- Testing: threadpool of size 1 for now
+      ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
       // Create a CountDownLatch in order to check when all processes are finished
       CountDownLatch doneSignal =  new CountDownLatch(experimentIds.size());
       
@@ -277,10 +266,9 @@ public class OhifViewerApi extends AbstractXapiRestController {
       
         logger.error("experimentId " + experimentId);
         RunnableCreateExperimentMetadata createExperimentMetadata =
-                new RunnableCreateExperimentMetadata(xnatRootURL, xnatArchivePath, experimentId, doneSignal);
+                new RunnableCreateExperimentMetadata(doneSignal, experimentId);
         executorService.submit(createExperimentMetadata);
       }
-      
       
       HttpStatus returnHttpStatus;
       try

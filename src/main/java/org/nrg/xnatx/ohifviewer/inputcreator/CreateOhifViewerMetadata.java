@@ -78,8 +78,6 @@ public class CreateOhifViewerMetadata {
   private final String xnatScanPath;
   private final String xnatExperimentScanUrl;
   private final HashMap<String,String> seriesUidToScanIdMap;
-
-  
   
   public CreateOhifViewerMetadata(final String xnatScanPath, final String xnatExperimentScanUrl, final HashMap<String,String> seriesUidToScanIdMap)
   {
@@ -88,8 +86,8 @@ public class CreateOhifViewerMetadata {
     this.seriesUidToScanIdMap = seriesUidToScanIdMap;
   }    
     
-    public String jsonify(final String transactionId)
-    {
+  public String jsonify(final String transactionId)
+  {
     String serialisedOvi = "";
 
     // Use Etherj to do the heavy lifting of sifting through all the scan data.
@@ -102,9 +100,8 @@ public class CreateOhifViewerMetadata {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     serialisedOvi = gson.toJson(ovi);
 
-    
     return serialisedOvi;
-    }
+  }
   
 
   private PatientRoot scanPath(String path)

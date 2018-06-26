@@ -42,8 +42,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import org.apache.commons.io.IOUtils;
+import org.nrg.xdat.XDAT;
 import org.nrg.xdat.model.XnatImagescandataI;
 import org.nrg.xdat.om.XnatExperimentdata;
 import org.nrg.xdat.om.XnatImagesessiondata;
@@ -57,39 +57,56 @@ import org.springframework.http.HttpStatus;
  *
  * @author jpetts
  */
-@Deprecated
-public abstract class RunnableCreateMetadata implements Runnable {
-  protected static final Logger logger = LoggerFactory.getLogger(RunnableCreateMetadata.class);
-  protected static final String SEP = File.separator;
-  protected final CountDownLatch doneSignal;
-  protected final String xnatRootURL;
-  protected final String xnatArchivePath;
-  protected Thread thread;
+public class CreateExperimentMetadata {
+  private static final Logger logger = LoggerFactory.getLogger(CreateExperimentMetadata.class);
+  private static final String SEP = File.separator;
+  private static final String xnatRootURL      = XDAT.getSiteConfigPreferences().getSiteUrl();
+  private static final String xnatArchivePath  = XDAT.getSiteConfigPreferences().getArchivePath();
   
-   
-  public RunnableCreateMetadata(CountDownLatch doneSignal, String _xnatRootURL, String _xnatArchivePath) {
-    this.doneSignal = doneSignal;
-    this.xnatRootURL = _xnatRootURL;
-    this.xnatArchivePath = _xnatArchivePath;
-  }
   
-  public void run()
+  public static HttpStatus createMetadata(String experimentId)
   {
+    HashMap<String,String> experimentData = getDirectoryInfo(experimentId);
+    String proj     = experimentData.get("proj");
+    String expLabel = experimentData.get("expLabel");
+    String subj     = experimentData.get("subj");
+
+    HashMap<String,String> seriesUidToScanIdMap = getSeriesUidToScanIdMap(experimentId);
+
+    String xnatScanPath = xnatArchivePath + SEP + proj
+      + SEP + "arc001" + SEP + expLabel + SEP + "SCANS";
+
+    String xnatExperimentScanUrl = getXnatScanUrl(proj, subj, expLabel);
+
+    String jsonString = "";
     try
     {
-      createMetadata();
-      doneSignal.countDown();
+      CreateOhifViewerMetadata jsonCreator = new CreateOhifViewerMetadata(xnatScanPath, xnatExperimentScanUrl, seriesUidToScanIdMap);
+      jsonString = jsonCreator.jsonify(experimentId);
     }
     catch (Exception ex)
     {
-      thread.interrupt();
-      logger.error(ex.getMessage());
+      logger.error("Jsonifier exception:\n" + ex.getMessage());
     }
+
+    String writeFilePath = getStudyPath(xnatArchivePath, proj, expLabel, experimentId);
+
+    // Create RESOURCES/metadata if it doesn't exist
+    createFilePath(writeFilePath);
+
+    // Write to file and send back response code
+    return writeJSON(jsonString, writeFilePath);
   }
   
-  protected abstract HttpStatus createMetadata();  
+
+  private static String getStudyPath(String xnatArchivePath, String proj, String expLabel, String _experimentId)
+  {
+    String filePath = xnatArchivePath + SEP + proj + SEP + "arc001"
+    + SEP + expLabel + SEP + "RESOURCES/metadata/" + _experimentId +".json";
+    return filePath;
+  }
   
-  protected String getXnatScanUrl(String project, String subject, String experimentId)
+  private static String getXnatScanUrl(String project, String subject, String experimentId)
   {
     String xnatExperimentScanUrl  = xnatRootURL
       + "/data/archive/projects/" + project
@@ -99,7 +116,7 @@ public abstract class RunnableCreateMetadata implements Runnable {
     return xnatExperimentScanUrl;
   }
   
-  protected HashMap<String, String> getDirectoryInfo(String _experimentId)
+  private static HashMap<String, String> getDirectoryInfo(String _experimentId)
   {
     // Get Experiment data and Project data from the experimentId
     XnatExperimentdata expData = XnatExperimentdata.getXnatExperimentdatasById(_experimentId, null, false);
@@ -124,7 +141,7 @@ public abstract class RunnableCreateMetadata implements Runnable {
     return result;
   }
   
-  protected HashMap<String, String> getSeriesUidToScanIdMap(String _experimentId)
+  protected static HashMap<String, String> getSeriesUidToScanIdMap(String _experimentId)
   {
     HashMap<String, String> seriesUidToScanIdMap = new HashMap<String, String>();
     XnatExperimentdata expData = XnatExperimentdata.getXnatExperimentdatasById(_experimentId, null, false);
@@ -151,7 +168,7 @@ public abstract class RunnableCreateMetadata implements Runnable {
     return seriesUidToScanIdMap;
   }
 
-  protected void createFilePath(String filePath)
+  protected static void createFilePath(String filePath)
   { // Create RESOURCES/metadata if it doesn't exist
     try
     {
@@ -167,7 +184,7 @@ public abstract class RunnableCreateMetadata implements Runnable {
     }
   }
     
-  protected HttpStatus writeJSON(String jsonString, String writeFilePath)
+  protected static HttpStatus writeJSON(String jsonString, String writeFilePath)
   {
     try
     {
@@ -184,4 +201,5 @@ public abstract class RunnableCreateMetadata implements Runnable {
       return HttpStatus.INTERNAL_SERVER_ERROR;
     }
   }
+
 }

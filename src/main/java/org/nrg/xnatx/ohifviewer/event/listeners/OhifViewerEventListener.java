@@ -44,12 +44,11 @@ import org.nrg.xdat.XDAT;
 import org.nrg.xdat.om.XnatExperimentdata;
 import org.nrg.xdat.om.XnatImagesessiondata;
 import org.nrg.xft.event.persist.PersistentWorkflowUtils;
-import org.nrg.xnatx.ohifviewer.inputcreator.RunnableCreateExperimentMetadata;
+import org.nrg.xnatx.ohifviewer.inputcreator.CreateExperimentMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import static reactor.bus.selector.Selectors.R;
-
 
 /**
  *
@@ -103,8 +102,7 @@ public class OhifViewerEventListener implements Consumer<Event<WorkflowStatusEve
       String xnatRootURL = XDAT.getSiteConfigPreferences().getSiteUrl();
       String xnatArchivePath = XDAT.getSiteConfigPreferences().getArchivePath();
       logger.debug("Rebuilding viewer JSON metadata for experiment " + experimentId);
-      RunnableCreateExperimentMetadata createExperimentMetadata = new RunnableCreateExperimentMetadata(xnatRootURL, xnatArchivePath, experimentId, null);
-      createExperimentMetadata.runOnCurrentThread();
+      CreateExperimentMetadata.createMetadata(experimentId);
     } catch (Exception e) {
      logger.error(e.getMessage());
     }

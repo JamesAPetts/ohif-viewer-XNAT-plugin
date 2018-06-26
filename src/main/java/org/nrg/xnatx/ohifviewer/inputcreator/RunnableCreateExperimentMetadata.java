@@ -34,68 +34,44 @@
 *********************************************************************/
 package org.nrg.xnatx.ohifviewer.inputcreator;
 
-import java.util.HashMap;
+
 import java.util.concurrent.CountDownLatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
 /**
  *
  * @author jpetts
  */
-public class RunnableCreateExperimentMetadata extends RunnableCreateMetadata {
+public class RunnableCreateExperimentMetadata implements Runnable {
+  protected static final Logger logger = LoggerFactory.getLogger(RunnableCreateMetadata.class);
   private final String experimentId;
+  protected final CountDownLatch doneSignal;
+  protected Thread thread;
+  
    
-  public RunnableCreateExperimentMetadata(String _xnatRootURL, String _xnatArchivePath, String _experimentId, CountDownLatch doneSignal) {
-    super(doneSignal, _xnatRootURL, _xnatArchivePath);
+  public RunnableCreateExperimentMetadata(CountDownLatch _doneSignal, String _experimentId) {
+    this.doneSignal = _doneSignal;
     this.experimentId = _experimentId;
   }
   
-  public HttpStatus runOnCurrentThread() {
-    // Method that allows single threaded execution (for single POST requests).
-    return createMetadata();
-  }
-  
-  @Override
-  protected HttpStatus createMetadata()
-  {
-    HashMap<String,String> experimentData = getDirectoryInfo(experimentId);
-    String proj     = experimentData.get("proj");
-    String expLabel = experimentData.get("expLabel");
-    String subj     = experimentData.get("subj");
-
-    HashMap<String,String> seriesUidToScanIdMap = getSeriesUidToScanIdMap(experimentId);
-
-    String xnatScanPath = xnatArchivePath + SEP + proj
-      + SEP + "arc001" + SEP + expLabel + SEP + "SCANS";
-
-    String xnatExperimentScanUrl = getXnatScanUrl(proj, subj, expLabel);
-
-    String jsonString = "";
+  public void run() {
     try
     {
-      CreateOhifViewerMetadata jsonCreator = new CreateOhifViewerMetadata(xnatScanPath, xnatExperimentScanUrl, seriesUidToScanIdMap);
-      jsonString = jsonCreator.jsonify(experimentId);
+      createMetadata();
+      doneSignal.countDown();
     }
     catch (Exception ex)
     {
-      logger.error("Jsonifier exception:\n" + ex.getMessage());
+      thread.interrupt();
+      logger.error(ex.getMessage());
     }
-
-    String writeFilePath = getStudyPath(xnatArchivePath, proj, expLabel, experimentId);
-
-    // Create RESOURCES/metadata if it doesn't exist
-    createFilePath(writeFilePath);
-
-    // Write to file and send back response code
-    return writeJSON(jsonString, writeFilePath);
   }
   
-
-  private String getStudyPath(String xnatArchivePath, String proj, String expLabel, String _experimentId)
+  protected HttpStatus createMetadata()
   {
-    String filePath = xnatArchivePath + SEP + proj + SEP + "arc001"
-    + SEP + expLabel + SEP + "RESOURCES/metadata/" + _experimentId +".json";
-    return filePath;
+    return CreateExperimentMetadata.createMetadata(experimentId);
   }
 
 }
