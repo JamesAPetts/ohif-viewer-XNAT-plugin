@@ -2,7 +2,7 @@
 <!-- BEGIN /templates/screens/xnat_imageSessionData/actionsBox/ViewInOHIFViewer.vm -->
 <!-- Sequence: 6 -->
 <li class="yuimenuitem">
-    <a id="ohifViewer" href="#"><div class="ic">&nbsp;</div><div class="ic_spacer">&nbsp;</div>View Study</a>
+    <a id="ohifViewer" href="#"><div class="ic">&nbsp;</div><div class="ic_spacer">&nbsp;</div>View Session</a>
 </li>
 
 <script>
