@@ -7,16 +7,20 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 # Public beta: #
 
 Hotfix 1: An updated viewer jar is available in the dist directory.
+
 Fixes:
+
 -- Issue #4 -- If image assessors other than the roiCollections are present in the assessor list, the viewer will now count the correct number of roiCollections and won't hang on import.
 
 New:
+
 -- Issue #2 -- Full multiframe support. I've tested on both primary and secondary multi-frame DICOMs and can sucuessfully save/load AIMs to these. If anyone has an RTSTRUCT that references a multiframe DICOM I would appreciate the data!
+
 -- Issue #5 -- I painfully went through the list of SOP classes and selected what the viewer should and should not attempted to load. If any non-imaging resources sit as "scans", the viewer will no longer try to load these.
 
 
 Please check the issues page. Label new issues with the "XNAT-ROI Beta" tag as well as relevent tags (e.g. enhancement, bug, etc).
-Please check the issue does not already have an existing thread.
+Please check that the issue does not already have an existing thread.
 
 Thank you!
 
