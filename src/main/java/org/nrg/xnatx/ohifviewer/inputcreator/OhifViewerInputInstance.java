@@ -47,6 +47,7 @@ public abstract class OhifViewerInputInstance extends OhifViewerInputItem {
 	private Integer instanceNumber;
 	private Integer columns;
 	private Integer rows;
+  private String numberOfFrames;
 	private String  frameOfReferenceUID;
 	private String  imagePositionPatient;
 	private String  imageOrientationPatient;
@@ -66,6 +67,13 @@ public abstract class OhifViewerInputInstance extends OhifViewerInputItem {
     setImagePositionPatient(dbl2DcmString(sop.getImagePositionPatient()));
     setImageOrientationPatient(dbl2DcmString(sop.getImageOrientationPatient()));
     setPixelSpacing(dbl2DcmString(sop.getPixelSpacing()));
+    
+    // Set number of frames if multiframe image, set to empty string if not so the viewer ignores it.
+    if (sop.getNumberOfFrames() > 1) {
+      setNumberOfFrames(Integer.toString(sop.getNumberOfFrames()));
+    } else {
+      setNumberOfFrames("");
+    }
   }
   
   protected String getResourceType(String sopClassUid)
@@ -132,6 +140,16 @@ public abstract class OhifViewerInputInstance extends OhifViewerInputItem {
 	private void setRows(Integer rows)
 	{
 		this.rows = rows;
+	}
+  
+ 	public String getNumberOfFrames()
+	{
+		return numberOfFrames;
+	}
+
+	private void setNumberOfFrames(String numberOfFrames)
+	{
+		this.numberOfFrames = numberOfFrames;
 	}
 
 	public String getFrameOfReferenceUID()

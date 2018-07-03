@@ -3,8 +3,8 @@
     "name": "standard-minifier-js",
     "version": "2.1.2"
   },
-  "totalMinifiedBytes": 2783492,
-  "totalMinifiedGzipBytes": 696041,
+  "totalMinifiedBytes": 2784465,
+  "totalMinifiedGzipBytes": 696293,
   "minifiedBytesByPackage": {
     "packages/meteor.js": 8650,
     "packages/meteor-base.js": 68,
@@ -985,7 +985,7 @@
       }
     ],
     "packages/ohif_cornerstone.js": [
-      789209,
+      789203,
       {
         "node_modules": {
           "meteor": {
@@ -1008,7 +1008,7 @@
                 },
                 "cornerstone-tools": {
                   "dist": {
-                    "cornerstoneTools.js": 292613
+                    "cornerstoneTools.js": 292607
                   }
                 },
                 "cornerstone-wado-image-loader": {
@@ -1098,7 +1098,7 @@
       }
     ],
     "packages/ohif_cornerstone-settings.js": [
-      8818,
+      8920,
       {
         "node_modules": {
           "meteor": {
@@ -1113,7 +1113,7 @@
                   "lib": {
                     "parsingUtils.js": 858,
                     "classes": {
-                      "MetadataProvider.js": 6463
+                      "MetadataProvider.js": 6565
                     }
                   }
                 }
@@ -1816,7 +1816,7 @@
     "packages/fortawesome_fontawesome.js": 80,
     "packages/mrt_moment.js": 31758,
     "packages/icr_xnat-roi.js": [
-      64267,
+      65144,
       {
         "node_modules": {
           "meteor": {
@@ -1827,10 +1827,10 @@
                     "AIMExporter.js": 4134,
                     "AIMReader.js": 4063,
                     "AIMWriter.js": 9600,
-                    "AsyncRoiFetcher.js": 5555,
+                    "AsyncRoiFetcher.js": 5771,
                     "Polygon.js": 1973,
-                    "RoiExtractor.js": 1851,
-                    "RoiImporter.js": 2907,
+                    "RoiExtractor.js": 2242,
+                    "RoiImporter.js": 3177,
                     "RTStructReader.js": 4643
                   },
                   "ioDialogUtils.js": 1423,

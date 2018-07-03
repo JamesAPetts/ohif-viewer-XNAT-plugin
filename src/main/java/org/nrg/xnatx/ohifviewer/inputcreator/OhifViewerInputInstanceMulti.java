@@ -56,7 +56,7 @@ public class OhifViewerInputInstanceMulti extends OhifViewerInputInstance {
   {
     super(sop, ser, xnatScanUrl, scanId);
     String file = new File(sop.getPath()).getName();
-    String sopClassUid = sop.getSopClassUid();    
+    String sopClassUid = sop.getSopClassUid();
     String resource = getResourceType(sopClassUid);
     
     String urlString = xnatScanUrl + scanId + RESOURCES + resource + FILES + file;

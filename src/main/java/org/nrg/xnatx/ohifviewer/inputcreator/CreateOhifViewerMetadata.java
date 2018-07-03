@@ -62,18 +62,68 @@ public class CreateOhifViewerMetadata {
   private static final Logger logger = LoggerFactory.getLogger(CreateOhifViewerMetadata.class);
   private static final DicomToolkit dcmTk = DicomToolkit.getToolkit();
   protected static final ArrayList<String> MULTI_FRAME_SOP_CLASS_UIDS = createMultiFrameSopClassUidList();
+  protected static final ArrayList<String> SINGLE_FRAME_SOP_CLASS_UIDS = createSingleFrameImageSopClassUidList();
+  
+  // TODO move these to a seperate class
   private static ArrayList<String> createMultiFrameSopClassUidList()
   {
         ArrayList<String> result = new ArrayList<>();
-        result.add("1.2.840.10008.5.1.4.1.1.3");
-        result.add("1.2.840.10008.5.1.4.1.1.3.1");
-        result.add("1.2.840.10008.5.1.4.1.1.7.1");
-        result.add("1.2.840.10008.5.1.4.1.1.7.2");
-        result.add("1.2.840.10008.5.1.4.1.1.7.3");
-        result.add("1.2.840.10008.5.1.4.1.1.7.4");
-        result.add("1.2.840.10008.5.1.4.1.1.77.2");
+        result.add("1.2.840.10008.5.1.4.1.1.3"); // Ultrasound Multiframe Image Storage
+        result.add("1.2.840.10008.5.1.4.1.1.3.1"); // Ultrasound Multiframe Image Storage
+        result.add("1.2.840.10008.5.1.4.1.1.7.1"); // Multiframe Single Bit Secondary Capture Image Storage
+        result.add("1.2.840.10008.5.1.4.1.1.7.2"); // Multiframe Grayscale Byte Secondary Capture Image Storage
+        result.add("1.2.840.10008.5.1.4.1.1.7.3"); // Multiframe Grayscale Word Secondary Capture Image Storage
+        result.add("1.2.840.10008.5.1.4.1.1.7.4"); // Multiframe True Color Secondary Capture Image Storage
+        result.add("1.2.840.10008.5.1.4.1.1.77.2"); // VL Multiframe Image Storage 
         return result;
-   }
+  }
+  
+  private static ArrayList<String> createSingleFrameImageSopClassUidList()
+  {
+        ArrayList<String> result = new ArrayList<>();
+        result.add("1.2.840.10008.5.1.4.1.1.1"); // CR Image Storage
+        result.add("1.2.840.10008.5.1.4.1.1.1.1"); // Digital X-Ray Image Storage – for Presentation
+        result.add("1.2.840.10008.5.1.4.1.1.1.1.1"); //	Digital X-Ray Image Storage – for Processing
+        result.add("1.2.840.10008.5.1.4.1.1.1.2"); // Digital Mammography X-Ray Image Storage – for Presentation
+        result.add("1.2.840.10008.5.1.4.1.1.1.3"); //	Digital Intra – oral X-Ray Image Storage – for Presentation	 
+        result.add("1.2.840.10008.5.1.4.1.1.1.3.1"); //	Digital Intra – oral X-Ray Image Storage – for Processing	 
+        result.add("1.2.840.10008.5.1.4.1.1.10"); //	Standalone Modality LUT Storage 	Retired
+        result.add("1.2.840.10008.5.1.4.1.1.104.1"); //	Encapsulated PDF Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.11"); //	Standalone VOI LUT Storage 	Retired
+        result.add("1.2.840.10008.5.1.4.1.1.11.1"); //	Grayscale Softcopy Presentation State Storage SOP Class	 
+        result.add("1.2.840.10008.5.1.4.1.1.11.2"); //	Color Softcopy Presentation State Storage SOP Class	 
+        result.add("1.2.840.10008.5.1.4.1.1.11.3"); //	Pseudocolor Softcopy Presentation Stage Storage SOP Class 	 
+        result.add("1.2.840.10008.5.1.4.1.1.11.4"); //	Blending Softcopy Presentation State Storage SOP Class	 
+        result.add("1.2.840.10008.5.1.4.1.1.12.1"); //	X-Ray Angiographic Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.12.1.1"); //	Enhanced XA Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.12.2"); //	X-Ray Radiofluoroscopic Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.12.2.1"); //	Enhanced XRF Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.12.3"); //	X-Ray Angiographic Bi-plane Image Storage 	Retired
+        result.add("1.2.840.10008.5.1.4.1.1.128"); //	Positron Emission Tomography Curve Storage 	Retired
+        result.add("1.2.840.10008.5.1.4.1.1.129"); //	Standalone Positron Emission Tomography Curve Storage 	Retired
+        result.add("1.2.840.10008.5.1.4.1.1.2"); //	CT Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.2.1"); //	Enhanced CT Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.20"); //	NM Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.3"); //	Ultrasound Multiframe Image Storage 	Retired
+        result.add("1.2.840.10008.5.1.4.1.1.3.1"); //	Ultrasound Multiframe Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.4"); //	MR Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.4.1"); //	Enhanced MR Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.4.2"); //	MR Spectroscopy Storage
+        result.add("1.2.840.10008.5.1.4.1.1.6"); //	Ultrasound Image Storage
+        result.add("1.2.840.10008.5.1.4.1.1.6.1"); //	Ultrasound Image Storage
+        result.add("1.2.840.10008.5.1.4.1.1.7"); // Secondary Capture Image Storage
+        result.add("1.2.840.10008.5.1.4.1.1.77.1"); //	VL (Visible Light) Image Storage 	Retired
+        result.add("1.2.840.10008.5.1.4.1.1.77.1.1"); //	VL endoscopic Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.77.1.1.1"); //	Video Endoscopic Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.77.1.2"); //	VL Microscopic Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.77.1.2.1"); //	Video Microscopic Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.77.1.3"); //	VL Slide-Coordinates Microscopic Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.77.1.4"); //	VL Photographic Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.77.1.4.1"); //	Video Photographic Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.77.1.5.1"); //	Ophthalmic Photography 8-Bit Image Storage	 
+        result.add("1.2.840.10008.5.1.4.1.1.77.1.5.2"); //	Ophthalmic Photography 16-Bit Image Storage
+        return result;
+  }
   
   private final String xnatScanPath;
   private final String xnatExperimentScanUrl;
@@ -154,18 +204,17 @@ public class CreateOhifViewerMetadata {
           List<SopInstance> sopList = ser.getSopInstanceList();
           for (SopInstance sop : sopList)
           {
-            if (MULTI_FRAME_SOP_CLASS_UIDS.contains(sop.getSopClassUid()))
-            {
-              // TODO FIX THIS
-              //OhifViewerInputInstanceMulti oviInst = new OhifViewerInputInstanceMulti(sop, ser, xnatScanUrl, scanId);
-              //oviSer.addInstances(oviInst);
-              // TEMP - At the moment just don't display multi-frame images
-            }
-            else
+            if (SINGLE_FRAME_SOP_CLASS_UIDS.contains(sop.getSopClassUid()))
             {
               OhifViewerInputInstanceSingle oviInst = new OhifViewerInputInstanceSingle(sop, ser, this.xnatExperimentScanUrl, scanId);
               oviSer.addInstances(oviInst);
             }
+            else if (MULTI_FRAME_SOP_CLASS_UIDS.contains(sop.getSopClassUid()))
+            {
+              OhifViewerInputInstanceMulti oviInst = new OhifViewerInputInstanceMulti(sop, ser, this.xnatExperimentScanUrl, scanId);
+              oviSer.addInstances(oviInst);
+            }
+            
           }
         }
       }
