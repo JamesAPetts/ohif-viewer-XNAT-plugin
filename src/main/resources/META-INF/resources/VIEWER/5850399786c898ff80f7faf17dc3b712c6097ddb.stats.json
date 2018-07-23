@@ -3,8 +3,8 @@
     "name": "standard-minifier-js",
     "version": "2.1.2"
   },
-  "totalMinifiedBytes": 2784465,
-  "totalMinifiedGzipBytes": 696293,
+  "totalMinifiedBytes": 2806453,
+  "totalMinifiedGzipBytes": 702349,
   "minifiedBytesByPackage": {
     "packages/meteor.js": 8650,
     "packages/meteor-base.js": 68,
@@ -985,7 +985,7 @@
       }
     ],
     "packages/ohif_cornerstone.js": [
-      789203,
+      808519,
       {
         "node_modules": {
           "meteor": {
@@ -1008,7 +1008,7 @@
                 },
                 "cornerstone-tools": {
                   "dist": {
-                    "cornerstoneTools.js": 292607
+                    "cornerstoneTools.js": 311923
                   }
                 },
                 "cornerstone-wado-image-loader": {
@@ -1201,7 +1201,7 @@
       }
     ],
     "packages/ohif_viewerbase.js": [
-      354982,
+      355435,
       {
         "node_modules": {
           "meteor": {
@@ -1349,7 +1349,7 @@
                   "getStudyMetadata.js": 280,
                   "getWADORSImageId.js": 319,
                   "getWADORSImageUrl.js": 166,
-                  "hotkeyUtils.js": 5002,
+                  "hotkeyUtils.js": 5105,
                   "imageViewerViewportData.js": 118,
                   "instanceClassSpecificViewport.js": 241,
                   "isImage.js": 2193,
@@ -1365,14 +1365,14 @@
                   "switchToImageRelative.js": 212,
                   "textMarkerUtils.js": 1184,
                   "thumbnailDragHandlers.js": 2953,
-                  "toolManager.js": 10005,
+                  "toolManager.js": 10318,
                   "unloadHandlers.js": 272,
                   "updateAllViewports.js": 223,
                   "updateCrosshairsSynchronizer.js": 573,
                   "updateMetaDataManager.js": 2484,
                   "updateOrientationMarkers.js": 1104,
                   "viewportOverlayUtils.js": 1000,
-                  "viewportUtils.js": 4841,
+                  "viewportUtils.js": 4878,
                   "classes": {
                     "ImageSet.js": 1287,
                     "LayoutManager.js": 8558,
@@ -1816,7 +1816,7 @@
     "packages/fortawesome_fontawesome.js": 80,
     "packages/mrt_moment.js": 31758,
     "packages/icr_xnat-roi.js": [
-      65144,
+      66795,
       {
         "node_modules": {
           "meteor": {
@@ -1838,12 +1838,13 @@
                   "seriesInfoProvider.js": 1663,
                   "import.js": 315,
                   "export.js": 2934,
-                  "freehandHelp.js": 4244,
+                  "freehandHelp.js": 5088,
                   "ioHelp.js": 1360,
                   "checkAndSetPermissions.js": 1060,
-                  "switchActiveVolume.js": 2477
+                  "switchActiveVolume.js": 2477,
+                  "toggleFreehandStats.js": 455
                 },
-                "viewportFunctions.js": 769,
+                "viewportFunctions.js": 929,
                 "test.js": 821,
                 "components": {
                   "viewer": {
@@ -1856,7 +1857,7 @@
                       "imageAnnotationDialogs.js": 175
                     },
                     "freehandHelpDialogs": {
-                      "template.freehandHelpDialogs.js": 1692,
+                      "template.freehandHelpDialogs.js": 1858,
                       "freehandHelpDialogs.js": 360
                     }
                   }
@@ -1887,7 +1888,7 @@
     "packages/hot-code-push.js": 70,
     "packages/global-imports.js": 1802,
     "app/app.js": [
-      21400,
+      21968,
       {
         "client": {
           "components": {
@@ -1896,7 +1897,7 @@
               "flexboxLayout.js": 354
             },
             "standaloneViewer": {
-              "template.standaloneViewer.js": 753
+              "template.standaloneViewer.js": 766
             },
             "standaloneViewerMain": {
               "template.standaloneViewerMain.js": 257,
@@ -1904,7 +1905,7 @@
             },
             "toolbarSection": {
               "template.toolbarSection.js": 716,
-              "toolbarSection.js": 5603
+              "toolbarSection.js": 6158
             },
             "viewer": {
               "template.viewer.js": 1322,

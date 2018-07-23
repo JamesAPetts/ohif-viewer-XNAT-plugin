@@ -6,7 +6,19 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 # Public beta: #
 
-Hotfix 1: An updated viewer jar is available in the dist directory.
+Up to date viewer jars are available in the dist directory.
+
+Hotfix 1.0.2:
+
+New:
+-- New Icons for import/export
+-- XNAT logo overlaying OHIF logo on the top left.
+-- ROI plugin version number top left.
+-- Side bar open by default.
+
+
+
+Hotfix 1.0.1:
 
 Fixes:
 
