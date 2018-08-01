@@ -10,20 +10,28 @@ Up to date viewer jars are available in the dist directory.
 
 **Hotfix 1.0.2: Please use BOTH new plugins jars in the dist directory**
 
-**New:**
+New:
+
 Delete tools. Under the delete menu there is:
+
 -- The Eraser tool, which can delete any annotation by clicking on its handle. Note there is no highlighting of the tools being deleted currently. This will come later once we have a more developed cornerstoneTools API.
+
 -- Clear, which deletes all annotations on the slice.
+
 Locked ROIs cannot be deleted by the Eraser tool, or by Clear.
 
 Minor changes:
+
 -- New Icons for import/export
+
 -- XNAT logo overlaying OHIF logo on the top left.
+
 -- ROI plugin version number top left.
+
 -- Side bar open by default.
 
 
-Hotfix 1.0.1:
+**Hotfix 1.0.1:**
 
 Fixes:
 
