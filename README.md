@@ -8,7 +8,15 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
-**Hotfix 1.0.2: Please use BOTH new plugins jars in the dist directory**
+** WIP Hotfix 1.3.0 (?) **
+
+No new functionality yet (?)
+
+-- Updated EtherJ version.
+
+
+
+**1.2.0: Please use BOTH new plugins jars in the dist directory**
 
 New:
 
@@ -31,7 +39,7 @@ Minor changes:
 -- Side bar open by default.
 
 
-**Hotfix 1.0.1:**
+**1.1.0:**
 
 Fixes:
 
