@@ -8,15 +8,12 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
-** WIP Hotfix 1.3.0 (?) **
+** WIP Hotfix 1.2.1 - Please use BOTH new plugins jars in the dist directory**
 
-No new functionality yet (?)
-
+-- Cleaned up UI of subject and project views, so that they don't list roiCollections. roiCollections are still listed in the Session they correspond to (Thanks James D'Arcy!).
 -- Updated EtherJ version.
 
-
-
-**1.2.0: Please use BOTH new plugins jars in the dist directory**
+**1.2.0:**
 
 New:
 
