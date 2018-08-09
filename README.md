@@ -8,7 +8,16 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
-** WIP Hotfix 1.2.1 - Please use BOTH new plugins jars in the dist directory**
+**1.3.0**
+New:
+
+Synchronization:
+
+-- Using the tick boxes at the top right of each viewport, one can synchronise scans to scroll together.
+-- The 'Sync Settings' menu has the option to set all viewports to be synced by default.
+-- The 'Sync Settings' menu allows you to configure the synchronization to opperate via image position, or by frame index. Image position is the default.
+
+** Hotfix 1.2.1 - Please use BOTH new plugins jars in the dist directory**
 
 -- Cleaned up UI of subject and project views, so that they don't list roiCollections. roiCollections are still listed in the Session they correspond to (Thanks James D'Arcy!).
 -- Updated EtherJ version.
