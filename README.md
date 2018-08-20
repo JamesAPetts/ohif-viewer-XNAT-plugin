@@ -17,6 +17,16 @@ Synchronization:
 -- The 'Sync Settings' menu has the option to set all viewports to be synced by default.
 -- The 'Sync Settings' menu allows you to configure the synchronization to opperate via image position, or by frame index. Image position is the default.
 
+UI:
+-- Consolidated Help to a single interface.
+-- Ported the volume UI to Blaze and optimised its performance.
+-- New export UI.
+
+Export:
+-- The user can now choose which ROIs to export as a collection, instead of exporting all ROI's by default.
+
+
+
 ** Hotfix 1.2.1 - Please use BOTH new plugins jars in the dist directory**
 
 -- Cleaned up UI of subject and project views, so that they don't list roiCollections. roiCollections are still listed in the Session they correspond to (Thanks James D'Arcy!).
