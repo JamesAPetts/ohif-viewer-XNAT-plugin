@@ -3,8 +3,8 @@
     "name": "standard-minifier-js",
     "version": "2.1.2"
   },
-  "totalMinifiedBytes": 2832188,
-  "totalMinifiedGzipBytes": 706101,
+  "totalMinifiedBytes": 2832510,
+  "totalMinifiedGzipBytes": 706132,
   "minifiedBytesByPackage": {
     "packages/meteor.js": 8650,
     "packages/meteor-base.js": 68,
@@ -1825,7 +1825,7 @@
     "packages/fortawesome_fontawesome.js": 80,
     "packages/mrt_moment.js": 31758,
     "packages/icr_xnat-roi.js": [
-      86613,
+      86935,
       {
         "node_modules": {
           "meteor": {
@@ -1833,7 +1833,7 @@
               "client": {
                 "lib": {
                   "classes": {
-                    "AIMExporter.js": 4134,
+                    "AIMExporter.js": 4160,
                     "AIMReader.js": 4063,
                     "AIMWriter.js": 9419,
                     "AsyncRoiFetcher.js": 5771,
@@ -1866,11 +1866,11 @@
                       "volumeManagementDialogs.js": 1285
                     },
                     "volumeListItem": {
-                      "template.volumeListItem.js": 604,
-                      "volumeListItem.js": 1020
+                      "template.volumeListItem.js": 846,
+                      "volumeListItem.js": 1076
                     },
                     "volumeList": {
-                      "template.volumeList.js": 572
+                      "template.volumeList.js": 570
                     },
                     "roiCollectionBuilderDialogs": {
                       "template.roiCollectionBuilderDialogs.js": 2359,

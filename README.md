@@ -19,7 +19,7 @@ Synchronization:
 
 UI:
 -- Consolidated Help to a single interface.
--- Ported the volume UI to Blaze and optimised its performance.
+-- Ported the volume UI to Blaze and optimised its performance. Also made it slicker, and consistent with the new export UI.
 -- New export UI.
 
 Export:
