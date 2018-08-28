@@ -3,8 +3,8 @@
     "name": "standard-minifier-js",
     "version": "2.1.2"
   },
-  "totalMinifiedBytes": 2835404,
-  "totalMinifiedGzipBytes": 706812,
+  "totalMinifiedBytes": 2834252,
+  "totalMinifiedGzipBytes": 706571,
   "minifiedBytesByPackage": {
     "packages/meteor.js": 8650,
     "packages/meteor-base.js": 68,
@@ -1081,14 +1081,14 @@
     ],
     "packages/u2622_persistent-session.js": 6587,
     "packages/icr_xnat-roi-scaling.js": [
-      3645,
+      3578,
       {
         "node_modules": {
           "meteor": {
             "icr:xnat-roi-scaling": {
               "client": {
                 "lib": {
-                  "rescaleImportedPolygons.js": 1856
+                  "rescaleImportedPolygons.js": 1789
                 }
               },
               "main.js": 205
@@ -1825,7 +1825,7 @@
     "packages/fortawesome_fontawesome.js": 80,
     "packages/mrt_moment.js": 31758,
     "packages/icr_xnat-roi.js": [
-      89592,
+      88507,
       {
         "node_modules": {
           "meteor": {
@@ -1846,15 +1846,15 @@
                   "freehandVolumeStateManagement.js": 1511,
                   "seriesInfoProvider.js": 1663,
                   "import.js": 315,
-                  "export.js": 4183,
-                  "checkAndSetPermissions.js": 1060,
+                  "export.js": 3976,
+                  "checkAndSetPermissions.js": 945,
                   "roiCollectionBuilder.js": 921,
                   "showHelp.js": 585,
                   "toggleFreehandStats.js": 455,
                   "volumeManagement.js": 1750
                 },
-                "viewportFunctions.js": 861,
-                "test.js": 821,
+                "viewportFunctions.js": 782,
+                "test.js": 137,
                 "components": {
                   "viewer": {
                     "ioDialogs": {
