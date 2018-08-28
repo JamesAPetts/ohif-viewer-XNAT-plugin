@@ -1,4 +1,4 @@
-# XNAT-ROI OHIF Viewer Plugin 1.0.0 Beta #
+# XNAT-ROI OHIF Viewer Plugin 1.3.0 Beta #
 
 This beta plugin integrates the OHIF viewer into XNAT. It differs from the publically released OHIf Viewer plugin in that it has functionality to create ROIs and save/load these to/from XNAT.
 This plugin depends on the xnat-roi plugin for 1.7 (current beta release included in /dist folder).
@@ -19,12 +19,12 @@ Synchronization:
 
 UI:
 -- Consolidated Help to a single interface.
--- Ported the volume UI to Blaze and optimised its performance. Also made it slicker, and consistent with the new export UI.
+-- The ROI management UI now displays ROIs in organised ROI collections when imported.
 -- New export UI.
 
 Export:
 -- The user can now choose which ROIs to export as a collection, instead of exporting all ROI's by default.
-
+-- The exported ROIs will become locked as before, and will be listed as an ROI collection in the ROI management interface.
 
 
 ** Hotfix 1.2.1 - Please use BOTH new plugins jars in the dist directory**
