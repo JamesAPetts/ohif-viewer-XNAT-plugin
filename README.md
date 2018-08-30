@@ -8,6 +8,10 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
+**1.4.0**
+UI:
+-- The volume management dialog now gives the option to disable the visbility of imported roiCollections, such that only a selection of the collections are rendered and interactable.
+
 **1.3.0**
 New:
 
@@ -27,7 +31,7 @@ Export:
 -- The exported ROIs will become locked as before, and will be listed as an ROI collection in the ROI management interface.
 
 
-** Hotfix 1.2.1 - Please use BOTH new plugins jars in the dist directory**
+** 1.2.1 - Please use BOTH new plugins jars in the dist directory**
 
 -- Cleaned up UI of subject and project views, so that they don't list roiCollections. roiCollections are still listed in the Session they correspond to (Thanks James D'Arcy!).
 -- Updated EtherJ version.
