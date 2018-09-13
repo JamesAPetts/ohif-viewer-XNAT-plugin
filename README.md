@@ -1,4 +1,4 @@
-# XNAT-ROI OHIF Viewer Plugin 1.5.0 Beta #
+# XNAT-ROI OHIF Viewer Plugin 1.5.1 Beta #
 
 This beta plugin integrates the OHIF viewer into XNAT. It differs from the publically released OHIf Viewer plugin in that it has functionality to create ROIs and save/load these to/from XNAT.
 This plugin depends on the xnat-roi plugin for 1.7 (current beta release included in /dist folder).
@@ -8,6 +8,11 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 # Public beta: #
 
 Up to date viewer jars are available in the dist directory.
+
+**1.5.1**
+Bug-Fixes:
+
+-- Fixed Issue #6.
 
 **1.5.0**
 
@@ -26,11 +31,6 @@ UI:
 UX:
 
 -- The import menu now pops up instantly and fills asynchronusly as it recieves data from the backend.
-
-**Known bug:**
-Upon opening a fresh viewer instance, if one creates the first ROI Collection through the menu, rather than Roi/Draw, when the user goes to attempt to draw the user can't draw and an exception is thrown to the console.
-This bug is also present in 1.4.
-
 
 **1.4.0**
 
