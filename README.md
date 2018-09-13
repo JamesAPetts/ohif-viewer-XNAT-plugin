@@ -3,6 +3,7 @@
 This beta plugin integrates the OHIF viewer into XNAT. It differs from the publically released OHIf Viewer plugin in that it has functionality to create ROIs and save/load these to/from XNAT.
 This plugin depends on the xnat-roi plugin for 1.7 (current beta release included in /dist folder).
 
+**PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
 # Public beta: #
 
