@@ -1,4 +1,4 @@
-# XNAT-ROI OHIF Viewer Plugin 1.3.0 Beta #
+# XNAT-ROI OHIF Viewer Plugin 1.5.0 Beta #
 
 This beta plugin integrates the OHIF viewer into XNAT. It differs from the publically released OHIf Viewer plugin in that it has functionality to create ROIs and save/load these to/from XNAT.
 This plugin depends on the xnat-roi plugin for 1.7 (current beta release included in /dist folder).
@@ -7,6 +7,28 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 # Public beta: #
 
 Up to date viewer jars are available in the dist directory.
+
+**1.5.0**
+IO:
+
+-- Clicking import ROIs now brings up a menu which allows importing of specific ROI collections, instead of importing all that the AsyncRoiFetcher can find. You can still import all if you wish.
+
+UI:
+
+-- Thanks to updates in the ROI plugin's schema. Only collections that reference the active series are shown in the import menu (Previously we had to grab each file and parse it to see if it references the current series, so even importing all eligile collections can be significantly faster if ROI Collections exist in the XNAT Session that reference other scans.
+
+-- If an ROI Collection has already been imported, it won't appear on the import list again.
+
+-- A message is displayed to tell the user there are no ROI Collections to import if either there are none in the Session that reference the series, or they have all already been imported.
+
+UX:
+
+-- The import menu now pops up instantly and fills asynchronusly as it recieves data from the backend.
+
+**Known bug:**
+Upon opening a fresh viewer instance, if one creates the first ROI Collection through the menu, rather than Roi/Draw, when the user goes to attempt to draw the user can't draw and an exception is thrown to the console.
+This bug is also present in 1.4.
+
 
 **1.4.0**
 UI:
