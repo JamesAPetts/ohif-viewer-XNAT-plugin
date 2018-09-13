@@ -9,7 +9,8 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 Up to date viewer jars are available in the dist directory.
 
 **1.5.0**
-IO:
+
+Features:
 
 -- Clicking import ROIs now brings up a menu which allows importing of specific ROI collections, instead of importing all that the AsyncRoiFetcher can find. You can still import all if you wish.
 
@@ -31,11 +32,14 @@ This bug is also present in 1.4.
 
 
 **1.4.0**
-UI:
+
+Features:
+
 -- The volume management dialog now gives the option to disable the visbility of imported roiCollections, such that only a selection of the collections are rendered and interactable.
 
 **1.3.0**
-New:
+
+Features:
 
 Synchronization:
 
@@ -43,24 +47,24 @@ Synchronization:
 -- The 'Sync Settings' menu has the option to set all viewports to be synced by default.
 -- The 'Sync Settings' menu allows you to configure the synchronization to opperate via image position, or by frame index. Image position is the default.
 
+Export:
+-- The user can now choose which ROIs to export as a collection, instead of exporting all ROI's by default.
+-- The exported ROIs will become locked as before, and will be listed as an ROI collection in the ROI management interface.
+
 UI:
 -- Consolidated Help to a single interface.
 -- The ROI management UI now displays ROIs in organised ROI collections when imported.
 -- New export UI.
 
-Export:
--- The user can now choose which ROIs to export as a collection, instead of exporting all ROI's by default.
--- The exported ROIs will become locked as before, and will be listed as an ROI collection in the ROI management interface.
-
-
 ** 1.2.1 - Please use BOTH new plugins jars in the dist directory**
 
+UI:
+
 -- Cleaned up UI of subject and project views, so that they don't list roiCollections. roiCollections are still listed in the Session they correspond to (Thanks James D'Arcy!).
--- Updated EtherJ version.
 
 **1.2.0:**
 
-New:
+Features:
 
 Delete tools. Under the delete menu there is:
 
@@ -68,9 +72,9 @@ Delete tools. Under the delete menu there is:
 
 -- Clear, which deletes all annotations on the slice.
 
-Locked ROIs cannot be deleted by the Eraser tool, or by Clear.
+-- Locked ROIs cannot be deleted by the Eraser tool, or by Clear.
 
-Minor changes:
+UI:
 
 -- New Icons for import/export
 
@@ -83,15 +87,16 @@ Minor changes:
 
 **1.1.0:**
 
-Fixes:
+Features:
 
--- Issue #4 -- If image assessors other than the roiCollections are present in the assessor list, the viewer will now count the correct number of roiCollections and won't hang on import.
+-- Full multiframe support. I've tested on both primary and secondary multi-frame DICOMs and can sucuessfully save/load AIMs to these. If anyone has an RTSTRUCT that references a multiframe DICOM I would appreciate the data!
 
-New:
+Bug fixes:
 
--- Issue #2 -- Full multiframe support. I've tested on both primary and secondary multi-frame DICOMs and can sucuessfully save/load AIMs to these. If anyone has an RTSTRUCT that references a multiframe DICOM I would appreciate the data!
+-- I painfully went through the list of SOP classes and selected what the viewer should and should not attempted to load. If any non-imaging resources sit as "scans", the viewer will no longer try to load these.
 
--- Issue #5 -- I painfully went through the list of SOP classes and selected what the viewer should and should not attempted to load. If any non-imaging resources sit as "scans", the viewer will no longer try to load these.
+-- If image assessors other than the roiCollections are present in the assessor list, the viewer will now count the correct number of roiCollections and won't hang on import.
+
 
 
 Please check the issues page. Label new issues with the "XNAT-ROI Beta" tag as well as relevent tags (e.g. enhancement, bug, etc).
