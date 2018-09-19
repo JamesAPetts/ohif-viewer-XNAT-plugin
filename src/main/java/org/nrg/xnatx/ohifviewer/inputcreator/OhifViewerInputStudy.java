@@ -44,8 +44,8 @@
 
 package org.nrg.xnatx.ohifviewer.inputcreator;
 
-import icr.etherj.dicom.Patient;
-import icr.etherj.dicom.Study;
+import etherj.dicom.Patient;
+import etherj.dicom.Study;
 import java.util.ArrayList;
 import java.util.List;
 

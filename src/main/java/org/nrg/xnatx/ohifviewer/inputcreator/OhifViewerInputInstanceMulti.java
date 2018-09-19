@@ -34,8 +34,8 @@
 *********************************************************************/
 package org.nrg.xnatx.ohifviewer.inputcreator;
 
-import icr.etherj.dicom.Series;
-import icr.etherj.dicom.SopInstance;
+import etherj.dicom.Series;
+import etherj.dicom.SopInstance;
 import java.io.File;
 import static org.nrg.xnatx.ohifviewer.inputcreator.OhifViewerInputInstance.RESOURCES;
 import org.slf4j.Logger;
