@@ -9,6 +9,11 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
+**1.5.4**
+Bug-Fixes:
+- Changing tool whilst midway through drawing an ROI will finish that roi instead of doing crazy things.
+
+
 **1.5.3**
 
 Bug-Fixes:
