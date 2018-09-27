@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        vXnat = '1.7.5-SNAPSHOT'
+        vXnat = '1.7.4-SNAPSHOT'
     }
     repositories {
         mavenLocal()
