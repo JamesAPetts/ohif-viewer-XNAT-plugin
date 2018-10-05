@@ -1,5 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
+  <symbol id="image-smoothing" viewBox="0 0 48 48">
+    <title>Image Smoothing</title>
+    <g id="image-smoothing" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M0.07 0.04L24.07 0.04L24.07 24.04L0.07 24.04L0.07 0.04Z" fill="none" id="n5aXcZtWKK"></path>
+      <path d="M24.01 23.98L48.01 23.98L48.01 47.98L24.01 47.98L24.01 23.98Z" fill="none" id="b1erkirdLS"></path>
+      <path d="M24.48 0.52L47.48 0.52L47.48 23.52L24.48 23.52L24.48 0.52Z" id="eDZzthFMD"></path>
+      <path d="M0.57 24.46L23.57 24.46L23.57 47.46L0.57 47.46L0.57 24.46Z" id="a29d3dEdUA"></path>
+    </g>
+  </symbol>
+
   <symbol id="icon-freehand-menu" viewBox="0 0 18 18">
     <title>ROI Menu</title>
     <g id="icon-freehand-menu" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">

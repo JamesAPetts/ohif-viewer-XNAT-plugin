@@ -9,6 +9,13 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
+
+**1.6.0**
+Features:
+-- Added a toggle for image smoothing, as it is sometimes necessary to see each pixel clearly when segmenting small objects.
+-- Added serverside creation of RTSTRUCT when roiCollection is exported to AIM. Both representations will appear under the roiCollection in XNAT.
+
+
 **1.5.4**
 Bug-Fixes:
 - Changing tool whilst midway through drawing an ROI will finish that roi instead of doing crazy things.
