@@ -1,4 +1,4 @@
-# XNAT-ROI OHIF Viewer Plugin 1.5.4 Beta #
+# XNAT-ROI OHIF Viewer Plugin 1.6.1 Beta #
 
 This beta plugin integrates the OHIF viewer into XNAT. It differs from the publically released OHIf Viewer plugin in that it has functionality to create ROIs and save/load these to/from XNAT.
 This plugin depends on the xnat-roi plugin for 1.7 (current beta release included in /dist folder).
@@ -9,11 +9,15 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
+**1.6.1**
+Bug-Fixes:
+- Fixes cases where the URLs of the package libraries would sometimes be prepended by multiple slashes, causing no problems to the user, but causing Tomcat to throw exceptions to the log on the backend.
+
 
 **1.6.0**
 Features:
--- Added a toggle for image smoothing, as it is sometimes necessary to see each pixel clearly when segmenting small objects.
--- Added serverside creation of RTSTRUCT when roiCollection is exported to AIM. Both representations will appear under the roiCollection in XNAT.
+- Added a toggle for image smoothing, as it is sometimes necessary to see each pixel clearly when segmenting small objects.
+- Added serverside creation of RTSTRUCT when roiCollection is exported to AIM. Both representations will appear under the roiCollection in XNAT.
 
 
 **1.5.4**
