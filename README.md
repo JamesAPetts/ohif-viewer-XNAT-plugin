@@ -9,6 +9,11 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
+**1.6.2**
+UI:
+- Moved the smooth toggle to the viewport overlay, under sync. Smoothing is off by default.
+
+
 **1.6.1**
 Bug-Fixes:
 - Fixes cases where the URLs of the package libraries would sometimes be prepended by multiple slashes, causing no problems to the user, but causing Tomcat to throw exceptions to the log on the backend.
