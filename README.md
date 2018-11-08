@@ -9,6 +9,23 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
+**1.7.0*
+
+CornerstoneTools v3:
+- Upgraded to a pre-release of cornerstoneTools v3! On the surface not a lot will have appeared to change yet, appart from tool UX bellow. But the new major version of library opens the doors to lots of possibilities going forward.
+- Improved the speed of all ROI UI/caching. This will likely only be noticable in larger studies.
+- The image screenshot functionality has been removed whilst the OHIF foundation updates it to v3. When it returns we plan to be able to store the generated images to XNAT.
+
+Features:
+- Brush Tool: New segmentation mask brush tool from cornerstoneTools v3. One may multiple 3D segmentations, and they may overlap. There are instructions available in the help menu. Export to DICOM-SEG and NIFTI masks to XNAT will come in the future.
+
+UX:
+- Freehand Draw: No more shift clicking is required for 'pencil mode'. To draw using the pencil simply click and drag , release the mouse to close the ROI. Click-move-click to use polygon mode. You can now freely switch between the two modes during use.
+- Freehand Sculpter: No more ctrl-click needed. Double click near an ROI to select it. A live preview of the toolsize can be seen during use, making it a lot easier to do precision sculpting. Just try it!
+
+Bug-Fixes:
+- Fixes erroneous mapping of RTSTRUCT contours onto images for some edge case orientations.
+
 **1.6.2**
 UI:
 - Moved the smooth toggle to the viewport overlay, under sync. Smoothing is off by default.
