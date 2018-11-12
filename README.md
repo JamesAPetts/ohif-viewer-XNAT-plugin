@@ -9,7 +9,13 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
-**1.7.0*
+**1.7.1**
+
+Bug-Fixes:
+- Fixed stack scroll with keyboard and bar.
+- Fixed reference lines.
+
+**1.7.0**
 
 CornerstoneTools v3:
 - Upgraded to a pre-release of cornerstoneTools v3! On the surface not a lot will have appeared to change yet, appart from tool UX bellow. But the new major version of library opens the doors to lots of possibilities going forward.
