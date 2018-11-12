@@ -9,6 +9,11 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
+**1.7.2**
+
+Bug-Fixes:
+- Bumped cornerstoneTools dev version to fix issues with broken ROI tools. This broke reference lines, which will be fixed soon.
+
 **1.7.1**
 
 Bug-Fixes:
