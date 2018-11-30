@@ -9,6 +9,20 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
+**1.8.0**
+Features:
+- DICOM-SEG import and export. Saves as RoiCollections of type SEG. There is currently a hard cap of 20 segmentations per series, but this limit will be removed in future developments.
+- Client side edge server. A big new feature is that Masks and contour based ROIs are backed up every minute in your browser. Should your browser crash, or your internet drop, etc. You will be given the option to recover this data when you return to view the session. The local backups are deleted if you choose not to restore the data, or when data is successfully pushed back to XNAT. No sensitive information is held on the client side database. Series instance UIDs are hashed using a one way hashing algorithm, and this hash is used to relate the data to a particular series.
+- Reference lines back in! Feature parity with the old cornerstoneTools v2 version of the view.
+
+Bug-Fixes:
+- Fixed passive cornerstoneTools functionality being broken in 1.7.2.
+
+UI:
+- New UI to go along with DICOM-SEG support.
+- Cleaned up and prettified some existing UI dialogs.
+
+
 **1.7.2**
 
 Bug-Fixes:
