@@ -14,8 +14,8 @@ Up to date viewer jars are available in the dist directory.
 **1.9.0**
 Features:
 - NIFTI mask import. You can now import NIFTI-based RoiCollections. An uploader capable of uploading NIFTI will come in the future.
- - NOTE: There is no NIFTI export yet, and you will be warned of this when you try to export.
- - NOTE: You can currently only view NIFTI masks that map onto DICOM images. A full NIFTI workflow is in the works.
+  - NOTE: There is no NIFTI export yet, and you will be warned of this when you try to export.
+  - NOTE: You can currently only view NIFTI masks that map onto DICOM images. A full NIFTI workflow is in the works.
 - If you are drawing on an imported NIFTI mask, the brush mode is set to non-overlapping, i.e. drawing with one color.
 - You can now rotate and flip the image and the brush layer will react accordingly. You can paint the mask from any orientation.
 - The client side backup feature has been disabled for now, as it needs a few optimisations to be useful for large NIFTI masks without significantly inhibiting UX. I will come back to this feature in the future and multithread it with webworkers.
