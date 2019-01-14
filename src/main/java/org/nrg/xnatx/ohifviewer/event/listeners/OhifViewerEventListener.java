@@ -34,20 +34,22 @@
 *********************************************************************/
 package org.nrg.xnatx.ohifviewer.event.listeners;
 
-import javax.inject.Inject;
-import org.nrg.xdat.om.WrkWorkflowdata;
-import reactor.fn.Consumer;
-import reactor.bus.Event;
-import reactor.bus.EventBus;
-import org.nrg.xft.event.entities.WorkflowStatusEvent;
 import org.nrg.xdat.XDAT;
+import org.nrg.xdat.om.WrkWorkflowdata;
 import org.nrg.xdat.om.XnatExperimentdata;
 import org.nrg.xdat.om.XnatImagesessiondata;
+import org.nrg.xft.event.entities.WorkflowStatusEvent;
 import org.nrg.xft.event.persist.PersistentWorkflowUtils;
 import org.nrg.xnatx.ohifviewer.inputcreator.CreateExperimentMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import reactor.bus.Event;
+import reactor.bus.EventBus;
+import reactor.fn.Consumer;
+
+import javax.inject.Inject;
+
 import static reactor.bus.selector.Selectors.R;
 
 /**
@@ -80,10 +82,17 @@ public class OhifViewerEventListener implements Consumer<Event<WorkflowStatusEve
     logger.debug(workflow.getDataType());
     logger.debug(experimentId);
     
-    // TODO If event is Transfered, Update and Folder Deleted, rebuild json.  
-    if (pipelineName.equals("Transfered")
+    // TODO If event is Transferred, Update and Folder Deleted, rebuild json.
+    if (pipelineName.equals("Transferred")
         || pipelineName.equals("Update")
-        || pipelineName.equals("Folder Deleted")) {
+        || pipelineName.equals("Folder Deleted")
+        || pipelineName.equals("Folder Created")
+        || pipelineName.equals("Removed scan")
+        || pipelineName.equals("Modified Subject")
+        || pipelineName.equals("Created resource")
+        || pipelineName.matches("Modified .* Session")
+        || pipelineName.equals("Modified project")
+        || pipelineName.equals("Configured project sharing")) {
       checkIfImageSessiondata(experimentId);
     }
   }
