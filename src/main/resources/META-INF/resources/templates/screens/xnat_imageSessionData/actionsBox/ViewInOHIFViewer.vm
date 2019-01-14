@@ -11,9 +11,9 @@
     });
 
     var jsonRequestUrl;
-    
-    const projectId = XNAT.data.context.projectID;
-    const experimentId = XNAT.data.context.ID;
+
+    var projectId = XNAT.data.context.projectID;
+    var experimentId = XNAT.data.context.ID;
 
     function checkIfSessionJSON(e) {
       var rootUrl = XNAT.url.fullUrl('').replace(/\/+$/, "");
@@ -22,44 +22,47 @@
       console.log("TEST");
 
       e.preventDefault();
-      
-      const projectId = XNAT.data.context.projectID;
-      const experimentId = XNAT.data.context.ID;
+
+      var projectId = XNAT.data.context.projectID;
+      var experimentId = XNAT.data.context.ID;
 
       // JPETTS: Define a request to XNAT to check if specified JSON data exists
-      const oReq = new XMLHttpRequest();
-      const url = `${rootUrl}/xapi/viewer/projects/${projectId}/experiments/${experimentId}/exists`;
-      console.log(`Opening GET XMLHttpRequest to: ${url}`);
+      var oReq = new XMLHttpRequest();
+      var url = rootUrl + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId + "/exists";
+
+      console.log("Opening GET XMLHttpRequest to: " + url);
 
       // Listeners
-      oReq.addEventListener('error', () => {
+      oReq.addEventListener('error', function () {
         console.error('Error in REST call!');
       });
 
-      oReq.addEventListener('abort', () => {
+      oReq.addEventListener('abort', function () {
         console.error('Request was aborted for some reason. Please contact your System Administrator.');
       });
 
-      oReq.addEventListener('load', () => {
+      oReq.addEventListener('load', function () {
 
-        console.log(`Request returned, status: ${oReq.status}`);
+        console.log("Request returned, status: " + oReq.status);
 
-        if (oReq.status === 302 ) { // 302 === FOUND
+        if (oReq.status === 302) {
+          // 302 === FOUND
           console.log('JSON for this session found!');
           console.log('Loading viewer with this JSON.');
 
           openViewer();
-        } else if (oReq.status === 404) { // 404 === NOT_FOUND
-            console.log('JSON doesn\'t exist, generating...');
-            generateJSONthenOpenViewer(e, rootUrl)
+        } else if (oReq.status === 404) {
+          // 404 === NOT_FOUND
+          console.log('JSON doesn\'t exist, generating...');
+          generateJSONthenOpenViewer(e, rootUrl);
 
-            return;
+          return;
         } else if (oReq.status === 403) {
           console.log('Incorrect permissions');
 
           return;
         } else {
-          console.log(`unsuccessful, status: ${oReq.status}`);
+          console.log("unsuccessful, status: " + oReq.status);
 
           return;
         }
@@ -72,7 +75,7 @@
     }
 
     function openViewer() {
-      const rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
+      var rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
 
       opts = {
         title: 'OHIF Viewer - Study: $om.label',
@@ -85,35 +88,32 @@
         esc: true // will pressing the 'esc' key dismiss the dialog?
       };
 
-
-      jsonRequestUrl = `${rootUrlWithPort}/xapi/viewer/projects/${projectId}/experiments/${experimentId}`;
-      console.log(`ViewInOHIFViewer.vm: jsonRequestUrl: ${jsonRequestUrl}`);
-      xmodal.iframe(`${rootUrlWithPort}/VIEWER/`, opts);
-
+      jsonRequestUrl = rootUrlWithPort + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId;
+      console.log("ViewInOHIFViewer.vm: jsonRequestUrl: " + jsonRequestUrl);
+      xmodal.iframe(rootUrlWithPort + "/VIEWER/", opts);
     }
 
     function generateJSONthenOpenViewer(e, rootUrl) {
-      const oReq = new XMLHttpRequest();
-      const url = `${rootUrl}/xapi/viewer/projects/${projectId}/experiments/${experimentId}`;
-      console.log(`Opening POST XMLHttpRequest to: ${url}`);
+      var oReq = new XMLHttpRequest();
+      var url = rootUrl + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId;
+      console.log("Opening POST XMLHttpRequest to: " + url);
 
       // Listeners
-      oReq.addEventListener('error', () => {
+      oReq.addEventListener('error', function () {
         console.error('Error in REST call!');
       });
 
-      oReq.addEventListener('abort', () => {
+      oReq.addEventListener('abort', function () {
         console.error('Request was aborted for some reason. Please contact your System Administrator.');
       });
 
-      oReq.addEventListener('load', () => {
+      oReq.addEventListener('load', function () {
 
-        console.log(`Request returned, status: ${oReq.status}`);
+        console.log("Request returned, status: " + oReq.status);
 
-        if (oReq.status === 201 ) {
+        if (oReq.status === 201) {
           console.log('JSON has been created!');
           openViewer();
-
         } else if (oReq.status === 403) {
           console.log('Incorrect permissions');
 
@@ -123,7 +123,7 @@
           //Likely just been POSTed by different user, try again in 100 ms
           setTimeout(checkIfSessionJSON(e), 100);
         } else {
-          console.log(`unsuccessful, status: ${oReq.status}`);
+          console.log("unsuccessful, status: " + oReq.status);
 
           return;
         }
@@ -134,7 +134,7 @@
       oReq.setRequestHeader('Accept', 'application/json');
       oReq.send();
       alert("Generating viewer metadata for experiment \"$om.label\" for the first time. If the study is very large please wait a minute before attempting to open the viewer. This will only happen once per experiment.");
-    }
 
+    }
 
 </script>
