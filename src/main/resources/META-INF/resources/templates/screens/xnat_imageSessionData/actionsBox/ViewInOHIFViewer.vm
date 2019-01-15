@@ -1,5 +1,6 @@
 #* @vtlvariable name="om" type="org.nrg.xdat.om.XnatImagesessiondata" *#
 <!-- BEGIN /templates/screens/xnat_imageSessionData/actionsBox/ViewInOHIFViewer.vm -->
+<!-- allowGuest: true -->
 <!-- Sequence: 6 -->
 <li class="yuimenuitem">
     <a id="ohifViewer" href="#"><div class="ic">&nbsp;</div><div class="ic_spacer">&nbsp;</div>View Session</a>
