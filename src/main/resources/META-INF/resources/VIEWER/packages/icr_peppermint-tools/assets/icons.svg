@@ -18,6 +18,26 @@
     </g>
   </symbol>
 
+  <symbol id="icon-freehand-interpolate-off" viewBox="0 0 48 48">
+    <title>Freehand Interpolate Off</title>
+    <g id="icon-freehand-interpolate-off-group" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path id="freehand-interpolate-off-group-1" d="M36.14 2.72L43.25 6.04L45.01 9.35L42.71 14.16L35.13 17.74L22.88 18.22L11.65 16.32L6.37 13.68L5.56 9.69L12.53 4.07L22.88 2.72L36.14 2.72Z"></path>
+      <path id="freehand-interpolate-off-group-2" d="M24.51 34.18L33.17 35.6L37.29 40.27L33.17 44.6L27.08 46.16L18.76 45.48L12.73 42.57L12.13 37.97L17.34 35.33L24.51 34.18Z"></path>
+    </g>
+  </symbol>
+
+  <symbol id="icon-freehand-interpolate-on" viewBox="0 0 48 48">
+    <title>Freehand Interpolate On</title>
+    <g id="icon-freehand-interpolate-on-group" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path id="freehand-interpolate-on-group-1" d="M36.14 2.72L43.25 6.04L45.01 9.35L42.71 14.16L35.13 17.74L22.88 18.22L11.65 16.32L6.37 13.68L5.56 9.69L12.53 4.07L22.88 2.72L36.14 2.72Z"></path>
+      <path id="freehand-interpolate-on-group-2" d="M24.51 34.18L33.17 35.6L37.29 40.27L33.17 44.6L27.08 46.16L18.76 45.48L12.73 42.57L12.13 37.97L17.34 35.33L24.51 34.18Z"></path>
+    </g>
+
+    <g id="icon-freehand-interpolate-on-group2" fill="none"  stroke-dasharray="5,5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21.87 20.11L32.56 20.65L38.65 22.41L40.54 24.24L41.29 26.74L40.54 29.04L36.69 30.94L29.45 32.15L20.24 31.68L13.34 30.94L9.49 27.96L9.22 24.44L13.34 21.06L21.87 20.11Z" id="eN6kOHdJ"></path>
+    </g>
+  </symbol>
+
   <symbol id="icon-freehand-menu" viewBox="0 0 18 18">
     <title>ROI Menu</title>
     <g id="icon-freehand-menu" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">

@@ -246,6 +246,18 @@
         <line id="svg_10" y2="11.037635" x2="15.509187" y1="7.727341" x1="15.700165"/>
       </g>
    </symbol>
+   <symbol id="bidirectional-tool" viewBox="0 0 48 48">
+     <title>Bidrectional Tool</title>
+       <g id="bidirectional-tool" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+         <path d="M42.75 5.11L6 42" id="aF0O0UGWx"></path>
+         <path d="M41.25 27.98L20.25 7.5" id="d4jEebKXJb"></path>
+         <path d="M43.85 5.45C43.85 6.28 43.17 6.95 42.35 6.95C41.52 6.95 40.85 6.28 40.85 5.45C40.85 4.62 41.52 3.95 42.35 3.95C43.17 3.95 43.85 4.62 43.85 5.45Z" id="bYG0PrOZP"></path>
+         <path d="M6.15 42.15C6.15 42.15 6.12 42.15 6.08 42.15C6.03 42.15 6 42.15 6 42.15C6 42.15 6.03 42.15 6.08 42.15C6.12 42.15 6.14 42.15 6.15 42.15Z" id="b2upeaKeeT"></path>
+         <path d="M7.5 42C7.5 42.83 6.83 43.5 6 43.5C5.17 43.5 4.5 42.83 4.5 42C4.5 41.17 5.17 40.5 6 40.5C6.83 40.5 7.5 41.17 7.5 42Z" id="aUsK8hmQV"></path>
+         <path d="M42.54 27.75C42.54 28.58 41.87 29.25 41.04 29.25C40.21 29.25 39.54 28.58 39.54 27.75C39.54 26.92 40.21 26.25 41.04 26.25C41.87 26.25 42.54 26.92 42.54 27.75Z" id="c4aYv2ZrcR"></path>
+         <path d="M21.57 7.25C21.57 8.08 20.9 8.75 20.07 8.75C19.24 8.75 18.57 8.08 18.57 7.25C18.57 6.43 19.24 5.75 20.07 5.75C20.9 5.75 21.57 6.43 21.57 7.25Z" id="b7fgkU0uQs"></path>
+       </g>
+    </symbol>
    <symbol id="icon-freehand-draw" viewBox="0 0 18 18">
      <title>Draw</title>
        <g id="icon-freehand-draw" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
