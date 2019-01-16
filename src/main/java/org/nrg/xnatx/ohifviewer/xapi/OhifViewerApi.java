@@ -113,7 +113,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
     
     @ApiOperation(value = "Checks if Study level JSON exists")
     @ApiResponses({
-      @ApiResponse(code = 302, message = "The session JSON exists."),
+      @ApiResponse(code = 200, message = "OK, the session JSON exists."),
       @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experiment."),
       @ApiResponse(code = 404, message = "The specified JSON does not exist."),
       @ApiResponse(code = 500, message = "An unexpected error occurred."),
@@ -153,7 +153,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       
       if (file.exists())
       {
-        return new ResponseEntity<>(HttpStatus.FOUND);
+        return new ResponseEntity<>(HttpStatus.OK);
       }
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -311,7 +311,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
 
     @ApiOperation(value = "Returns 200 if series level JSON exists")
     @ApiResponses({
-      @ApiResponse(code = 302, message = "The session JSON exists."),
+      @ApiResponse(code = 200, message = "OK, The session JSON exists."),
       @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experiment."),
       @ApiResponse(code = 404, message = "The specified JSON does not exist."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
@@ -343,7 +343,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       File file = new File(readFilePath);
       if (file.exists())
       {
-        return new ResponseEntity<>(HttpStatus.FOUND);
+        return new ResponseEntity<>(HttpStatus.OK);
       }
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

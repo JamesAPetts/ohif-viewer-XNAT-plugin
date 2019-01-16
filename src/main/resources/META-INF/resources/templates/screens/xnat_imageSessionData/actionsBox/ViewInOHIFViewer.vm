@@ -46,8 +46,8 @@
 
         console.log("Request returned, status: " + oReq.status);
 
-        if (oReq.status === 302) {
-          // 302 === FOUND
+        if (oReq.status === 200) {
+          // 200 === OK
           console.log('JSON for this session found!');
           console.log('Loading viewer with this JSON.');
 
