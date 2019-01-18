@@ -11,6 +11,10 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
+**1.9.1**
+Temporary Feature:
+- If you edit a NIFTI mask you can save back as SEG. Eventually it will just save back to native NIFTI.
+
 **1.9.0**
 Features:
 - NIFTI mask import. You can now import NIFTI-based RoiCollections. An uploader capable of uploading NIFTI will come in the future.
