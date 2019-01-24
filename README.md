@@ -15,6 +15,7 @@ Up to date viewer jars are available in the dist directory.
 Temporary Feature:
 - If you edit a NIFTI mask you can save back as SEG. Eventually it will just save back to native NIFTI.
 
+
 **1.9.0**
 Features:
 - NIFTI mask import. You can now import NIFTI-based RoiCollections. An uploader capable of uploading NIFTI will come in the future.
@@ -33,6 +34,7 @@ Features:
 
 Bug-Fixes:
 - Fixed passive cornerstoneTools functionality being broken in 1.7.2.
+- Fixed memory leak issue in OHIF viewer.
 
 UI:
 - New UI to go along with DICOM-SEG support.
