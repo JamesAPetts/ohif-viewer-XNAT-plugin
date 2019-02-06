@@ -11,10 +11,14 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
+**1.9.2**
+-- Improved select -> drag UX of the freehand sculpter.
+-- Fix edge case of erroneous "export failed" message when the export actually succeeded.
+-- Fixed ctrl + click which broken in cornerstoneTools V3 (also pushed back to the cTools repo).
+
 **1.9.1**
 Temporary Feature:
 - If you edit a NIFTI mask you can save back as SEG. Eventually it will just save back to native NIFTI.
-
 
 **1.9.0**
 Features:
