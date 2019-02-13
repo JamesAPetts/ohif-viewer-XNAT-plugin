@@ -3,7 +3,7 @@
 
 
 This beta plugin integrates the OHIF viewer into XNAT. It differs from the publically released OHIf Viewer plugin in that it has functionality to create ROIs and save/load these to/from XNAT.
-This plugin depends on the xnat-roi plugin for 1.7 (current beta release included in /dist folder).
+This plugin depends on the xnat-roi plugin for 1.7.4.1 (current beta release included in /dist folder).
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
@@ -11,10 +11,17 @@ This plugin depends on the xnat-roi plugin for 1.7 (current beta release include
 
 Up to date viewer jars are available in the dist directory.
 
+**1.9.3**
+UX:
+- Updated to latest version of cornerstoneTools.
+  - Freehand spacing is based on image resolution, not canvas size/zoom.
+  - Freehand sculpter is more effecient and clever. The max size is adapted and it only adds new points where they are needed to alter the geometry.
+- When clicking on 'draw' or 'paint' for the first time on a new scan, the dialog for metadata input appears immediately, as opposed to requiring a click first.
+
 **1.9.2**
--- Improved select -> drag UX of the freehand sculpter.
--- Fix edge case of erroneous "export failed" message when the export actually succeeded.
--- Fixed ctrl + click which broken in cornerstoneTools V3 (also pushed back to the cTools repo).
+- Improved select -> drag UX of the freehand sculpter.
+- Fix edge case of erroneous "export failed" message when the export actually succeeded.
+- Fixed ctrl + click which broken in cornerstoneTools V3 (also pushed back to the cTools repo).
 
 **1.9.1**
 Temporary Feature:
