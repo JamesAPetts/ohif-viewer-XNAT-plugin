@@ -10,11 +10,15 @@
     $('#ohifViewer').click(function (e) {
       checkIfSessionJSON(e);
     });
+    
+    var dataContext = XNAT.data.context;
 
-    var jsonRequestUrl;
-
-    var projectId = XNAT.data.context.projectID;
-    var experimentId = XNAT.data.context.ID;
+    var projectId = dataContext.projectID;
+    var experimentId = dataContext.ID;
+    var subjectId = dataContext.subjectID;
+    
+    var experimentLabel = dataContext.label;
+    var parentProjectId = dataContext.parentProjectID;
 
     function checkIfSessionJSON(e) {
       var rootUrl = XNAT.url.fullUrl('').replace(/\/+$/, "");
@@ -74,7 +78,7 @@
       oReq.setRequestHeader('Accept', 'application/json');
       oReq.send();
     }
-
+    
     function openViewer() {
       var rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
 
@@ -88,10 +92,20 @@
         enter: false, // will pressing the 'enter' key trigger the default button?
         esc: true // will pressing the 'esc' key dismiss the dialog?
       };
-
-      jsonRequestUrl = rootUrlWithPort + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId;
-      console.log("ViewInOHIFViewer.vm: jsonRequestUrl: " + jsonRequestUrl);
-      xmodal.iframe(rootUrlWithPort + "/VIEWER/", opts);
+      
+      var params = '?subjectId=' + subjectId + '&projectId=' + projectId + '&experimentId=' + experimentId;
+      
+      if (experimentLabel) {
+        params = params +  '&experimentLabel=' + experimentLabel;
+      }
+      
+      if (parentProjectId) {
+        params = params + '&parentProjectId=' + parentProjectId;
+      }
+      
+      console.log(rootUrlWithPort + '/VIEWER' + params);
+      
+      xmodal.iframe(rootUrlWithPort + '/VIEWER' + params, opts);
     }
 
     function generateJSONthenOpenViewer(e, rootUrl) {
