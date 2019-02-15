@@ -19,6 +19,7 @@
     
     var experimentLabel = dataContext.label;
     var parentProjectId = dataContext.parentProjectID;
+    var csrfToken = window.csrfToken;
 
     function checkIfSessionJSON(e) {
       var rootUrl = XNAT.url.fullUrl('').replace(/\/+$/, "");
@@ -82,19 +83,10 @@
     function openViewer() {
       var rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
 
-      opts = {
-        title: 'OHIF Viewer - Study: $om.label',
-        ok: false,
-        cancel: false,
-        size: 'max',
-        maximize: false, // render a 'maximize' button in the title bar (to expand the dialog to fill the viewport)?
-        isDraggable: false, // can we drag this dialog?
-        enter: false, // will pressing the 'enter' key trigger the default button?
-        esc: true // will pressing the 'esc' key dismiss the dialog?
-      };
-      
       var params = '?subjectId=' + subjectId + '&projectId=' + projectId + '&experimentId=' + experimentId;
       
+      params = params + '&csrfToken=' + csrfToken;
+        
       if (experimentLabel) {
         params = params +  '&experimentLabel=' + experimentLabel;
       }
@@ -103,9 +95,8 @@
         params = params + '&parentProjectId=' + parentProjectId;
       }
       
-      console.log(rootUrlWithPort + '/VIEWER' + params);
+      window.open(rootUrlWithPort + '/VIEWER' + params);
       
-      xmodal.iframe(rootUrlWithPort + '/VIEWER' + params, opts);
     }
 
     function generateJSONthenOpenViewer(e, rootUrl) {
