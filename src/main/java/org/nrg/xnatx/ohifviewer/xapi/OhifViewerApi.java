@@ -57,6 +57,7 @@ import java.io.*;
 import java.util.HashMap;
 import org.nrg.xft.security.UserI;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -68,6 +69,8 @@ import org.nrg.xdat.security.services.RoleHolder;
 import org.nrg.xdat.security.services.UserManagementServiceI;
 import org.nrg.xapi.rest.AbstractXapiRestController;
 import org.nrg.xapi.rest.ProjectId;
+import org.nrg.xdat.model.XnatExperimentdataShareI;
+import org.nrg.xdat.om.XnatExperimentdataShare;
 import org.nrg.xdat.security.helpers.AccessLevel;
 import org.nrg.xnatx.ohifviewer.inputcreator.CreateExperimentMetadata;
 import org.nrg.xnatx.ohifviewer.inputcreator.RunnableCreateExperimentMetadata;
@@ -94,22 +97,6 @@ public class OhifViewerApi extends AbstractXapiRestController {
     /*=================================
     // Study level GET/POST
     =================================*/
-    
-    @ApiOperation(value = "Checks whether user has permission to write to project (intended for private use by the viewer)")
-    @ApiResponses({
-      @ApiResponse(code = 200, message = "Permission granted."),
-      @ApiResponse(code = 403, message = "The user does not have permission to view the indicated project"),
-    })
-    @XapiRequestMapping(
-            value = "projects/{_projectId}/writepermissions",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.GET,
-            restrictTo = AccessLevel.Edit)
-    public ResponseEntity<String> canUserWrite(
-      @PathVariable("_projectId") @ProjectId final String _projectId)
-    {
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
     
     @ApiOperation(value = "Checks if Study level JSON exists")
     @ApiResponses({
@@ -143,8 +130,10 @@ public class OhifViewerApi extends AbstractXapiRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
       
-      // Check if the experiment corresponds to the project specified in Url
-      if (!proj.equals(_projectId)) {
+      final Boolean isSessionSharedIntoProject = sessionSharedIntoProject(_experimentId, _projectId);
+
+      if (!isSessionSharedIntoProject) {
+        logger.info("project ids not equal");
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
       
@@ -190,8 +179,10 @@ public class OhifViewerApi extends AbstractXapiRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
       
-      if (!proj.equals(_projectId)) {
-        logger.error("project ids not equal");
+      final Boolean isSessionSharedIntoProject = sessionSharedIntoProject(_experimentId, _projectId);
+      
+      if (!isSessionSharedIntoProject) {
+        logger.info("project ids not equal");
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
       
@@ -234,7 +225,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
       
-      if (!proj.equals(_projectId)) {
+      if (!proj.equals(_projectId) || sessionSharedIntoProject(_experimentId, _projectId)) {
         return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
       }
       
@@ -243,9 +234,9 @@ public class OhifViewerApi extends AbstractXapiRestController {
       return new ResponseEntity<String>(returnHttpStatus);
     }
     
-    @ApiOperation(value = "Generates the session JSON for every experiment in the database.")
+    @ApiOperation(value = "Generates the session JSON for every session in the database.")
     @ApiResponses({
-      @ApiResponse(code = 201, message = "The JSON metadata has been created for every experiment in the database."),
+      @ApiResponse(code = 201, message = "The JSON metadata has been created for every session in the database."),
       @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experient."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
@@ -280,7 +271,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       {
         final String experimentId = experimentIds.get(i);
       
-        logger.error("experimentId " + experimentId);
+        logger.info("experimentId " + experimentId);
         RunnableCreateExperimentMetadata createExperimentMetadata =
                 new RunnableCreateExperimentMetadata(doneSignal, experimentId);
         executorService.submit(createExperimentMetadata);
@@ -460,7 +451,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
         session=(XnatImagesessiondata)expData;
       } catch (Exception ex) {
         throw new FileNotFoundException("Experiment not found in project");
-      }            
+      }
 
       // Get the subject data
       XnatSubjectdata subjData = XnatSubjectdata.getXnatSubjectdatasById(session.getSubjectId(), null, false);
@@ -477,6 +468,43 @@ public class OhifViewerApi extends AbstractXapiRestController {
       result.put("subj", subj);
       
       return result;
+    }
+    
+    private Boolean sessionSharedIntoProject(String experimentId, String projectId)
+      throws FileNotFoundException
+    {
+      
+      logger.info("in sessionSharedIntoProject(" + experimentId + "," + projectId + ")");
+      
+      XnatExperimentdata expData = null;
+      XnatImagesessiondata session = null;
+      
+      try {
+        expData = XnatExperimentdata.getXnatExperimentdatasById(experimentId, null, false);
+        session=(XnatImagesessiondata)expData;
+      } catch (Exception ex) {
+        throw new FileNotFoundException("Experiment not found.");
+      }
+      
+      if (expData.getProject().equals(projectId)) {
+        logger.info("session belongs to this project");
+        return true;
+      }
+
+      List<XnatExperimentdataShare> xnatExperimentdataShareList = session.getSharing_share();     
+      
+      for (int i = 0; i< xnatExperimentdataShareList.size(); i++)
+      {
+        final XnatExperimentdataShare xnatExperimentdataShareI = xnatExperimentdataShareList.get(i);
+        
+        logger.info(xnatExperimentdataShareI.getProject());
+        
+        
+        if (xnatExperimentdataShareI.getProject().equals(projectId)) {
+          return true;
+        }
+      }
+      return false;
     }
    
     

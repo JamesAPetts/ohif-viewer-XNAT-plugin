@@ -85,7 +85,7 @@
 
       var params = '?subjectId=' + subjectId + '&projectId=' + projectId + '&experimentId=' + experimentId;
       
-      params = params + '&csrfToken=' + csrfToken;
+      params = params + '&csrfToken=' + btoa(encodeURIComponent(csrfToken));
         
       if (experimentLabel) {
         params = params +  '&experimentLabel=' + experimentLabel;

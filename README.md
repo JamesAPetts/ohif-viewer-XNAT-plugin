@@ -11,6 +11,7 @@ Up to date viewer jars are available in the dist directory.
 
 **1.10.0**
 UX/UI:
+- Sessions shared into projects can now be viewed in the viewer.
 - Fullscreen viewer. After some architectural changes to the viewer's router, the viewer no longer has to sit in an XNAT window to opperate. The viewer now opens fullscreen in a seperate tab instead of appearing in an iframe.
 
 **1.9.3**
