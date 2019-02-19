@@ -9,9 +9,15 @@ This plugin depends on the xnat-roi plugin for 1.7.4.1 (current beta release inc
 
 Up to date viewer jars are available in the dist directory.
 
+**1.11.0**
+Features:
+- RoiCollections shared into shared projects can now be loaded into the viewer.
+- If a user in a shared project has write access to the parent project, the export button will show in the interface, and will push annotations back to the source project.
+
 **1.10.0**
-UX/UI:
-- Sessions shared into projects can now be viewed in the viewer.
+Features:
+- Session shared into projects can now be viewed in the viewer. No annotation support for shared projects yet.
+UI/UX:
 - Fullscreen viewer. After some architectural changes to the viewer's router, the viewer no longer has to sit in an XNAT window to opperate. The viewer now opens fullscreen in a seperate tab instead of appearing in an iframe.
 
 **1.9.3**
