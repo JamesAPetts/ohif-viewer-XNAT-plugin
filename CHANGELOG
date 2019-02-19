@@ -1,47 +1,232 @@
-0.5.0
--- Added server side event listeners to automate JSON generation on session upload/modification.
--- Removed need for setting up of automation scripts.
 
+**1.11.0 Beta**
+Features:
+- RoiCollections shared into shared projects can now be loaded into the viewer.
 
-0.4.0
+UX:
+- If a user in a shared project has write access to the parent project, the export button will show in the interface, and will push annotations back to the source project.
 
--- Removed the requirement for the "Sync Viewer" button.
--- Added a Groovy script to automate server side JSON generation whenever new images are uploaded or removed. This requires setup by an admin. Please check the README for instructions.
+**1.10.0 Beta**
+Features:
+- Session shared into projects can now be viewed in the viewer. No annotation support for shared projects yet.
+UI/UX:
+- Fullscreen viewer. After some architectural changes to the viewer's router, the viewer no longer has to sit in an XNAT window to operate. The viewer now opens fullscreen in a separate tab instead of appearing in an iframe.
 
+**1.9.2 Beta**
 
-0.3.1
+UX:
+- Updated to latest version of cornerstoneTools.
+  - Freehand spacing is based on image resolution, not canvas size/zoom.
+  - Freehand sculpter is more efficient and clever. The max size is adapted and it only adds new points where they are needed to alter the geometry.
+- When clicking on 'draw' or 'paint' for the first time on a new scan, the dialog for metadata input appears immediately, as opposed to requiring a click first.
 
-Added:
--- Series level JSONification and the ability to read only series from the viewer application, however this is not currently wired up to the XNAT UI (yet is functional).
+**1.9.1 Beta**
+UX:
+- Improved select -> drag UX of the freehand sculpter.
+
+Bug Fixes:
+- Fix edge case of erroneous "export failed" message when the export actually succeeded.
+- Fixed ctrl + click which broken in cornerstoneTools 3.0 (also pushed back to the cTools repo).
+
+**1.9.0 Beta**
+
+Features:
+- NIFTI mask import. You can now import NIFTI-based RoiCollections. An uploader capable of uploading NIFTI will come in the future.
+  - NOTE: There is no NIFTI export yet. If you edit a NIFTI mask you can save back as SEG for now.
+  - NOTE: You can currently only view NIFTI masks that map onto DICOM images. A full NIFTI workflow is in the works.
+- If you are drawing on an imported NIFTI mask, the brush mode is set to non-overlapping, i.e. drawing with one color overwrites another, and the mask data more closely resembles a NIFTI formatted file.
+- You can now rotate and flip the image and the brush layer will react accordingly. You can paint the mask from any orientation.
+- The client side backup feature has been disabled for now, as it needs a few optimisations to be useful for large NIFTI masks without significantly inhibiting UX. I will come back to this feature in the future and multithread it with webworkers.
+
+**1.8.0 Beta**
+
+Features:
+- DICOM-SEG import and export. Saves as RoiCollections of type SEG. There is currently a hard cap of 20 segmentations per series, but this limit will be removed in future developments.
+- Client side edge server. A big new feature is that Masks and contour based ROIs are backed up every minute in your browser. Should your browser crash, or your internet drop, etc. You will be given the option to recover this data when you return to view the session. The local backups are deleted if you choose not to restore the data, or when data is successfully pushed back to XNAT. No sensitive information is held on the client side database. Series instance UIDs are hashed using a one way hashing algorithm, and this hash is used to relate the data to a particular series.
+- Reference lines back in! Feature parity with the old cornerstoneTools v2 version of the view.
+
+UI:
+- New UI to go along with DICOM-SEG support.
+- Cleaned up and prettified some existing UI dialogs.
+
+Bug-Fixes:
+- Fixed passive cornerstoneTools functionality being broken in 1.7.2.
+- Fixed memory leak issue in OHIF viewer.
+
+**1.7.2 Beta**
+
+Bug-Fixes:
+- Bumped cornerstoneTools dev version to fix issues with broken ROI tools. This broke reference lines, which will be fixed soon.
+
+**1.7.1 Beta**
+
+Bug-Fixes:
+- Fixed stack scroll with keyboard and bar.
+- Fixed reference lines.
+
+**1.7.0 Beta**
+
+Features:
+- CornerstoneTools v3:
+  - Upgraded to a pre-release of cornerstoneTools v3! On the surface not a lot will have appeared to change yet, apart from tool UX bellow. But the new major version of library opens the doors to lots of possibilities going forward.
+  - Improved the speed of all ROI UI/caching. This will likely only be noticeable in larger studies.
+  - The image screenshot functionality has been removed whilst the OHIF foundation updates it to v3. When it returns we plan to be able to store the generated images to XNAT.
+- Brush Tool: New segmentation mask brush tool from cornerstoneTools v3. One may create multiple 3D segmentations, and they may overlap. There are instructions available in the help menu. Export to DICOM-SEG and NIFTI masks to XNAT will come in the future.
+
+UX:
+- Freehand Draw: No more shift clicking is required for 'pencil mode'. To draw using the pencil simply click and drag , release the mouse to close the ROI. Click-move-click to use polygon mode. You can now freely switch between the two modes during use.
+- Freehand Sculpter: No more ctrl-click needed. Double click near an ROI to select it. A live preview of the toolsize can be seen during use, making it a lot easier to do precision sculpting. Just try it!
+
+Bug-Fixes:
+- Fixes erroneous mapping of RTSTRUCT contours onto images for some orientations.
+
+**1.6.2 Beta**
+UI:
+- Moved the smooth toggle to the viewport overlay, under sync. Smoothing is off by default.
+
+**1.6.1 Beta**
+Bug-Fixes:
+- Fixes cases where the URLs of the package libraries would sometimes be prepended by multiple slashes, causing no problems to the user, but causing Tomcat to throw exceptions to the log on the backend.
+
+**1.6.0 Beta**
+
+Features:
+- Added a toggle for image smoothing, as it is sometimes necessary to see each pixel clearly when segmenting small objects.
+- Added server-side creation of RTSTRUCT when roiCollection is exported to AIM. Both representations will appear under the roiCollection in XNAT.
+
+**1.5.4 Beta**
+
+Bug-Fixes:
+- Changing tool whilst midway through drawing an ROI will finish that roi instead of doing crazy things.
+
+**1.5.3 Beta**
+
+Bug-Fixes:
+- Fix broken help menu button.
+
+**1.5.2 Beta**
+
+Bug-Fixes:
+
+- Updated EtherJ-Core and EtherJ-XNAT Versions. This fixes issues that occurred whilst converting to and from AIM and RTSTRUCT using the ROI api.
+
+**1.5.1 Beta**
+
+Bug-Fixes:
+
+- Fixed Issue #6.
+
+**1.5.0 Beta**
+
+Features:
+- Clicking import ROIs now brings up a menu which allows importing of specific ROI collections, instead of importing all that the AsyncRoiFetcher can find. You can still import all if you wish.
+
+UI:
+- Only collections that reference the active series are shown in the import menu.
+- If an ROI Collection has already been imported, it won't appear on the import list again.
+- A message is displayed to tell the user there are no ROI Collections to import if either there are none in the Session that reference the series, or they have all already been imported.
+
+UX:
+- The import menu now pops up instantly and fills asynchronously as it receives data from the backend.
+
+**1.4.0 Beta**
+
+Features:
+
+- The volume management dialog now gives the option to disable the visibility of imported RoiCollections, such that only a selection of the collections are rendered and interact-able.
+
+**1.3.0 Beta**
+
+Features:
+
+- Synchronization
+  - Using the tick boxes at the top right of each viewport, one can synchronise scans to scroll together.
+  - The 'Sync Settings' menu has the option to set all viewports to be synced by default.
+  - The 'Sync Settings' menu allows you to configure the synchronization to opperate via image position, or by frame index. Image position is the default.
+- Export:
+  - The user can now choose which ROIs to export as a collection, instead of exporting all ROI's by default.
+  - The exported ROIs will become locked as before, and will be listed as an ROI collection in the ROI management interface.
+
+UI:
+- Consolidated Help to a single interface.
+- The ROI management UI now displays ROIs in organised ROI collections when imported.
+- New export UI.
+
+**1.2.1 Beta**
+
+UI:
+
+- Cleaned up UI of subject and project views, so that they don't list RoiCollections. RoiCollections are still listed in the Session they correspond to (Thanks James D'Arcy!).
+
+**1.2.0 Beta**
+
+Features:
+
+- Delete tools. Under the delete menu there is:
+  - The Eraser tool, which can delete any annotation by clicking on its handle. Note there is no highlighting of the tools being deleted currently. This will come later once we have a more developed cornerstoneTools API.
+  - Clear, which deletes all annotations on the slice.
+  - Locked ROIs cannot be deleted by the Eraser tool, or by Clear.
+
+UI:
+
+- New Icons for import/export.
+- XNAT logo overlaying OHIF logo on the top left.
+- ROI plugin version number top left.
+- Side bar open by default.
+
+**1.1.0 Beta**
+
+Features:
+
+- Full multi-frame support. Tested on both primary and secondary multi-frame DICOMs and can successfully save/load AIMs to these.
+
+**1.0.0**
+
+- Initial public release with no ROI support for the backend.
+
+Bug fixes:
+
+- Made a list of SOP classes defining viewer should and should not attempted to load. If any non-imaging resources sit as "scans", the viewer will no longer try to load these.
+- If image assessors other than the RoiCollections are present in the assessor list, the viewer will now count the correct number of RoiCollections and won't hang on import.
+
+**0.5.0**
+
+UX:
+
+- Added server side event listeners to automate JSON generation on session upload/modification.
+- Removed need for setting up of automation scripts.
+
+**0.4.0**
+
+UX:
+
+- Removed the requirement for the "Sync Viewer" button.
+- Added a Groovy script to automate server side JSON generation whenever new images are uploaded or removed. This requires setup by an admin. Please check the README for instructions.
+
+**0.3.1**
+
+Features:
+
+- Series level JSONification and the ability to read only series from the viewer application, however this is not currently wired up to the XNAT UI (yet is functional).
+
+Performance:
+- Improved Multithreaded code for generating all metadata.
+
+**0.3.0**
+
+Features:
+- Added a new REST call "/xapi/viewer/generate-all-metadata" which will generate the viewer metadata for every session in the database using as many threads as available on the server. This is intended to only be called once, when the plugin is added to an already populated XNAT. Currently this can invoked via the command line or the swagger-ui interface.
+
+**0.2.0**
+
+Features:
+- Added support for secondary DICOM files.
+- Added support for single frame images which contain the tag (0028,0008), which is supposed to be reserved for multi-frame images according to the DICOM standard.
+- Added support for generating JSON with the correct protocol for both single and multi-frame DICOM images, however this is currently unused (see changes).
 
 Changed:
--- Improved Multithreaded code to use a threadpool with size equal to the number of threads on the server machine to avoid a clog up of IO opperations on large databases.
--- Fixed an issue introduced in 0.3.0 whereby single experiment/series JSONification would instantiate a single new Thread rather than opperating on the active thread processing the API request.
+- Multi-frame images will not appear in the viewer when View Study is clicked, as they currently do not load correctly.
 
+**0.1.0**
 
-0.3.0
-
-Added:
--- Added a new REST call "/xapi/viewer/generate-all-metadata" which will generate the viewer metadata for every experiment in the database. This is only useable by an admin.
-currently this must be invoked by the URL or the command line, but will be soon added to the administer tools.
-
-Changed:
--- Multithreaded the server code such that each POST uses a seperate thread when multiple JSON files need to be written (as in "/xapi/viewer/generate-all-metadata").
-
-
-0.2.0
-
-Added:
--- Added support for secondary DICOM files.
--- Added support for single frame images which contain the tag (0028,0008), which is supposed to be reserved for multi-frame images according to the DICOM standard.
--- Added support for generating JSON with the correct protocol for both single and multi-frame DICOM images, however this is currently unused (see changes).
-
-Changed:
--- Multi-frame images will not appear in the viewer when View Study is clicked, as they currently do not load correctly.
-
-Multi frame image support should come shortly.
-
-
-0.1.0
-
-Basic functionality, the viewer is correctly linked and interfaced with XNAT. Although not yet feature rich the plugin is useable.
+Basic functionality, the viewer is correctly linked and interfaced with XNAT. Although not yet feature rich, the plugin is useable.
