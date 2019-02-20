@@ -225,9 +225,12 @@ public class OhifViewerApi extends AbstractXapiRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
       
-      if (!proj.equals(_projectId) || sessionSharedIntoProject(_experimentId, _projectId)) {
-        return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+      if (!_projectId.equals(proj)) {
+        logger.info("project ids not equal");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
+      
+      logger.error("creating experiment metadata for " + _experimentId);
       
       HttpStatus returnHttpStatus = CreateExperimentMetadata.createMetadata(_experimentId);
       

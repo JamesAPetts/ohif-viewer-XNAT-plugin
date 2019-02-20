@@ -20,6 +20,8 @@
     var experimentLabel = dataContext.label;
     var parentProjectId = dataContext.parentProjectID;
     var csrfToken = window.csrfToken;
+    
+    var rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
 
     function checkIfSessionJSON(e) {
       var rootUrl = XNAT.url.fullUrl('').replace(/\/+$/, "");
@@ -56,7 +58,7 @@
           console.log('JSON for this session found!');
           console.log('Loading viewer with this JSON.');
 
-          openViewer();
+          checkJSONAndOpenViewer();
         } else if (oReq.status === 404) {
           // 404 === NOT_FOUND
           console.log('JSON doesn\'t exist, generating...');
@@ -80,9 +82,86 @@
       oReq.send();
     }
     
-    function openViewer() {
-      var rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
+    
+    function checkJSONAndOpenViewer() {      
+      // Fetch JSON
+      var oReq = new XMLHttpRequest();
+      
+       // Listeners
+      oReq.addEventListener('error', function () {
+        console.error('Error in REST call!');
+      });
 
+      oReq.addEventListener('abort', function () {
+        console.error('Request was aborted for some reason. Please contact your System Administrator.');
+      });
+
+      oReq.addEventListener('load', function () {
+
+        console.log("Request returned, status: " + oReq.status);
+
+        if (oReq.status === 200) {
+          console.log('JSON found.. checking!');
+          // TODO -> Check the json!
+          console.log(oReq);
+          
+          var jsonString = oReq.responseText;
+          var studyList = JSON.parse(jsonString); //parses the query result
+          
+          console.log(studyList);
+          
+          if (studyListEmpty(studyList)) {
+            XNAT.dialog.message(
+              'No viewable scans',
+              "There are no scans in this session compatible with the OHIF Viewer."
+            );
+            return;
+          }
+          
+          openViewer();
+        } else if (oReq.status === 403) {
+          console.log('Incorrect permissions');
+
+          return;
+        } else if (oReq.status === 423) {
+          console.log('POST locked');
+          //Likely just been POSTed by different user, try again in 100 ms
+          setTimeout(checkIfSessionJSON(e), 100);
+        } else {
+          console.log("unsuccessful, status: " + oReq.status);
+
+          return;
+        }
+      });
+      
+      var jsonRequestUrl = rootUrlWithPort + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId;
+      
+      // REST GET call
+      oReq.open('GET', jsonRequestUrl);
+      oReq.setRequestHeader('Accept', 'application/json');
+      oReq.send();
+    }
+    
+    function studyListEmpty(studyList) {      
+      if (!studyList.studies || !studyList.studies[0] || !studyList.studies[0].seriesList) {
+        console.log('invalid studyList object');
+        return true;
+      }
+      
+      var series = studyList.studies[0].seriesList;
+      var empty = true;
+      
+      for (var i = 0; i < series.length; i++) {
+        if (series[i].instances.length) {
+          empty = false;
+          break;
+        }
+      }
+      
+      return empty;
+    }
+    
+    function openViewer() {
       var params = '?subjectId=' + subjectId + '&projectId=' + projectId + '&experimentId=' + experimentId;
       
       params = params + '&csrfToken=' + btoa(encodeURIComponent(csrfToken));
@@ -119,7 +198,7 @@
 
         if (oReq.status === 201) {
           console.log('JSON has been created!');
-          openViewer();
+          checkJSONAndOpenViewer();
         } else if (oReq.status === 403) {
           console.log('Incorrect permissions');
 
@@ -139,7 +218,11 @@
       oReq.open('POST', url);
       oReq.setRequestHeader('Accept', 'application/json');
       oReq.send();
-      alert("Generating viewer metadata for experiment \"$om.label\" for the first time. If the study is very large please wait a minute before attempting to open the viewer. This will only happen once per experiment.");
+      
+      XNAT.dialog.message(
+        'Generating Missing Viewer Data',
+        "Generating missing viewer metadata for experiment " + experimentLabel + ". If the session is very large please wait a minute before attempting to open the viewer. This will only happen once."
+      );
 
     }
 

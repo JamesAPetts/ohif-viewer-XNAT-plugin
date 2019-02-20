@@ -5,9 +5,18 @@ Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
-# Public Beta 1.11.0:
+# Public Beta 1.11.1:
 
-**New in 1.11.0:**
+**1.11.1 Beta**
+UI:
+
+- Use XNAT styled dilogs for alert prompts.
+
+Bug Fix:
+
+- Fix broken manual post of view metadata introduced in 1.11.0.
+
+**1.11.0 Beta**
 
 Features:
 
@@ -16,6 +25,7 @@ Features:
 UX:
 
 - If a user in a shared project has write access to the parent project, the export button will show in the interface, and will push annotations back to the source project.
+
 
 A full list of changes are available in the `CHANGELOG`.
 
