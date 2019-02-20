@@ -1,4 +1,10 @@
-# XNAT-ROI OHIF Viewer Plugin 1.11.0 Beta
+
+
+# XNAT-OHIF Viewer Plugin 1.11.0 Beta
+
+<p align="center">
+  <img src="assets/Logo.png" width="256" title="OHIF-XNAT-logo">
+</p>
 
 This beta plugin integrates the OHIF viewer into XNAT. It differs from the publicly released OHIf Viewer plugin in that it has functionality to create ROIs and save/load these to/from XNAT.
 Up to date viewer jars are available in the dist directory.
