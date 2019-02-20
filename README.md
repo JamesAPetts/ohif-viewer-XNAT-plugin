@@ -13,7 +13,14 @@ Up to date viewer jars are available in the dist directory.
 
 # Public Beta 1.11.1:
 
+**1.11.2 Beta**
+
+Bug Fix:
+
+- Account for when metadata has multiple studies. 
+
 **1.11.1 Beta**
+
 UI:
 
 - Use XNAT styled dilogs for alert prompts.

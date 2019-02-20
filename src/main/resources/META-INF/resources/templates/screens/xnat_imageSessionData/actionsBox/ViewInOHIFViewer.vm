@@ -143,18 +143,26 @@
     }
     
     function studyListEmpty(studyList) {      
-      if (!studyList.studies || !studyList.studies[0] || !studyList.studies[0].seriesList) {
+      if (!studyList.studies) {
         console.log('invalid studyList object');
         return true;
       }
       
-      var series = studyList.studies[0].seriesList;
       var empty = true;
       
-      for (var i = 0; i < series.length; i++) {
-        if (series[i].instances.length) {
-          empty = false;
-          break;
+      for (var i = 0; i < studyList.studies.length; i++) {
+          
+        if (!studyList.studies[i] || !studyList.studies[i].seriesList) {
+          continue;
+        }
+        
+        var series = studyList.studies[i].seriesList;
+      
+        for (var j = 0; j < series.length; j++) {
+          if (series[j].instances.length) {
+            empty = false;
+            break;
+          }
         }
       }
       
