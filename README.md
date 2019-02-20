@@ -1,6 +1,6 @@
 
 
-# XNAT-OHIF Viewer Plugin 1.11.0 Beta
+# XNAT-OHIF Viewer Plugin 1.11.1 Beta
 
 <p align="center">
   <img src="assets/Logo.png" width="256" title="OHIF-XNAT-logo">
