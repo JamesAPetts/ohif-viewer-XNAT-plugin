@@ -1,6 +1,4 @@
-
-
-# XNAT-OHIF Viewer Plugin 1.11.1 Beta
+# XNAT-OHIF Viewer Plugin 1.11.3 Beta
 
 <p align="center">
   <img src="assets/Logo.png" width="256" title="OHIF-XNAT-logo">
@@ -11,13 +9,19 @@ Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
-# Public Beta 1.11.1:
+# Public Beta 1.11.3:
+
+**1.11.3 Beta**
+Bug Fix:
+- Fixed the new routing mechanism introduced when the viewer transitioned away from an iframe, such that URLs are properly constructed for XNATs hosted on root.
+- Support for RTSTRUCTs which map on to multi-frame data is still poorly supported. For now the AIM files will be read if they exist, since they are well supported for both single and multi-frame images.
+
 
 **1.11.2 Beta**
 
 Bug Fix:
 
-- Account for when metadata has multiple studies. 
+- Account for the edge case where metadata has multiple studies. 
 
 **1.11.1 Beta**
 
