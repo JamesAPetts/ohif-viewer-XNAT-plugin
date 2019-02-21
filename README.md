@@ -12,6 +12,7 @@ Up to date viewer jars are available in the dist directory.
 # Public Beta 1.11.3:
 
 **1.11.3 Beta**
+
 Bug Fix:
 - Fixed the new routing mechanism introduced when the viewer transitioned away from an iframe, such that URLs are properly constructed for XNATs hosted on root.
 - Support for RTSTRUCTs which map on to multi-frame data is still poorly supported. For now the AIM files will be read if they exist, since they are well supported for both single and multi-frame images.
@@ -20,27 +21,22 @@ Bug Fix:
 **1.11.2 Beta**
 
 Bug Fix:
-
 - Account for the edge case where metadata has multiple studies. 
 
 **1.11.1 Beta**
 
 UI:
-
 - Use XNAT styled dilogs for alert prompts.
 
 Bug Fix:
-
 - Fix broken manual post of view metadata introduced in 1.11.0.
 
 **1.11.0 Beta**
 
 Features:
-
 - RoiCollections shared into shared projects can now be loaded into the viewer.
 
 UX:
-
 - If a user in a shared project has write access to the parent project, the export button will show in the interface, and will push annotations back to the source project.
 
 
