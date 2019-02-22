@@ -1,3 +1,9 @@
+**1.11.4 Beta**
+
+Bug Fix:
+- Correctly extract imagePlane information for multiframe images.
+- If a RoiCollection had a type of RTSTRUCT, then the RTSTRUCT resources is once again parsed and loaded instead of the AIM.
+
 **1.11.3 Beta**
 Bug Fix:
 - Fixed the new routing mechanism introduced when the viewer transitioned away from an iframe, such that URLs are properly constructed for XNATs hosted on root.

@@ -56,18 +56,18 @@ public class OhifViewerInputInstanceSingle extends OhifViewerInputInstance {
     String sopClassUid = sop.getSopClassUid();    
     String resource = getResourceType(sopClassUid);
     
-    xnatScanUrl = selectCorrectProtocol(xnatScanUrl, sopClassUid);
+    xnatScanUrl = selectCorrectProtocol(xnatScanUrl);
     
     String urlString = xnatScanUrl + scanId + RESOURCES + resource + FILES + file;
     
     setUrl(urlString);
   }
   
-  private String selectCorrectProtocol(String xnatScanUrl, String sopClassUid)
+  private String selectCorrectProtocol(String xnatScanUrl)
   {
     try
     {
-      xnatScanUrl = selectProtocol(xnatScanUrl, sopClassUid);
+      xnatScanUrl = selectProtocol(xnatScanUrl);
     }
     catch (Exception ex)
     {
@@ -77,12 +77,9 @@ public class OhifViewerInputInstanceSingle extends OhifViewerInputInstance {
     return xnatScanUrl;
   }
   
-  private String selectProtocol(String xnatScanUrl, String sopClassUid)
+  private String selectProtocol(String xnatScanUrl)
   throws Exception
   {
-    //Elegance please James...
-    //TODO: Use URL type and just replace protocol with dicomweb
-
     if (xnatScanUrl.contains("https"))
     {
       return xnatScanUrl.replace("https", "dicomweb");

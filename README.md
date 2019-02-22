@@ -1,4 +1,4 @@
-# XNAT-OHIF Viewer Plugin 1.11.3 Beta
+# XNAT-OHIF Viewer Plugin 1.11.4 Beta
 
 <p align="center">
   <img src="assets/Logo.png" width="256" title="OHIF-XNAT-logo">
@@ -9,7 +9,14 @@ Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
-# Public Beta 1.11.3:
+# Public Beta 1.11.4:
+
+**1.11.4 Beta**
+
+Bug Fix:
+- Correctly extract imagePlane information for multiframe images.
+- If a RoiCollection had a type of RTSTRUCT, then the RTSTRUCT resources is once again parsed and loaded instead of the AIM.
+
 
 **1.11.3 Beta**
 
