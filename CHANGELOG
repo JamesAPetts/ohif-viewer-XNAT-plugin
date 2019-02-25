@@ -1,3 +1,10 @@
+**1.12.0 Beta**
+
+UX:
+- The csrfToken used to PUT RoiCollections is now dynamically fetched using the XNAT JSESSION cookie in the browser.
+  - This means that the user can time out/disconnect, and log back into XNAT via the main XNAT interface, then push back from the viewer.
+  - Users can E-Mail direct links to a viewer session. The user can log in, annotate, and push directly, without going through the regular 'View Session' route.
+
 **1.11.4 Beta**
 
 Bug Fix:
