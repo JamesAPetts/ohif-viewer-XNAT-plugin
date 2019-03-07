@@ -10,17 +10,16 @@
     $('#ohifViewer').click(function (e) {
       checkIfSessionJSON(e);
     });
-    
+
     var dataContext = XNAT.data.context;
 
     var projectId = dataContext.projectID;
     var experimentId = dataContext.ID;
     var subjectId = dataContext.subjectID;
-    
+
     var experimentLabel = dataContext.label;
     var parentProjectId = dataContext.parentProjectID;
-    var csrfToken = window.csrfToken;
-    
+
     var rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
 
     function checkIfSessionJSON(e) {
@@ -81,12 +80,12 @@
       oReq.setRequestHeader('Accept', 'application/json');
       oReq.send();
     }
-    
-    
-    function checkJSONAndOpenViewer() {      
+
+
+    function checkJSONAndOpenViewer() {
       // Fetch JSON
       var oReq = new XMLHttpRequest();
-      
+
        // Listeners
       oReq.addEventListener('error', function () {
         console.error('Error in REST call!');
@@ -104,12 +103,12 @@
           console.log('JSON found.. checking!');
           // TODO -> Check the json!
           console.log(oReq);
-          
+
           var jsonString = oReq.responseText;
           var studyList = JSON.parse(jsonString); //parses the query result
-          
+
           console.log(studyList);
-          
+
           if (studyListEmpty(studyList)) {
             XNAT.dialog.message(
               'No viewable scans',
@@ -117,7 +116,7 @@
             );
             return;
           }
-          
+
           openViewer();
         } else if (oReq.status === 403) {
           console.log('Incorrect permissions');
@@ -133,31 +132,31 @@
           return;
         }
       });
-      
+
       var jsonRequestUrl = rootUrlWithPort + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId;
-      
+
       // REST GET call
       oReq.open('GET', jsonRequestUrl);
       oReq.setRequestHeader('Accept', 'application/json');
       oReq.send();
     }
-    
-    function studyListEmpty(studyList) {      
+
+    function studyListEmpty(studyList) {
       if (!studyList.studies) {
         console.log('invalid studyList object');
         return true;
       }
-      
+
       var empty = true;
-      
+
       for (var i = 0; i < studyList.studies.length; i++) {
-          
+
         if (!studyList.studies[i] || !studyList.studies[i].seriesList) {
           continue;
         }
-        
+
         var series = studyList.studies[i].seriesList;
-      
+
         for (var j = 0; j < series.length; j++) {
           if (series[j].instances.length) {
             empty = false;
@@ -165,23 +164,23 @@
           }
         }
       }
-      
+
       return empty;
     }
-    
+
     function openViewer() {
       var params = '?subjectId=' + subjectId + '&projectId=' + projectId + '&experimentId=' + experimentId;
-        
+
       if (experimentLabel) {
         params = params +  '&experimentLabel=' + experimentLabel;
       }
-      
+
       if (parentProjectId) {
         params = params + '&parentProjectId=' + parentProjectId;
       }
-      
+
       window.open(rootUrlWithPort + '/VIEWER' + params);
-      
+
     }
 
     function generateJSONthenOpenViewer(e, rootUrl) {
@@ -224,7 +223,7 @@
       oReq.open('POST', url);
       oReq.setRequestHeader('Accept', 'application/json');
       oReq.send();
-      
+
       XNAT.dialog.message(
         'Generating Missing Viewer Data',
         "Generating missing viewer metadata for experiment " + experimentLabel + ". If the session is very large please wait a minute before attempting to open the viewer. This will only happen once."

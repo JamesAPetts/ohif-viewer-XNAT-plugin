@@ -1,3 +1,15 @@
+
+**1.13.0 Beta**
+Features:
+- Subject level view:   
+  - On a Subject page you can now access a subject level viewer by clicking on "View Subject".
+  - In the scan list there will be a collapsable list of scans for each Session. You can view scans from multiple sessions simultaneously.
+  - When you annotate ROIs and export them back to XNAT, they will be stored under the appropriate session.
+- ROICollection Page (Thanks @JamesDarcy616 !):
+  - The default XNAT datatype page has been replaced with a customised ROI Collection page.
+  - The ROI Collection resources, as well as the individual ROIs included in the collection are listed on the page.
+  - The user can now use the manage files/delete functionality within the ROI Collection page.
+
 **1.12.0 Beta**
 
 UX:

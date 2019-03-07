@@ -1,4 +1,4 @@
-# XNAT-OHIF Viewer Plugin 1.12.0 Beta
+# XNAT-OHIF Viewer Plugin 1.13.0 Beta
 
 <p align="center">
   <img src="assets/Logo.png" width="256" title="OHIF-XNAT-logo">
@@ -9,14 +9,18 @@ Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
-# Public Beta 1.12.0:
+# Public Beta 1.13.0:
 
-**1.12.0 Beta**
-
-UX:
-- The csrfToken used to PUT RoiCollections is now dynamically fetched using the XNAT JSESSION cookie in the browser.
-  - This means that the user can time out/disconnect, and log back into XNAT via the main XNAT interface, then push back from the viewer.
-  - Users can E-Mail direct links to a viewer session. The user can log in, annotate, and push directly, without going through the regular 'View Session' route.
+**1.13.0 Beta**
+Features:
+- Subject level view:
+  - On a Subject page you can now access a subject level viewer by clicking on "View Subject".
+  - In the scan list there will be a collapsable list of scans for each Session. You can view scans from multiple sessions simultaneously.
+  - When you annotate ROIs and export them back to XNAT, they will be stored under the appropriate session.
+- ROICollection Page (Thanks @JamesDarcy616 !):
+  - The default XNAT datatype page has been replaced with a customised ROI Collection page.
+  - The ROI Collection resources, as well as the individual ROIs included in the collection are listed on the page.
+  - The user can now use the manage files/delete functionality within the ROI Collection page.
 
 A full list of changes are available in the `CHANGELOG`.
 
