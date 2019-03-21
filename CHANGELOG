@@ -1,3 +1,7 @@
+**1.14.1 Beta**
+Temporary Bug Fix:
+- Disabled double-click enlarge viewport, as it causes clashes with cornerstoneTools v3.
+
 **1.14.0 Beta**
 Features:
 - DICOM SEG improvements:
