@@ -9,8 +9,6 @@ Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
-# Public Beta 1.11.0:
-
 **1.14.1 Beta**
 
 - Disabled double-click enlarge viewport, as it causes clashes with cornerstoneTools v3.
