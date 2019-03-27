@@ -1,4 +1,4 @@
-# XNAT-OHIF Viewer Plugin 1.14.0 Beta
+# XNAT-OHIF Viewer Plugin 1.15.0 Beta
 
 <p align="center">
   <img src="assets/Logo.png" width="256" title="OHIF-XNAT-logo">
@@ -9,20 +9,17 @@ Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
-# Public Beta 1.14.0:
+# Public Beta 1.15.0:
 
-**1.14.0 Beta**
+**1.15.0 Beta**
 Features:
-- DICOM SEG improvements:
-  - We now have support for DICOM Segmentation objects in a variety of possible configurations.
-  - DICOM SEG export for both single frame and multiframe source data.
-  - ROICollectionName baked into the generated DICOM SeriesDescription.
-  - Only segmentation frames with at least one segment occupying them are now saved, reducing the filesize of small segmentations on large scans drastically.
-
-- Freehand Improvements:
-  - If you find yourself in a pickle whilst drawing, hitting delete will cleanly cancel your contour and allow you to start again.
-  - Hitting escape whilst drawing will quickly close your contour.
-  - Whilst drawing you can now zoom/pan with the right/middle mouse buttons respectively whilst drawing. So if you wish to zoom in part way through drawing your contour, you can.
+- Navigation Bar:
+ - A navigation bar can now be accessed by opening the right-hand tab in the viewer.
+ - The navigation bar allows you to switch to a different subject/session, allowing you to segment many scans without leaving the viewer.
+ - If a subject/session is shared from another project, the projectId of its parent is also displayed.
+ - Under "This Project", the current project is displayed, with the current subject/session in yellow.
+ - You may navigate to other projects via the "Other Projects" menu.
+ - The navigation bar fetches data on Projects/Subjects/Sessions as requested, providing a quick and responsive UI.
 
 A full list of changes are available in the `CHANGELOG`.
 

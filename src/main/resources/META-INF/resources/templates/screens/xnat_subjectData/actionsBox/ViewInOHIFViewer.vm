@@ -16,10 +16,15 @@
 
       var projectId = dataContext.projectID;
       var subjectId = dataContext.subjectID;
+      var parentProjectId = dataContext.parentProjectID;
 
       var rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
 
       var params = '?subjectId=' + subjectId + '&projectId=' + projectId;
+
+      if (parentProjectId) {
+        params = params + '&parentProjectId=' + parentProjectId;
+      }
 
       window.open(rootUrlWithPort + '/VIEWER' + params);
     }

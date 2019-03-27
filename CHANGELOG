@@ -1,3 +1,14 @@
+
+**1.15.0 Beta**
+Features:
+- Navigation Bar:
+ - A navigation bar can now be accessed by opening the right-hand tab in the viewer.
+ - The navigation bar allows you to switch to a different subject/session, allowing you to segment many scans without leaving the viewer.
+ - If a subject/session is shared from another project, the projectId of its parent is also displayed.
+ - Under "This Project", the current project is displayed, with the current subject/session in yellow.
+ - You may navigate to other projects via the "Other Projects" menu.
+ - The navigation bar fetches data on Projects/Subjects/Sessions as requested, providing a quick and responsive UI.
+
 **1.14.0 Beta**
 Features:
 - DICOM SEG improvements:
