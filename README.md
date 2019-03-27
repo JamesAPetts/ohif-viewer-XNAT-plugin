@@ -1,4 +1,4 @@
-# XNAT-OHIF Viewer Plugin 1.15.0 Beta
+# XNAT-OHIF Viewer Plugin 1.15.1 Beta
 
 <p align="center">
   <img src="assets/Logo.png" width="256" title="OHIF-XNAT-logo">
@@ -9,7 +9,12 @@ Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
-# Public Beta 1.15.0:
+# Public Beta 1.15.1:
+
+**1.15.1 Beta**
+Features:
+- Navigation from View Subject/View Session:
+ - These buttons now open the viewer directly in the window, as this has much better support for mobile.
 
 **1.15.0 Beta**
 Features:

@@ -179,7 +179,9 @@
         params = params + '&parentProjectId=' + parentProjectId;
       }
 
-      window.open(rootUrlWithPort + '/VIEWER' + params);
+      window.location.href = rootUrlWithPort + '/VIEWER' + params;
+
+      //window.open(rootUrlWithPort + '/VIEWER' + params);
 
     }
 
