@@ -1,3 +1,7 @@
+**1.15.2 Beta**
+Fixes:    
+- Updated DICOM SEG version to properly add ReferencedSOPClassUIDs to relevant lists. The individual segmentations now come up in the ROI list in the ROICollection view. 
+
 **1.15.1 Beta**
 Features:
 - Navigation from View Subject/View Session:

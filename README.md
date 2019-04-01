@@ -1,4 +1,4 @@
-# XNAT-OHIF Viewer Plugin 1.15.1 Beta
+# XNAT-OHIF Viewer Plugin 1.15.2 Beta
 
 <p align="center">
   <img src="assets/Logo.png" width="256" title="OHIF-XNAT-logo">
@@ -9,7 +9,9 @@ Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
-# Public Beta 1.15.1:
+**1.15.2 Beta**
+Fixes:
+- Updated DICOM SEG version to properly add ReferencedSOPClassUIDs to relevant lists. The individual segmentations now come up in the ROI list in the ROICollection view.
 
 **1.15.1 Beta**
 Features:
