@@ -98,7 +98,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
     // Study level GET/POST
     =================================*/
     
-    @ApiOperation(value = "Checks if Study level JSON exists")
+    @ApiOperation(value = "Checks if Session level JSON exists")
     @ApiResponses({
       @ApiResponse(code = 200, message = "OK, the session JSON exists."),
       @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experiment."),
