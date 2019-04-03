@@ -187,8 +187,25 @@ public class OhifViewerApi extends AbstractXapiRestController {
       }
       
       String readFilePath = getStudyPath(xnatArchivePath, proj, expLabel, _experimentId);
-      final Reader reader = new FileReader(readFilePath);
+      File file = new File(readFilePath);
       
+      if (file.exists()) {
+        final Reader reader = new FileReader(readFilePath);
+        StreamingResponseBody srb = new StreamingResponseBody() {
+          @Override
+          public void writeTo(final OutputStream output) throws IOException {
+            IOUtils.copy(reader, output);
+          }
+        };
+      
+        return new ResponseEntity<>(srb, HttpStatus.OK);
+      }
+      
+      // JSON doesn't exist, so generate and cache it.
+       
+      CreateExperimentMetadata.createMetadata(_experimentId);
+      
+      final Reader reader = new FileReader(readFilePath);
       StreamingResponseBody srb = new StreamingResponseBody() {
         @Override
         public void writeTo(final OutputStream output) throws IOException {
