@@ -1,4 +1,4 @@
-# XNAT-OHIF Viewer Plugin 1.15.2 Beta
+# XNAT-OHIF Viewer Plugin 1.15.3 Beta
 
 <p align="center">
   <img src="assets/Logo.png" width="256" title="OHIF-XNAT-logo">
@@ -8,6 +8,11 @@ This beta plugin integrates the OHIF viewer into XNAT. It differs from the publi
 Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
+
+**1.15.3 Beta**
+UX:
+- Produce a list of available ROICollections in the side nav bar.
+- If you have unsaved annotations, get a confirmation from the user before switching scans.
 
 **1.15.2 Beta**
 Fixes:

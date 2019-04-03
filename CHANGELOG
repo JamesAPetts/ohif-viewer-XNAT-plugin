@@ -1,3 +1,8 @@
+**1.15.3 Beta**
+UX:
+- Produce a list of available ROICollections in the side nav bar.
+- If you have unsaved annotations, get a confirmation from the user before switching scans.
+
 **1.15.2 Beta**
 Fixes:    
 - Updated DICOM SEG version to properly add ReferencedSOPClassUIDs to relevant lists. The individual segmentations now come up in the ROI list in the ROICollection view. 
