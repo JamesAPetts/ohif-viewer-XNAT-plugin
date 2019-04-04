@@ -5,6 +5,13 @@ XAPI: I note that all of this here is fallback incase JSON gets deleted for some
  - The "exists" check is very quick, and can be used to check if the JSON generation will need to happen in the GET, so that you can display approiate "loading" UI.
  - "View Subject" from the XNAT UI now brings a dialog up tracking progress of JSON generation for each related session.
 
+UX:
+- When navigating to a Subject or Session view from the navbar that has missing JSON metadata, a request is made to generate this, and appropriate progress dialogs display until the data is generated. At which point the user is redirected.
+
+UI:
+- Make sure scrollbar for navbar sticks to the right.
+
+
 **1.15.3 Beta**
 UX:
 - Produce a list of available ROICollections in the side nav bar.

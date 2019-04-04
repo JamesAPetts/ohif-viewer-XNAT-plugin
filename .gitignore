@@ -1,5 +1,6 @@
 *.iml
 *.log
+*.txt
 /.gradle*
 /.idea
 /out

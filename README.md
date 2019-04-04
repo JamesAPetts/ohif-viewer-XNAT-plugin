@@ -1,4 +1,4 @@
-# XNAT-OHIF Viewer Plugin 1.15.3 Beta
+# XNAT-OHIF Viewer Plugin 1.16.0 Beta
 
 <p align="center">
   <img src="assets/Logo.png" width="256" title="OHIF-XNAT-logo">
@@ -9,29 +9,18 @@ Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
-**1.15.3 Beta**
+**1.16.0 Beta WIP**
+XAPI: I note that all of this here is fallback incase JSON gets deleted for some reason. Automation should generate JSON on upload/transfer/deletion of scans, and the average user should never see any "Generating JSON" dialogs.
+ - The OHIF viewer API now only has 3 end points, GET for JSON existance, JSON itself, and an admin-level POST to generate JSON for the whole database.
+ - JSON is now generated within the GET code if it doesn't exist and cached for future usage. This means a user with only READ permissions to a session can trigger JSON generation if the session JSON doesn't exist.
+ - The "exists" check is very quick, and can be used to check if the JSON generation will need to happen in the GET, so that you can display approiate "loading" UI.
+ - "View Subject" from the XNAT UI now brings a dialog up tracking progress of JSON generation for each related session.
+
 UX:
-- Produce a list of available ROICollections in the side nav bar.
-- If you have unsaved annotations, get a confirmation from the user before switching scans.
+- When navigating to a Subject or Session view from the navbar that has missing JSON metadata, a request is made to generate this, and appropriate progress dialogs display until the data is generated. At which point the user is redirected.
 
-**1.15.2 Beta**
-Fixes:
-- Updated DICOM SEG version to properly add ReferencedSOPClassUIDs to relevant lists. The individual segmentations now come up in the ROI list in the ROICollection view.
-
-**1.15.1 Beta**
-Features:
-- Navigation from View Subject/View Session:
- - These buttons now open the viewer directly in the window, as this has much better support for mobile.
-
-**1.15.0 Beta**
-Features:
-- Navigation Bar:
- - A navigation bar can now be accessed by opening the right-hand tab in the viewer.
- - The navigation bar allows you to switch to a different subject/session, allowing you to segment many scans without leaving the viewer.
- - If a subject/session is shared from another project, the projectId of its parent is also displayed.
- - Under "This Project", the current project is displayed, with the current subject/session in yellow.
- - You may navigate to other projects via the "Other Projects" menu.
- - The navigation bar fetches data on Projects/Subjects/Sessions as requested, providing a quick and responsive UI.
+UI:
+- Make sure scrollbar for navbar sticks to the right.
 
 A full list of changes are available in the `CHANGELOG`.
 
