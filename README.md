@@ -10,7 +10,9 @@ Up to date viewer jars are available in the dist directory.
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
 **1.16.0 Beta WIP**
-XAPI: I note that all of this here is fallback incase JSON gets deleted for some reason. Automation should generate JSON on upload/transfer/deletion of scans, and the average user should never see any "Generating JSON" dialogs.
+
+XAPI:
+I note that all of this here is fallback incase JSON gets deleted for some reason. Automation should generate JSON on upload/transfer/deletion of scans, and the average user should never see any "Generating JSON" dialogs.
  - The OHIF viewer API now only has 3 end points, GET for JSON existance, JSON itself, and an admin-level POST to generate JSON for the whole database.
  - JSON is now generated within the GET code if it doesn't exist and cached for future usage. This means a user with only READ permissions to a session can trigger JSON generation if the session JSON doesn't exist.
  - The "exists" check is very quick, and can be used to check if the JSON generation will need to happen in the GET, so that you can display approiate "loading" UI.
