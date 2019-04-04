@@ -38,19 +38,21 @@
         var xhrExists = [];
         for (var i = 0; i < experimentList.length; i++) {
             var experimentId = experimentList[i].ID;
-            var experimentExistsUrl = rootUrlWithPort + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentList[i].ID + "/exists";
+            var experimentLabel = experimentList[i].label;
+            var experimentExistsUrl = rootUrlWithPort + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId + "/exists";
 
             xhrExists[i] = new XMLHttpRequest();
 
             console.log(experimentExistsUrl);
 
-            console.log(xhrExists);
-
             xhrExists[i].onload = function () {
                 console.log(this.status);
 
                 if (this.status === 404) {
-                    sessionsThatNeedJSON.push(experimentId);
+                    sessionsThatNeedJSON.push({
+                      ID: experimentId,
+                      label: experimentLabel
+                    });
                 }
                 sessionsChecked++;
                 console.log(sessionsChecked);
@@ -76,16 +78,62 @@
     function generateJSONandLoadViewer(sessionsThatNeedJSON) {
         console.log(sessionsThatNeedJSON);
         console.log('TODO.. generate JSON and then open viewer.');
+
+        if (sessionsThatNeedJSON.length === 0) {
+          openSubjectView()
+          return;
+        }
+
+        let message = "Generating missing viewer metadata for sessions:"
+
+        for (let i = 0; i < sessionsThatNeedJSON.length; i++) {
+          message = message + " " + sessionsThatNeedJSON[i].label;
+        }
+
+        var sessionsGenerated = 0;
+
+        XNAT.dialog.message(
+          'Generating Missing Viewer Data: ' + sessionsGenerated + "/" + sessionsThatNeedJSON.length,
+          message + ". If the sessions are very large please wait a minute before attempting to open the viewer. This will only happen once."
+        );
+
+        var xhrGenerate = [];
+        for (var i = 0; i < sessionsThatNeedJSON.length; i++) {
+            var experimentId = sessionsThatNeedJSON[i].ID;
+            var experimentExistsUrl = rootUrlWithPort + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId;
+
+            xhrGenerate[i] = new XMLHttpRequest();
+
+            console.log(experimentExistsUrl);
+
+            xhrGenerate[i].onload = function () {
+                console.log(this.status);
+
+                if (this.status === 200) {
+                  sessionsGenerated++;
+                }
+
+                console.log(sessionsGenerated);
+                if (sessionsGenerated === sessionsThatNeedJSON.length) {
+                  openSubjectView();
+                } else {
+                  XNAT.dialog.message(
+                    'Generating Missing Viewer Data: ' + sessionsGenerated + "/" + sessionsThatNeedJSON.length,
+                    message + ". If the sessions are very large please wait a minute before attempting to open the viewer. This will only happen once."
+                  );
+                }
+            }
+
+            xhrGenerate[i].open("GET", experimentExistsUrl);
+            xhrGenerate[i].responseType = "json";
+            xhrGenerate[i].send();
+        }
     }
 
 
 
 
     function openSubjectView() {
-
-
-
-
       var params = '?subjectId=' + subjectId + '&projectId=' + projectId;
 
       if (parentProjectId) {

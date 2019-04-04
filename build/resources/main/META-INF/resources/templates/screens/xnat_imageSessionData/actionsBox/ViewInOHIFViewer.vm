@@ -73,7 +73,7 @@
       oReq.open('GET', url);
       oReq.setRequestHeader('Accept', 'application/json');
       oReq.send();
-      
+
     }
 
     function checkJSONAndOpenViewer() {
@@ -157,7 +157,7 @@
 
       return empty;
     }
-    
+
     function generateJSONthenOpenViewer(e, rootUrl) {
       var oReq = new XMLHttpRequest();
       var url = rootUrl + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId;
@@ -188,7 +188,7 @@
 
       XNAT.dialog.message(
         'Generating Missing Viewer Data',
-        "Generating missing viewer metadata for experiment " + experimentLabel + ". If the session is very large please wait a minute before attempting to open the viewer. This will only happen once."
+        "Generating missing viewer metadata for session " + experimentLabel + ". If the session is very large please wait a minute before attempting to open the viewer. This will only happen once."
       );
     }
 
@@ -206,5 +206,5 @@
       window.location.href = rootUrlWithPort + '/VIEWER' + params;
     }
 
-    
+
 </script>
