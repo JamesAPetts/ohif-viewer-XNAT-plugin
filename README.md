@@ -20,9 +20,14 @@ I note that all of this here is fallback incase JSON gets deleted for some reaso
 
 UX:
 - When navigating to a Subject or Session view from the navbar that has missing JSON metadata, a request is made to generate this, and appropriate progress dialogs display until the data is generated. At which point the user is redirected.
+- Added Hotkeys to commonly used tools in the XNAT workflow. Annotations that aren't supported by the XNAT Schema don't have shortcuts for now, but this may change if and when they are supported.
+- Removed the ON/OFF tags from the ROI stats and interpolation toggles, as it wasn't clear if e.g. it is OFF, or clicking it will turn it off. It now highlights bright green when its on. (Happy for feedback on this!)
 
 UI:
 - Make sure scrollbar for navbar sticks to the right.
+- Display hotkeys next to toolbar names.
+- Removed the binding for stack scroll to left click. Stack scroll can already be used whilst any tool is active by either the mouse wheel, left clicking on the scrollbar at the side of the image, the up and down arrow keys, or three finger multitouch scroll. As such the mouse binding seemed redundant and clutters the UI.
+- The series list now can show full 64 character series descriptions and 10 digit series numbers cleanly, with line wrapping prioritising spaces, and otherwise linebreaking where needbe.
 
 A full list of changes are available in the `CHANGELOG`.
 
