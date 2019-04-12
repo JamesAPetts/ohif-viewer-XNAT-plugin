@@ -10,22 +10,10 @@ Up to date viewer jars are available in the dist directory.
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
 **1.16.0 Beta WIP**
-
-XAPI:
-I note that all of this here is fallback incase JSON gets deleted for some reason. Automation should generate JSON on upload/transfer/deletion of scans, and the average user should never see any "Generating JSON" dialogs.
- - The OHIF viewer API now only has 3 end points, GET for JSON existance, JSON itself, and an admin-level POST to generate JSON for the whole database.
- - JSON is now generated within the GET code if it doesn't exist and cached for future usage. This means a user with only READ permissions to a session can trigger JSON generation if the session JSON doesn't exist.
- - The "exists" check is very quick, and can be used to check if the JSON generation will need to happen in the GET, so that you can display approiate "loading" UI.
- - "View Subject" from the XNAT UI now brings a dialog up tracking progress of JSON generation for each related session.
-
-UX:
-- When navigating to a Subject or Session view from the navbar that has missing JSON metadata, a request is made to generate this, and appropriate progress dialogs display until the data is generated. At which point the user is redirected.
-- Added Hotkeys to commonly used tools in the XNAT workflow. Annotations that aren't supported by the XNAT Schema don't have shortcuts for now, but this may change if and when they are supported.
+UX
 - Removed the ON/OFF tags from the ROI stats and interpolation toggles, as it wasn't clear if e.g. it is OFF, or clicking it will turn it off. It now highlights bright green when its on. (Happy for feedback on this!)
 
 UI:
-- Make sure scrollbar for navbar sticks to the right.
-- Display hotkeys next to toolbar names.
 - Removed the binding for stack scroll to left click. Stack scroll can already be used whilst any tool is active by either the mouse wheel, left clicking on the scrollbar at the side of the image, the up and down arrow keys, or three finger multitouch scroll. As such the mouse binding seemed redundant and clutters the UI.
 - The series list now can show full 64 character series descriptions and 10 digit series numbers cleanly, with line wrapping prioritising spaces, and otherwise linebreaking where needbe.
 
