@@ -15,7 +15,6 @@ Up to date viewer jars are available in the dist directory.
 UX
 
 - Removed the ON/OFF tags from the ROI stats and interpolation toggles, as it wasn't clear if e.g. it is OFF, or clicking it will turn it off. It now highlights bright green when its on. (Happy for feedback on this!)
-  > > > > > > > xnat-roi-beta-1.17
 
 UI:
 
