@@ -1,36 +1,30 @@
-<<<<<<< HEAD
-# XNAT-OHIF Viewer Plugin 1.14.1 Beta
-=======
 # XNAT-OHIF Viewer Plugin 1.17.0 Beta
->>>>>>> xnat-roi-beta-1.17
 
 <p align="center">
   <img src="assets/Logo.png" width="256" title="OHIF-XNAT-logo">
 </p>
 
-This beta plugin integrates the OHIF viewer into XNAT. It differs from the publicly released OHIf Viewer plugin in that it has functionality to create ROIs and save/load these to/from XNAT.
+This beta plugin integrates the OHIF viewer into XNAT. It differs from the publicly released OHIF Viewer plugin in that it has functionality to create ROIs and save/load these to/from XNAT.
 Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
-<<<<<<< HEAD
-# Public Beta 1.11.0:
-
-**1.14.1 Beta**
-
-- Disabled double-click enlarge viewport, as it causes clashes with cornerstoneTools v3.
 =======
 **1.17.0 Beta WIP**
+
 UX
+
 - Removed the ON/OFF tags from the ROI stats and interpolation toggles, as it wasn't clear if e.g. it is OFF, or clicking it will turn it off. It now highlights bright green when its on. (Happy for feedback on this!)
->>>>>>> xnat-roi-beta-1.17
+  > > > > > > > xnat-roi-beta-1.17
 
 UI:
+
 - Removed the binding for stack scroll to left click. Stack scroll can already be used whilst any tool is active by either the mouse wheel, left clicking on the scrollbar at the side of the image, the up and down arrow keys, or three finger multitouch scroll. As such the mouse binding seemed redundant and clutters the UI.
 - The series list now can show full 64 character series descriptions and 10 digit series numbers cleanly, with line wrapping prioritising spaces, and otherwise linebreaking where needbe.
 - Added a scrollbar to the series list, and styled the scrollbars for the two side windows to match the OHIF styling.
 
 JSON Generation:
+
 - Use the dicomweb protocol for everything, as it seems to have better support for multiframe images in cornerstoneWADOImageLoader.
 - Expand the list of valid SopClassUIDs to include some imaging modalities I originally missed.
 
