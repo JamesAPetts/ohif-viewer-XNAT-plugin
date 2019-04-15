@@ -1,3 +1,16 @@
+**1.17.0 Beta WIP**
+UX
+- Removed the ON/OFF tags from the ROI stats and interpolation toggles, as it wasn't clear if e.g. it is OFF, or clicking it will turn it off. It now highlights bright green when its on. (Happy for fee$
+
+UI:
+- Removed the binding for stack scroll to left click. Stack scroll can already be used whilst any tool is active by either the mouse wheel, left clicking on the scrollbar at the side of the image, the $
+- The series list now can show full 64 character series descriptions and 10 digit series numbers cleanly, with line wrapping prioritising spaces, and otherwise linebreaking where needbe.
+- Added a scrollbar to the series list, and styled the scrollbars for the two side windows to match the OHIF styling.
+
+JSON Generation:
+- Use the dicomweb protocol for everything, as it seems to have better support for multiframe images in cornerstoneWADOImageLoader.
+- Expand the list of valid SopClassUIDs to include some imaging modalities I originally missed.
+
 **1.16.0 Beta WIP**
 XAPI: I note that all of this here is fallback incase JSON gets deleted for some reason. Automation should generate JSON on upload/transfer/deletion of scans, and the average user should never see any "Generating JSON" dialogs.
  - The OHIF viewer API now only has 3 end points, GET for JSON existance, JSON itself, and an admin-level POST to generate JSON for the whole database.

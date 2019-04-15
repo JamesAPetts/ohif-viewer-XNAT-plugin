@@ -1,24 +1,24 @@
 /********************************************************************
 * Copyright (c) 2018, Institute of Cancer Research
 * All rights reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions
 * are met:
-* 
+*
 * (1) Redistributions of source code must retain the above copyright
 *     notice, this list of conditions and the following disclaimer.
-* 
+*
 * (2) Redistributions in binary form must reproduce the above
 *     copyright notice, this list of conditions and the following
 *     disclaimer in the documentation and/or other materials provided
 *     with the distribution.
-* 
+*
 * (3) Neither the name of the Institute of Cancer Research nor the
 *     names of its contributors may be used to endorse or promote
 *     products derived from this software without specific prior
 *     written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -61,18 +61,18 @@ import org.slf4j.LoggerFactory;
 public class CreateOhifViewerMetadata {
   private static final Logger logger = LoggerFactory.getLogger(CreateOhifViewerMetadata.class);
   private static final DicomToolkit dcmTk = DicomToolkit.getToolkit();
-  
+
   private final String xnatScanPath;
   private final String xnatExperimentScanUrl;
   private final HashMap<String,String> seriesUidToScanIdMap;
-  
+
   public CreateOhifViewerMetadata(final String xnatScanPath, final String xnatExperimentScanUrl, final HashMap<String,String> seriesUidToScanIdMap)
   {
     this.xnatScanPath = xnatScanPath;
     this.xnatExperimentScanUrl = xnatExperimentScanUrl;
     this.seriesUidToScanIdMap = seriesUidToScanIdMap;
-  }    
-    
+  }
+
   public String jsonify(final String transactionId)
   {
     String serialisedOvi = "";
@@ -89,7 +89,7 @@ public class CreateOhifViewerMetadata {
 
     return serialisedOvi;
   }
-  
+
 
   private PatientRoot scanPath(String path)
   {
@@ -112,7 +112,7 @@ public class CreateOhifViewerMetadata {
     return root;
   }
 
-  
+
   private OhifViewerInput createInput(String transactionId, PatientRoot root)
   {
     OhifViewerInput ovi = new OhifViewerInput();
@@ -124,7 +124,7 @@ public class CreateOhifViewerMetadata {
     List<Patient> patList = root.getPatientList();
     for (Patient pat : patList)
     {
-      List<Study> studyList = pat.getStudyList();			
+      List<Study> studyList = pat.getStudyList();
       for (Study std : studyList)
       {
         OhifViewerInputStudy oviStd = new OhifViewerInputStudy(std, pat);
@@ -135,23 +135,17 @@ public class CreateOhifViewerMetadata {
         {
           OhifViewerInputSeries oviSer = new OhifViewerInputSeries(ser);
           oviStd.addSeries(oviSer);
-          
+
           String scanId = seriesUidToScanIdMap.get(ser.getUid());
 
           List<SopInstance> sopList = ser.getSopInstanceList();
           for (SopInstance sop : sopList)
           {
-            if (SopClassLists.SINGLE_FRAME_SOP_CLASS_UIDS.contains(sop.getSopClassUid()))
+            if (SopClassLists.DISPLAYABLE_SOP_CLASS_UIDS.contains(sop.getSopClassUid()))
             {
-              OhifViewerInputInstanceSingle oviInst = new OhifViewerInputInstanceSingle(sop, ser, this.xnatExperimentScanUrl, scanId);
+              OhifViewerInputInstance oviInst = new OhifViewerInputInstance(sop, ser, this.xnatExperimentScanUrl, scanId);
               oviSer.addInstances(oviInst);
             }
-            else if (SopClassLists.MULTI_FRAME_SOP_CLASS_UIDS.contains(sop.getSopClassUid()))
-            {
-              OhifViewerInputInstanceMulti oviInst = new OhifViewerInputInstanceMulti(sop, ser, this.xnatExperimentScanUrl, scanId);
-              oviSer.addInstances(oviInst);
-            }
-            
           }
         }
       }
@@ -159,5 +153,5 @@ public class CreateOhifViewerMetadata {
 
     return ovi;
   }
-  
+
 }

@@ -219,7 +219,8 @@ public class OhifViewerApi extends AbstractXapiRestController {
     @ApiOperation(value = "Generates the session JSON for every session in the database.")
     @ApiResponses({
       @ApiResponse(code = 201, message = "The JSON metadata has been created for every session in the database."),
-      @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experient."),
+      @ApiResponse(code = 403, message = "The user does not have permission to perform this action."),
+      @ApiResponse(code = 423, message = "This process is already underway and is locked."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
     @XapiRequestMapping(
