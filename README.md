@@ -9,7 +9,6 @@ Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
-=======
 **1.17.0 Beta WIP**
 
 UX
