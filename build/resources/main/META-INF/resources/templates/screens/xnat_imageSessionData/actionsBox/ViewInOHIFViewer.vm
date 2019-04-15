@@ -8,6 +8,7 @@
 
 <script>
     $('#ohifViewer').click(function (e) {
+      e.preventDefault();
       checkIfSessionJSON(e);
     });
 
@@ -60,18 +61,11 @@
           checkJSONAndOpenViewer();
         } else if (oReq.status === 404) {
           // 404 === NOT_FOUND
-          console.log('JSON doesn\'t exist, generating...');
           generateJSONthenOpenViewer(e, rootUrl);
-
-          return;
         } else if (oReq.status === 403) {
           console.log('Incorrect permissions');
-
-          return;
         } else {
           console.log("unsuccessful, status: " + oReq.status);
-
-          return;
         }
       });
 
@@ -79,8 +73,8 @@
       oReq.open('GET', url);
       oReq.setRequestHeader('Accept', 'application/json');
       oReq.send();
-    }
 
+    }
 
     function checkJSONAndOpenViewer() {
       // Fetch JSON
@@ -122,10 +116,6 @@
           console.log('Incorrect permissions');
 
           return;
-        } else if (oReq.status === 423) {
-          console.log('POST locked');
-          //Likely just been POSTed by different user, try again in 100 ms
-          setTimeout(checkIfSessionJSON(e), 100);
         } else {
           console.log("unsuccessful, status: " + oReq.status);
 
@@ -168,6 +158,40 @@
       return empty;
     }
 
+    function generateJSONthenOpenViewer(e, rootUrl) {
+      var oReq = new XMLHttpRequest();
+      var url = rootUrl + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId;
+      console.log("Opening GET XMLHttpRequest to: " + url);
+
+      oReq.addEventListener('load', function () {
+
+        console.log("Request returned, status: " + oReq.status);
+
+        if (oReq.status === 200) {
+          console.log('JSON has been created!');
+          checkJSONAndOpenViewer();
+        } else if (oReq.status === 403) {
+          console.log('Incorrect permissions');
+
+          return;
+        } else {
+          console.log("unsuccessful, status: " + oReq.status);
+
+          return;
+        }
+      });
+
+      // REST POST call
+      oReq.open('GET', url);
+      oReq.setRequestHeader('Accept', 'application/json');
+      oReq.send();
+
+      XNAT.dialog.message(
+        'Generating Missing Viewer Data',
+        "Generating missing viewer metadata for session " + experimentLabel + ". If the session is very large please wait a minute before attempting to open the viewer. This will only happen once."
+      );
+    }
+
     function openViewer() {
       var params = '?subjectId=' + subjectId + '&projectId=' + projectId + '&experimentId=' + experimentId;
 
@@ -179,56 +203,8 @@
         params = params + '&parentProjectId=' + parentProjectId;
       }
 
-      window.open(rootUrlWithPort + '/VIEWER' + params);
-
+      window.location.href = rootUrlWithPort + '/VIEWER' + params;
     }
 
-    function generateJSONthenOpenViewer(e, rootUrl) {
-      var oReq = new XMLHttpRequest();
-      var url = rootUrl + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId;
-      console.log("Opening POST XMLHttpRequest to: " + url);
-
-      // Listeners
-      oReq.addEventListener('error', function () {
-        console.error('Error in REST call!');
-      });
-
-      oReq.addEventListener('abort', function () {
-        console.error('Request was aborted for some reason. Please contact your System Administrator.');
-      });
-
-      oReq.addEventListener('load', function () {
-
-        console.log("Request returned, status: " + oReq.status);
-
-        if (oReq.status === 201) {
-          console.log('JSON has been created!');
-          checkJSONAndOpenViewer();
-        } else if (oReq.status === 403) {
-          console.log('Incorrect permissions');
-
-          return;
-        } else if (oReq.status === 423) {
-          console.log('POST locked');
-          //Likely just been POSTed by different user, try again in 100 ms
-          setTimeout(checkIfSessionJSON(e), 100);
-        } else {
-          console.log("unsuccessful, status: " + oReq.status);
-
-          return;
-        }
-      });
-
-      // REST POST call
-      oReq.open('POST', url);
-      oReq.setRequestHeader('Accept', 'application/json');
-      oReq.send();
-
-      XNAT.dialog.message(
-        'Generating Missing Viewer Data',
-        "Generating missing viewer metadata for experiment " + experimentLabel + ". If the session is very large please wait a minute before attempting to open the viewer. This will only happen once."
-      );
-
-    }
 
 </script>

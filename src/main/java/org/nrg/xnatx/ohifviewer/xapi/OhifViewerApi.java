@@ -69,7 +69,6 @@ import org.nrg.xdat.security.services.RoleHolder;
 import org.nrg.xdat.security.services.UserManagementServiceI;
 import org.nrg.xapi.rest.AbstractXapiRestController;
 import org.nrg.xapi.rest.ProjectId;
-import org.nrg.xdat.model.XnatExperimentdataShareI;
 import org.nrg.xdat.om.XnatExperimentdataShare;
 import org.nrg.xdat.security.helpers.AccessLevel;
 import org.nrg.xnatx.ohifviewer.inputcreator.CreateExperimentMetadata;
@@ -98,7 +97,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
     // Study level GET/POST
     =================================*/
     
-    @ApiOperation(value = "Checks if Study level JSON exists")
+    @ApiOperation(value = "Checks if Session level JSON exists")
     @ApiResponses({
       @ApiResponse(code = 200, message = "OK, the session JSON exists."),
       @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experiment."),
@@ -147,6 +146,7 @@ public class OhifViewerApi extends AbstractXapiRestController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     
+    
     @ApiOperation(value = "Returns the session JSON for the specified experiment ID.")
     @ApiResponses({
       @ApiResponse(code = 200, message = "The session was located and properly rendered to JSON."),
@@ -187,8 +187,25 @@ public class OhifViewerApi extends AbstractXapiRestController {
       }
       
       String readFilePath = getStudyPath(xnatArchivePath, proj, expLabel, _experimentId);
-      final Reader reader = new FileReader(readFilePath);
+      File file = new File(readFilePath);
       
+      if (file.exists()) {
+        final Reader reader = new FileReader(readFilePath);
+        StreamingResponseBody srb = new StreamingResponseBody() {
+          @Override
+          public void writeTo(final OutputStream output) throws IOException {
+            IOUtils.copy(reader, output);
+          }
+        };
+      
+        return new ResponseEntity<>(srb, HttpStatus.OK);
+      }
+      
+      // JSON doesn't exist, so generate and cache it.
+       
+      CreateExperimentMetadata.createMetadata(_experimentId);
+      
+      final Reader reader = new FileReader(readFilePath);
       StreamingResponseBody srb = new StreamingResponseBody() {
         @Override
         public void writeTo(final OutputStream output) throws IOException {
@@ -199,48 +216,11 @@ public class OhifViewerApi extends AbstractXapiRestController {
       return new ResponseEntity<>(srb, HttpStatus.OK);
     }
     
-    @ApiOperation(value = "Generates the session JSON for the specified experiment ID.")
-    @ApiResponses({
-      @ApiResponse(code = 201, message = "The session JSON has been created."),
-      @ApiResponse(code = 403, message = "The user does not have permission to post to the indicated experient."),
-      @ApiResponse(code = 500, message = "An unexpected error occurred.")
-    })
-    @XapiRequestMapping(
-      value = "projects/{_projectId}/experiments/{_experimentId}",
-      method = RequestMethod.POST,
-      restrictTo = AccessLevel.Edit
-    )
-    public ResponseEntity<String> postExperimentJson(
-      @PathVariable("_projectId") @ProjectId final String _projectId,
-      final @PathVariable String _experimentId)
-      throws IOException
-    {      
-      // Get directory info from _experimentId
-      HashMap<String,String> experimentData;
-      String proj = null;
-      try {
-        experimentData = getDirectoryInfo(_experimentId);
-        proj     = experimentData.get("proj");
-      } catch (Exception ex) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-      }
-      
-      if (!_projectId.equals(proj)) {
-        logger.info("project ids not equal");
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-      }
-      
-      logger.error("creating experiment metadata for " + _experimentId);
-      
-      HttpStatus returnHttpStatus = CreateExperimentMetadata.createMetadata(_experimentId);
-      
-      return new ResponseEntity<String>(returnHttpStatus);
-    }
-    
     @ApiOperation(value = "Generates the session JSON for every session in the database.")
     @ApiResponses({
       @ApiResponse(code = 201, message = "The JSON metadata has been created for every session in the database."),
-      @ApiResponse(code = 403, message = "The user does not have permission to view the indicated experient."),
+      @ApiResponse(code = 403, message = "The user does not have permission to perform this action."),
+      @ApiResponse(code = 423, message = "This process is already underway and is locked."),
       @ApiResponse(code = 500, message = "An unexpected error occurred.")
     })
     @XapiRequestMapping(

@@ -7,20 +7,139 @@
 </li>
 
 <script>
+    var dataContext = XNAT.data.context;
+    var projectId = dataContext.projectID;
+    var subjectId = dataContext.subjectID;
+    var parentProjectId = dataContext.parentProjectID;
+    var rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
+
+
     $('#ohifViewer').click(function (e) {
-      openSubjectView(e);
+        e.preventDefault();
+      checkSessionJSONExists(e);
     });
 
+    function checkSessionJSONExists() {
+      var subjectExperimentListUrl = rootUrlWithPort + '/data/archive/projects/'+ projectId + "/subjects/" + subjectId + "/experiments?format=json";
+
+      console.log(subjectExperimentListUrl);
+
+      var xhr = new XMLHttpRequest();
+
+      xhr.onload = function () {
+        var experimentList = xhr.response.ResultSet.Result;
+
+        console.log("on load, experimentList:");
+        console.log(experimentList);
+
+        var sessionsChecked = 0;
+        var sessionsThatNeedJSON = [];
+
+        var xhrExists = [];
+        for (var i = 0; i < experimentList.length; i++) {
+            var experimentId = experimentList[i].ID;
+            var experimentLabel = experimentList[i].label;
+            var experimentExistsUrl = rootUrlWithPort + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId + "/exists";
+
+            xhrExists[i] = new XMLHttpRequest();
+
+            console.log(experimentExistsUrl);
+
+            xhrExists[i].onload = function () {
+                console.log(this.status);
+
+                if (this.status === 404) {
+                    sessionsThatNeedJSON.push({
+                      ID: experimentId,
+                      label: experimentLabel
+                    });
+                }
+                sessionsChecked++;
+                console.log(sessionsChecked);
+                if (sessionsChecked === experimentList.length) {
+                    generateJSONandLoadViewer(sessionsThatNeedJSON);
+                }
+            }
+
+            xhrExists[i].open("GET", experimentExistsUrl);
+            xhrExists[i].responseType = "json";
+            xhrExists[i].send();
+        }
+
+      };
+
+
+      console.log("GET " + subjectExperimentListUrl);
+      xhr.open("GET", subjectExperimentListUrl);
+      xhr.responseType = "json";
+      xhr.send();
+    }
+
+    function generateJSONandLoadViewer(sessionsThatNeedJSON) {
+        console.log(sessionsThatNeedJSON);
+        console.log('TODO.. generate JSON and then open viewer.');
+
+        if (sessionsThatNeedJSON.length === 0) {
+          openSubjectView()
+          return;
+        }
+
+        let message = "Generating missing viewer metadata for sessions:"
+
+        for (let i = 0; i < sessionsThatNeedJSON.length; i++) {
+          message = message + " " + sessionsThatNeedJSON[i].label;
+        }
+
+        var sessionsGenerated = 0;
+
+        XNAT.dialog.message(
+          'Generating Missing Viewer Data: ' + sessionsGenerated + "/" + sessionsThatNeedJSON.length,
+          message + ". If the sessions are very large please wait a minute before attempting to open the viewer. This will only happen once."
+        );
+
+        var xhrGenerate = [];
+        for (var i = 0; i < sessionsThatNeedJSON.length; i++) {
+            var experimentId = sessionsThatNeedJSON[i].ID;
+            var experimentExistsUrl = rootUrlWithPort + "/xapi/viewer/projects/" + projectId + "/experiments/" + experimentId;
+
+            xhrGenerate[i] = new XMLHttpRequest();
+
+            console.log(experimentExistsUrl);
+
+            xhrGenerate[i].onload = function () {
+                console.log(this.status);
+
+                if (this.status === 200) {
+                  sessionsGenerated++;
+                }
+
+                console.log(sessionsGenerated);
+                if (sessionsGenerated === sessionsThatNeedJSON.length) {
+                  openSubjectView();
+                } else {
+                  XNAT.dialog.message(
+                    'Generating Missing Viewer Data: ' + sessionsGenerated + "/" + sessionsThatNeedJSON.length,
+                    message + ". If the sessions are very large please wait a minute before attempting to open the viewer. This will only happen once."
+                  );
+                }
+            }
+
+            xhrGenerate[i].open("GET", experimentExistsUrl);
+            xhrGenerate[i].responseType = "json";
+            xhrGenerate[i].send();
+        }
+    }
+
+
+
+
     function openSubjectView() {
-      var dataContext = XNAT.data.context;
-
-      var projectId = dataContext.projectID;
-      var subjectId = dataContext.subjectID;
-
-      var rootUrlWithPort = XNAT.url.getProtocol() + '//' + XNAT.url.getDomain() + ":" + XNAT.url.getPort() + XNAT.url.rootUrl('').replace(/\/+$/, "");
-
       var params = '?subjectId=' + subjectId + '&projectId=' + projectId;
 
-      window.open(rootUrlWithPort + '/VIEWER' + params);
+      if (parentProjectId) {
+        params = params + '&parentProjectId=' + parentProjectId;
+      }
+
+      window.location.href = rootUrlWithPort + '/VIEWER' + params;
     }
 </script>

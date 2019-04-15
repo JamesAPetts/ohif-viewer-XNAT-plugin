@@ -1,24 +1,24 @@
 /********************************************************************
 * Copyright (c) 2018, Institute of Cancer Research
 * All rights reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions
 * are met:
-* 
+*
 * (1) Redistributions of source code must retain the above copyright
 *     notice, this list of conditions and the following disclaimer.
-* 
+*
 * (2) Redistributions in binary form must reproduce the above
 *     copyright notice, this list of conditions and the following
 *     disclaimer in the documentation and/or other materials provided
 *     with the distribution.
-* 
+*
 * (3) Neither the name of the Institute of Cancer Research nor the
 *     names of its contributors may be used to endorse or promote
 *     products derived from this software without specific prior
 *     written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -37,12 +37,15 @@ package org.nrg.xnatx.ohifviewer.inputcreator;
 import icr.etherj.dicom.Series;
 import icr.etherj.dicom.SopInstance;
 import org.nrg.dcm.SOPModel;
+import java.io.File;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author jpetts
  */
-public abstract class OhifViewerInputInstance extends OhifViewerInputItem {
+public class OhifViewerInputInstance extends OhifViewerInputItem {
   private String  sopInstanceUid;
 	private Integer instanceNumber;
 	private Integer columns;
@@ -52,11 +55,11 @@ public abstract class OhifViewerInputInstance extends OhifViewerInputItem {
 	private String  imagePositionPatient;
 	private String  imageOrientationPatient;
 	private String  pixelSpacing;
-  // @simond: Here's the bit that needs changing when we decide exactly how we want to store the files.
-  //private static final String SUBDIRECTORY = "/resources/DICOM/files/";
+  private String url;
   protected static final String RESOURCES = "/resources/";
   protected static final String FILES = "/files/";
-  
+  private static final Logger logger = LoggerFactory.getLogger(OhifViewerInputInstance.class);
+
   public OhifViewerInputInstance(SopInstance sop, Series ser, String xnatScanUrl, String scanId)
   {
     setSopInstanceUid(sop.getUid());
@@ -67,18 +70,60 @@ public abstract class OhifViewerInputInstance extends OhifViewerInputItem {
     setImagePositionPatient(dbl2DcmString(sop.getImagePositionPatient()));
     setImageOrientationPatient(dbl2DcmString(sop.getImageOrientationPatient()));
     setPixelSpacing(dbl2DcmString(sop.getPixelSpacing()));
-    
+
     // Set number of frames if multiframe image, set to empty string if not so the viewer ignores it.
     if (sop.getNumberOfFrames() > 1) {
       setNumberOfFrames(Integer.toString(sop.getNumberOfFrames()));
     } else {
       setNumberOfFrames("");
     }
+
+    String file = new File(sop.getPath()).getName();
+    String sopClassUid = sop.getSopClassUid();
+    String resource = getResourceType(sopClassUid);
+
+    xnatScanUrl = selectCorrectProtocol(xnatScanUrl);
+
+    String urlString = xnatScanUrl + scanId + RESOURCES + resource + FILES + file;
+
+    setUrl(urlString);
   }
-  
+
+  private String selectCorrectProtocol(String xnatScanUrl)
+  {
+    try
+    {
+      xnatScanUrl = selectProtocol(xnatScanUrl);
+    }
+    catch (Exception ex)
+    {
+      logger.error(ex.getMessage());
+    }
+
+    return xnatScanUrl;
+  }
+
+  private String selectProtocol(String xnatScanUrl)
+  throws Exception
+  {
+    if (xnatScanUrl.contains("https"))
+    {
+      return xnatScanUrl.replace("https", "dicomweb");
+    }
+    else if (xnatScanUrl.contains("http"))
+    {
+      return xnatScanUrl.replace("http", "dicomweb");
+    }
+    else
+    {
+      throw new Exception("unrecognised protocol in xnat url");
+    }
+
+  }
+
   protected String getResourceType(String sopClassUid)
   {
-    
+
     String resourceType;
     if (SOPModel.isPrimaryImagingSOP(sopClassUid))
     {
@@ -88,7 +133,7 @@ public abstract class OhifViewerInputInstance extends OhifViewerInputItem {
     {
       resourceType = "secondary";
     }
-    
+
     return resourceType;
   }
 
@@ -141,7 +186,7 @@ public abstract class OhifViewerInputInstance extends OhifViewerInputItem {
 	{
 		this.rows = rows;
 	}
-  
+
  	public String getNumberOfFrames()
 	{
 		return numberOfFrames;
@@ -181,4 +226,14 @@ public abstract class OhifViewerInputInstance extends OhifViewerInputItem {
 	{
 		this.imageOrientationPatient = imageOrientationPatient;
 	}
+
+  public String getUrl()
+  {
+    return url;
+  }
+
+  private void setUrl(String url)
+  {
+    this.url = url;
+  }
 }

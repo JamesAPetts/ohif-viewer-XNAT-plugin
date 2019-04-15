@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # XNAT-OHIF Viewer Plugin 1.14.1 Beta
+=======
+# XNAT-OHIF Viewer Plugin 1.17.0 Beta
+>>>>>>> xnat-roi-beta-1.17
 
 <p align="center">
   <img src="assets/Logo.png" width="256" title="OHIF-XNAT-logo">
@@ -9,24 +13,26 @@ Up to date viewer jars are available in the dist directory.
 
 **PLEASE DO NOT ATTEMPT TO USE IN PRODUCTION AT THIS STAGE.**
 
+<<<<<<< HEAD
 # Public Beta 1.11.0:
 
 **1.14.1 Beta**
 
 - Disabled double-click enlarge viewport, as it causes clashes with cornerstoneTools v3.
+=======
+**1.17.0 Beta WIP**
+UX
+- Removed the ON/OFF tags from the ROI stats and interpolation toggles, as it wasn't clear if e.g. it is OFF, or clicking it will turn it off. It now highlights bright green when its on. (Happy for feedback on this!)
+>>>>>>> xnat-roi-beta-1.17
 
-**1.14.0 Beta**
-Features:
-- DICOM SEG improvements:
-  - We now have support for DICOM Segmentation objects in a variety of possible configurations.
-  - DICOM SEG export for both single frame and multiframe source data.
-  - ROICollectionName baked into the generated DICOM SeriesDescription.
-  - Only segmentation frames with at least one segment occupying them are now saved, reducing the filesize of small segmentations on large scans drastically.
+UI:
+- Removed the binding for stack scroll to left click. Stack scroll can already be used whilst any tool is active by either the mouse wheel, left clicking on the scrollbar at the side of the image, the up and down arrow keys, or three finger multitouch scroll. As such the mouse binding seemed redundant and clutters the UI.
+- The series list now can show full 64 character series descriptions and 10 digit series numbers cleanly, with line wrapping prioritising spaces, and otherwise linebreaking where needbe.
+- Added a scrollbar to the series list, and styled the scrollbars for the two side windows to match the OHIF styling.
 
-- Freehand Improvements:
-  - If you find yourself in a pickle whilst drawing, hitting delete will cleanly cancel your contour and allow you to start again.
-  - Hitting escape whilst drawing will quickly close your contour.
-  - Whilst drawing you can now zoom/pan with the right/middle mouse buttons respectively whilst drawing. So if you wish to zoom in part way through drawing your contour, you can.
+JSON Generation:
+- Use the dicomweb protocol for everything, as it seems to have better support for multiframe images in cornerstoneWADOImageLoader.
+- Expand the list of valid SopClassUIDs to include some imaging modalities I originally missed.
 
 A full list of changes are available in the `CHANGELOG`.
 
