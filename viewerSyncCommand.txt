@@ -1,1 +1,0 @@
-rm -rf * && cp ~/OHIF_Viewer/OHIF-Viewer-XNAT/StandaloneViewer/testBuild/Viewer.war . && jar xf Viewer.war && rm Viewer.war
